@@ -1,3 +1,4 @@
+#include <atcoder/all>
 #include <bits/stdc++.h>
 #define fr first
 #define sc second
