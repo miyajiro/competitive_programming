@@ -28,6 +28,7 @@
             "#define v(T) vector<T>",
             "#define vv(T) v(v(T))",
             "using namespace std;",
+            "using namespace atcoder;",
             "using ll = long long;",
             "using uint = unsigned;",
             "using ull = unsigned long long;",
