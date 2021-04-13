@@ -64,91 +64,32 @@ bool chmin(T &a, const T &b)
 
 ll N;
 vl A;
-ll ans = 0LL;
-priority_queue<LP> lq, rq;
-bool used[400000];
+ll sumA = 0LL;
+ll aoki = 0LL;
+priority_queue<ll, v(ll) , greater<ll>> pq;
 
 int main()
 {
     cin >> N;
-    N *= 2LL;
-    rep(i, N){
+    rep(i, 2 * N){
         ll a;
         cin >> a;
+        sumA += a;
         A.pb(a);
-        used[i] = false;
     }
 
-    rep(i, N){
-        if(i < N / 2LL){
-            lq.push(LP(A[i], i));
-        } else {
-            rq.push(LP(A[i], -i));
-        }
+    rep(d, N){
+        ll l = N - 1LL - d;
+        ll r = N + d;
+
+        pq.push(A[l]);
+        pq.push(A[r]);
+
+        aoki += pq.top();
+        pq.pop();
     }
 
-    ll al = N / 2LL - 1LL;
-    ll ar = N / 2LL;
-
-    rep(_, N / 2LL){
-        // al, arを適切にする。
-        while(used[ar]){
-            ar++;
-        }
-        while(used[al]){
-            al--;
-        }
-
-        LP p;
-
-        LP rp = rq.top();
-        while(used[rp.sc]){
-            rq.pop();
-            rp = rq.top();
-            rp.sc = -p.sc;
-        }
-
-        LP lp = lq.top();
-        while(used[rp.sc]){
-            lq.pop();
-            lp = lq.top();
-        }
-
-        if(A[al] < A[ar] || (A[al] == A[ar] && rp.fr >= lp.fr)){ // 右の方が強い場合
-            p = rq.top();
-            rq.pop();
-            p.sc = -p.sc;
-
-            while(used[p.sc]){
-                p = rq.top();
-                p.sc = -p.sc;
-                rq.pop();
-            }
-
-            // 右取る
-            ans += p.fr;
-            used[p.sc] = true;
-
-            used[al] = true; // 左取らせる。
-            al--;
-        } else {
-            p = lq.top();
-            lq.pop();
-            while(used[p.sc]){
-                p = lq.top();
-                lq.pop();
-            }
-
-            // 左取る
-            ans += p.fr;
-            used[p.sc] = true;
-
-            used[ar] = true; // 右取らせる。
-            ar++;
-        }
-    }
-
-    cout << ans << endl;
+    cout << sumA - aoki << endl;
 
     return 0;
 }
