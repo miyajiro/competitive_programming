@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <atcoder/all>
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -23,59 +24,22 @@
 #define v(T) vector<T>
 #define vv(T) v(v(T))
 using namespace std;
-typedef long long int ll;
-typedef unsigned uint;
-typedef unsigned long long ull;
-typedef pair<int, int> P;
-// typedef tuple<int, int, int> T;
-typedef vector<int> vi;
-typedef vector<vi> vvi;
-typedef vector<ll> vl;
-typedef vector<P> vp;
-// typedef vector<T> vt;
+using namespace atcoder;
+using ll = long long;
+using uint = unsigned;
+using ull = unsigned long long;
+using P = pair<int, int>;
+using LP = pair<ll, ll>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using vl = vector<ll>;
+using vp = vector<P>;
+using vlp = vector<LP>;
 inline int getInt()
 {
     int x;
     scanf("%d", &x);
     return x;
-}
-template <typename T>
-inline istream &operator>>(istream &i, v(T) & v)
-{
-    rep(j, sz(v)) i >> v[j];
-    return i;
-}
-template <typename T>
-string join(const v(T) & v)
-{
-    stringstream s;
-    rep(i, sz(v)) s << ' ' << v[i];
-    return s.str().substr(1);
-}
-template <typename T>
-inline ostream &operator<<(ostream &o, const v(T) & v)
-{
-    if (sz(v))
-        o << join(v);
-    return o;
-}
-template <typename T1, typename T2>
-inline istream &operator>>(istream &i, pair<T1, T2> &v)
-{
-    return i >> v.fi >> v.se;
-}
-template <typename T1, typename T2>
-inline ostream &operator<<(ostream &o, const pair<T1, T2> &v)
-{
-    return o << v.fi << "," << v.se;
-}
-template <typename T>
-inline ll suma(const v(T) & a)
-{
-    ll res(0);
-    for (auto &&x : a)
-        res += x;
-    return res;
 }
 template <class T>
 bool chmax(T &a, const T &b)
@@ -83,37 +47,31 @@ bool chmax(T &a, const T &b)
     if (a < b)
     {
         a = b;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 template <class T>
 bool chmin(T &a, const T &b)
 {
-    if (b < a)
+    if (a > b)
     {
         a = b;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
-const double eps = 1e-10;
-const ll LINF = 1001002003004005006ll;
-const int INF = 1001001001;
-#define dame        \
-    {               \
-        puts("-1"); \
-        return 0;   \
-    }
-#define yn           \
-    {                \
-        puts("Yes"); \
-    }                \
-    else             \
-    {                \
-        puts("No");  \
-    }
+
+void solve()
+{
+    
+}
 
 int main()
 {
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cout << fixed << setprecision(15);
+    solve();
+    return 0;
 }
