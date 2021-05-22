@@ -62,9 +62,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl players;
+ll A[10][10];
+ll M;
+bool getAlong[10][10];
+
 void solve()
 {
-    
+    cin >> N;
+    rep(pi, N){
+        players.pb(pi);
+        rep(ki, N){
+            cin >> A[pi][ki];
+        }
+        rep(p2i, N){
+            getAlong[pi][p2i] = true;
+        }
+    }
+
+    cin >> M;
+    rep(xyi, M){
+        ll x, y;
+        cin >> x >> y;
+        x--;
+        y--;
+        getAlong[x][y] = getAlong[y][x] = false;
+    }
+
+    ll inf = 0xfffffffffff;
+    ll ans = inf;
+
+    do {
+        ll timeResult = 0;
+        rep(pi, N){
+            if(pi < N - 1LL && !getAlong[players[pi]][players[pi+1]]){
+                goto nex;
+            }
+
+            timeResult += A[players[pi]][pi];
+        }
+        chmin(ans, timeResult);
+        nex:
+            ;
+    } while (next_permutation(rng(players)));
+    if(ans == inf){
+        ans = -1LL;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
