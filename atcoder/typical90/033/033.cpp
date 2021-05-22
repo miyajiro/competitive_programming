@@ -62,9 +62,29 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+
+// 2 1
+// 3 2
+// 4 2
+// 5 3
+// 6 3
+
+
 void solve()
 {
-    
+    cin >> H >> W;
+    if(H == 1){
+        cout << W << "\n";
+        return;
+    }
+
+    if(W == 1){
+        cout << H << "\n";
+        return;
+    }
+
+    cout << ((H + 1) / 2) * ((W + 1) / 2) << "\n";
 }
 
 int main()

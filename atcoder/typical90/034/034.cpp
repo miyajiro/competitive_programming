@@ -62,9 +62,52 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, K;
+int ans;
+int l, r;
+vi A;
+map<int, int> valNum;
+int cnt;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.pb(a);
+    }
+
+    l = 0;
+    r = 0;
+    cnt = 0;
+    int ans = 0;
+    while(l < N && r <= N){
+        while(cnt < K && r < N){ // とりあえずK種類まで
+            if(valNum[A[r]] == 0){
+                cnt++;
+            }
+            valNum[A[r]]++;
+            r++;
+        }
+
+        while(r < N && valNum[A[r]] > 0){
+            valNum[A[r]]++;
+            r++;
+        }
+
+        // cout << "\n";
+        // show(l);
+        // show(r);
+        chmax(ans, r - l);
+
+        if(valNum[A[l]] == 1){
+            cnt--;
+        }
+        valNum[A[l]]--;
+        l++;
+    }
+    cout << ans << "\n";
 }
 
 int main()
