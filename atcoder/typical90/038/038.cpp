@@ -62,9 +62,38 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll A, B;
+
+ll gcd(ll a, ll b){
+    if(a < b){
+        swap(a, b);
+    }
+
+    if(b == 0LL){
+        return a;
+    }
+
+    return gcd(b, a % b);
+}
+
 void solve()
 {
-    
+    cin >> A >> B;
+
+    A /= gcd(A, B);
+
+    if(A < B){
+        swap(A, B);
+    }
+
+    ll ll1e18 = 1e18;
+
+    if(ll1e18 / B + 1 < A || A * B > ll1e18){
+        puts("Large");
+        return;
+    }
+
+    cout << A * B << "\n";
 }
 
 int main()
