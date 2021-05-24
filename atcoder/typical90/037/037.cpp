@@ -62,9 +62,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll dp[500][10001]; // dp[ni][w] niまでの料理で香辛料w使ったときの最大値
+
+ll W, N;
+vl L, R, values;
+
 void solve()
 {
-    
+    cin >> W >> N;
+    rep(i, N){
+        ll l, r, val;
+        cin >> l >> r >> val;
+        L.pb(l);
+        R.pb(r);
+        values.pb(val);
+    }
+
+    for(ll w = L[0]; w <= R[0]; w++){
+        dp[0][w] = values[0];
+    }
+
+    rep1(ni, N - 1){
+        ll l = L[ni];
+        ll r = R[ni];
+        ll val = values[ni];
+        priority_queue<LP> pq; // LP(dp[ni-1][w'], w')
+
+        rep(w, W + 1){
+            if(w - l >= 0 && (w - l == 0 || dp[ni - 1][w - l] > 0)){
+                pq.push(LP(dp[ni - 1][w - l], w - l));
+            }
+            dp[ni][w] = dp[ni - 1][w];
+
+            while(!pq.empty()){
+                LP lp = pq.top();
+                ll dpPast = lp.fr;
+                ll w_ = lp.sc;
+
+                if(w_ < w - r){
+                    pq.pop();
+                    continue;
+                }
+
+                chmax(dp[ni][w], dpPast + val);
+                break;
+            }
+        }
+    }
+
+    cout << (dp[N - 1][W] == 0LL ? -1LL : dp[N - 1][W]) << "\n";
 }
 
 int main()
