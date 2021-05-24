@@ -62,9 +62,36 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, Q;
+vl X, Y;
+v(LP) XPlusYAndI; // (x + y, i)
+v(LP) XMinusYAndI; // (x - y, i)
+
+ll dist(int ai, int bi){
+    return abs(X[ai] - X[bi]) + abs(Y[ai] - Y[bi]);
+}
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    rep(i, N){
+        ll x, y;
+        cin >> x >> y;
+        X.pb(x);
+        Y.pb(y);
+        XPlusYAndI.pb(LP(x + y, i));
+        XMinusYAndI.pb(LP(x - y, i));
+    }
+    sort(rng(XPlusYAndI));
+    sort(rng(XMinusYAndI));
+
+    rep(q, Q){
+        int qi;
+        cin >> qi;
+        qi--;
+
+        cout << max({dist(qi, XPlusYAndI[0].sc), dist(qi, XPlusYAndI[N-1].sc), dist(qi, XMinusYAndI[0].sc), dist(qi, XMinusYAndI[N-1].sc)}) << "\n";
+    }
 }
 
 int main()

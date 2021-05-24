@@ -62,9 +62,154 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+/**
+ * Lowest Common Ancestor
+ */
+class LCA
+{
+private:
+    int root;
+    int k;                  // n<=2^kとなる最小のk
+    vector<vector<int>> dp; // dp[i][j]:=要素jの2^i上の要素
+    vector<int> depth;      // depth[i]:=rootに対する頂点iの深さ
+
+public:
+    LCA(const vector<vector<int>> &_G, const int _root = 0)
+    {
+        int n = _G.size();
+        root = _root;
+        k = 1;
+        int nibeki = 2;
+        while (nibeki < n)
+        {
+            nibeki <<= 1;
+            k++;
+        }
+        // 頂点iの親ノードを初期化
+        dp = vector<vector<int>>(k + 1, vector<int>(n, -1));
+        depth.resize(n);
+        function<void(int, int)> _dfs = [&](int v, int p) {
+            dp[0][v] = p;
+            for (auto nv : _G[v])
+            {
+                if (nv == p)
+                    continue;
+                depth[nv] = depth[v] + 1;
+                _dfs(nv, v);
+            }
+        };
+        _dfs(root, -1);
+        // ダブリング
+        for (int i = 0; i < k; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (dp[i][j] == -1)
+                    continue;
+                dp[i + 1][j] = dp[i][dp[i][j]];
+            }
+        }
+    }
+
+    /// get LCA
+    int get(int u, int v)
+    {
+        if (depth[u] < depth[v])
+            swap(u, v); // u側を深くする
+        if (depth[u] != depth[v])
+        {
+            long long d = depth[u] - depth[v];
+            for (int i = 0; i < k; i++)
+                if ((d >> i) & 1)
+                    u = dp[i][u];
+        }
+        if (u == v)
+            return u;
+
+        for (int i = k; i >= 0; i--)
+        {
+            if (dp[i][u] != dp[i][v])
+            {
+                u = dp[i][u], v = dp[i][v];
+            }
+        }
+        return dp[0][u];
+    }
+
+    int get_distance(const int u, const int v)
+    {
+        int lca = get(u, v);
+        return depth[u] + depth[v] - 2 * depth[lca];
+    }
+};
+
+
+
+ll N, Q;
+vector<int> labels;
+vector<vector<int>> G;
+
+void dfs(int now, int from, int& label){
+    labels[now] = label++;
+    for(auto nex : G[now]){
+        if(nex == from){
+            continue;
+        }
+        dfs(nex, now, label);
+    }
+    return;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    G = vector<vector<int>>(N, vector<int>());
+    labels = vector<int>(N, -1);
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+        G[a].pb(b);
+        G[b].pb(a);
+    }
+
+    int label = 0;
+    dfs(0, -1, label);
+    cerr << "label: " << label << "\n";
+
+    LCA lca(G);
+
+    cin >> Q;
+
+    rep(i, Q){
+        int K;
+        v(P) labelAndNodeArray;
+        cin >> K;
+
+        rep(ki, K){
+            int node;
+            cin >> node;
+            node--;
+            labelAndNodeArray.pb(P(labels[node], node));
+        }
+
+        sort(rng(labelAndNodeArray));
+
+        vi nodeArray;
+        for(auto labelAndNode : labelAndNodeArray){
+            nodeArray.pb(labelAndNode.sc);
+        }
+
+        ll ans = 0;
+        rep(ki, K){
+            int from = nodeArray[ki];
+            int to = nodeArray[(ki + 1) % K];
+            ans += lca.get_distance(from, to);
+        }
+        ans /= 2LL;
+        cout << ans << "\n";
+    }
 }
 
 int main()
