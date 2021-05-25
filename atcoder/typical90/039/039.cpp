@@ -62,9 +62,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl A, B;
+ll ans;
+vv(int) G;
+
+ll dfs(int node, int from){
+    ll subTreeSize = 1;
+
+    for(auto nex : G[node]){
+        if(nex == from){
+            continue;
+        }
+
+        ll nexSubTreeSize = dfs(nex, node);
+        ans += nexSubTreeSize * (N - nexSubTreeSize);
+        subTreeSize += nexSubTreeSize;
+    }
+
+    return subTreeSize;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    G = vv(int)(N, vi());
+
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+        G[a].pb(b);
+        G[b].pb(a);
+    }
+
+    dfs(0, -1);
+
+    cout << ans << "\n";
 }
 
 int main()

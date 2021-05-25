@@ -62,9 +62,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+ll W;
+vl A;
+vv(ll) C;
+
 void solve()
 {
-    
+    cin >> N >> W;
+    C = vv(ll)(N, vl());
+    rep(ni, N){
+        ll a;
+        cin >> a;
+        A.pb(a);
+    }
+    rep(ni, N){
+        ll k;
+        cin >> k;
+        rep(ki, k){
+            int c;
+            cin >> c;
+            c--;
+            C[ni].pb(c);
+        }
+    }
+
+    mf_graph<ll> graph(N + 2);
+
+    ll ans = 0;
+    ll s = N;
+    ll t = N + 1;
+    ll inf = 1e18;
+    rep(ni, N){
+        if(W < A[ni]){
+            ans += A[ni] - W;
+            graph.add_edge(s, ni, 0);
+            graph.add_edge(ni, t, A[ni] - W);
+        } else {
+            graph.add_edge(s, ni, W - A[ni]);
+            graph.add_edge(ni, t, 0);
+        }
+
+        for(auto c : C[ni]){
+            graph.add_edge(ni, c, inf);
+        }
+    }
+
+    ans -= graph.flow(s, t);
+
+    cout << ans << "\n";
 }
 
 int main()

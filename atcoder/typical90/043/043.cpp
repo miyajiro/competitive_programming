@@ -62,9 +62,101 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+int sh, sw, gh, gw;
+string S[1000];
+bool isWall[1000][1000];
+int node[1000][1000];
+int yoko[1000][1000];
+int tate[1000][1000];
+int nodeNum = 0;
+
+int d[3000000];
+vector<P> edges[3000000]; // to, cost
+
 void solve()
 {
-    
+    cin >> H >> W >> sh >> sw >> gh >> gw;
+    sh--;
+    sw--;
+    gh--;
+    gw--;
+
+    rep(h, H){
+        cin >> S[h];
+        rep(w, W){
+            isWall[h][w] = (S[h][w] == '#');
+            if(!isWall[h][w]){
+                node[h][w] = nodeNum++;
+            }
+        }
+    }
+
+    rep(h, H){
+        rep(w, W){
+            if(isWall[h][w]){
+                continue;
+            }
+
+            if(w == W - 1 || isWall[h][w + 1]){
+                yoko[h][w] = nodeNum++;
+            } else {
+                yoko[h][w] = nodeNum;
+            }
+        }
+    }
+
+    rep(w, W){
+        rep(h, H){
+            if(isWall[h][w]){
+                continue;
+            }
+
+            if(h == H - 1 || isWall[h + 1][w]){
+                tate[h][w] = nodeNum++;
+            } else {
+                tate[h][w] = nodeNum;
+            }
+        }
+    }
+
+    rep(h, H){
+        rep(w, W){
+            edges[node[h][w]].pb(P(tate[h][w], 1));
+            edges[node[h][w]].pb(P(yoko[h][w], 1));
+
+            edges[tate[h][w]].pb(P(node[h][w], 0));
+            edges[yoko[h][w]].pb(P(node[h][w], 0));
+        }
+    }
+
+    int s = node[sh][sw];
+    int g = node[gh][gw];
+
+    int inf = 0xfffffff;
+    rep(i, nodeNum){
+        d[i] = inf;
+    }
+
+    d[s] = 0;
+    PQ(P) pq;
+    pq.push(P(0, s));
+    while(!pq.empty()){
+        P p = pq.top();
+        int now = p.sc;
+        pq.pop();
+        if(p.fr > d[now]){
+            continue;
+        }
+
+        for(auto edge : edges[now]){
+            if(chmin(d[edge.fr], d[now] + edge.sc)){
+                pq.push(P(d[edge.fr], edge.fr));
+            }
+        }
+    }
+
+    cout << d[g] - 1 << "\n";
 }
 
 int main()

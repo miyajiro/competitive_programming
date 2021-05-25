@@ -62,9 +62,24 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+ll K;
+mint dp[100001];
+
 void solve()
 {
-    
+    cin >> K;
+    if(K % 9LL != 0LL){
+        cout << 0 << "\n";
+        return;
+    }
+    dp[0] = 1;
+    rep(k, K){
+        rep1(a, 9){
+            dp[k + a] += dp[k];
+        }
+    }
+    cout << dp[K].val() << "\n";
 }
 
 int main()
