@@ -3,3 +3,5 @@
 **/tests
 **/contest.acc.json
 **/metadata.yml
+aoj/**/in*.txt
+aoj/**/out*.txt
