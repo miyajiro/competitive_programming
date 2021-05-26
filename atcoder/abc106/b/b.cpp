@@ -60,9 +60,24 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+
 void solve()
 {
-    
+    cin >> N;
+    int ans = 0;
+    for(int n = 1; n <= N; n += 2){
+        int cnt = 0;
+        for(int div = 1; div <= n; div++){
+            if(n % div == 0){
+                cnt++;
+            }
+        }
+        if(cnt == 8){
+            ans++;
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()
