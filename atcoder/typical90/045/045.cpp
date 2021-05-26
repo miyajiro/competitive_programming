@@ -62,9 +62,77 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, K;
+vl X, Y;
+ll dp[16][1 << 15]; // dp[何グループできているか][使用済みのノード] = スコア最小値
+
+const ll INF = INT64_MAX - 2LL;
+
+ll nijo(ll x){
+    return x * x;
+}
+
+ll getDist2(int ni1, int ni2){
+    return nijo(X[ni1] - X[ni2]) + nijo(Y[ni1] - Y[ni2]);
+}
+
+ll dist2[15][15];
+ll maxDistInS[1 << 15];
+vi unUsedNums[1 << 15];
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, N){
+        ll x, y;
+        cin >> x >> y;
+        X.eb(x);
+        Y.eb(y);
+    }
+
+    rep(i, N){
+        rep(j, N){
+            dist2[i][j] = getDist2(i, j);
+        }
+    }
+
+    rep(k, K + 1){
+        rep(s, 1 << N){
+            dp[k][s] = INF;
+        }
+    }
+
+    rep(s, 1 << N){
+        vi niInS = vector<int>();
+        ll maxDist = 0;
+        rep(ni, N){
+            if(((s >> ni) & 1) == 1){
+                niInS.eb(ni);
+            } else {
+                unUsedNums[s].pb(ni);
+            }
+        }
+        for(int niI1 = 0; niI1 < sz(niInS); niI1++){
+            for(int niI2 = niI1 + 1; niI2 < sz(niInS); niI2++){
+                chmax(maxDist, dist2[niInS[niI1]][niInS[niI2]]);
+            }
+        }
+        maxDistInS[s] = maxDist;
+    }
+
+    dp[0][0] = 0;
+    rep1(k, K){
+        rep(s, 1 << N){
+            for(int subS = s;; subS = ((subS - 1) & s)){
+                chmin(dp[k][s], max(dp[k-1][subS], maxDistInS[s - subS]));
+                if(subS == 0){
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << dp[K][bn(N)] << "\n";
 }
 
 int main()

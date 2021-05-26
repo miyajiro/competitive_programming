@@ -62,9 +62,42 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+ll A[46];
+ll B[46];
+ll C[46];
+ll AB[46];
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A[a % 46]++;
+    }
+
+    rep(i, N){
+        ll b;
+        cin >> b;
+        B[b % 46]++;
+    }
+
+    rep(i, N){
+        ll c;
+        cin >> c;
+        C[c % 46]++;
+    }
+
+    ll ans = 0;
+    rep(a, 46){
+        rep(b, 46){
+            int c = (46 - a + 46 - b) % 46;
+            ans += A[a] * B[b] * C[c];
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

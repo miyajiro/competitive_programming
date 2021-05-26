@@ -62,9 +62,35 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, Q;
+vl A;
+vl T, X, Y;
+ll shiftNum = 0;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.pb(a);
+    }
+
+    rep(q, Q){
+        ll t, x, y;
+        cin >> t >> x >> y;
+        if(t == 1LL){
+            x--;
+            y--;
+            swap(A[(x + N - shiftNum) % N], A[(y + N - shiftNum) % N]);
+        } else if(t == 2LL) {
+            shiftNum++;
+            shiftNum %= N;
+        } else {
+            x--;
+            cout << A[(x + N - shiftNum) % N] << "\n";
+        }
+    }
 }
 
 int main()
