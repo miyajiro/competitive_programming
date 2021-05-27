@@ -12,3 +12,6 @@ atcoder/**/atcoder
 
 aoj/**/in*.txt
 aoj/**/out*.txt
+
+codeforces/**/in*.txt
+codeforces/**/ans*.txt
