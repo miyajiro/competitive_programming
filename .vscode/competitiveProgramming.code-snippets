@@ -192,10 +192,15 @@
     "LCA": {
         "prefix": "LCA",
         "body": [
+            "#ifndef TO_BE_SUBMITTED",
+            "#include <bits/stdc++.h>",
+            "using namespace std;",
+            "#endif",
+            "",
             "/**",
             " * Lowest Common Ancestor",
             " */",
-            "class LCA",
+            "struct LCA",
             "{",
             "private:",
             "    int root;",
