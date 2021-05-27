@@ -275,9 +275,14 @@
         ],
         "description": ""
     },
-    "geometry": {
-        "prefix": "geometry",
+    "Geometry": {
+        "prefix": "Geometry",
         "body": [
+            "#ifndef TO_BE_SUBMITTED",
+            "#include <bits/stdc++.h>",
+            "using namespace std;",
+            "#endif",
+            "",
             "using Real = double;",
             "using Point = complex<Real>;",
             "const Real EPS = 1e-8, PI = acos(-1);",
