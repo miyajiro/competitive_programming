@@ -1,7 +1,13 @@
+**/atcoder
+!atcoder/
+atcoder/**/atcoder
+
+**/combined.cpp
 **/*.out
 **/node_modules
 **/tests
 **/contest.acc.json
 **/metadata.yml
+
 aoj/**/in*.txt
 aoj/**/out*.txt
