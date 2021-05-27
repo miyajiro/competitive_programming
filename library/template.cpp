@@ -12,7 +12,9 @@
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
-// using namespace atcoder;
+
+namespace atcoder{};
+using namespace atcoder;
 using namespace std;
 
 #define fr first

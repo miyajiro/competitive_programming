@@ -1,6 +1,6 @@
 {
     "Template": {
-        "prefix": "template",
+        "prefix": "Template",
         "body": [
             "#define TO_BE_SUBMITTED",
             "#include <bits/stdc++.h>",
@@ -16,7 +16,9 @@
             "// #include <atcoder/mincostflow>",
             "// #include <atcoder/scc>",
             "// #include <atcoder/twosat>",
-            "// using namespace atcoder;",
+            "",
+            "namespace atcoder{};",
+            "using namespace atcoder;",
             "using namespace std;",
             "",
             "#define fr first",
