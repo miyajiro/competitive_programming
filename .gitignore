@@ -8,6 +8,7 @@ atcoder/**/atcoder
 **/tests
 **/contest.acc.json
 **/metadata.yml
+**/.DS_Store
 
 aoj/**/in*.txt
 aoj/**/out*.txt
