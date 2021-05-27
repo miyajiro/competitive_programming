@@ -1,5 +1,20 @@
+#define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-#include <atcoder/all>
+// #include <atcoder/fenwicktree>
+// #include <atcoder/segtree>
+// #include <atcoder/lazysegtree>
+// #include <atcoder/string>
+// #include <atcoder/math>
+// #include <atcoder/convolution>
+// #include <atcoder/modint>
+// #include <atcoder/dsu>
+// #include <atcoder/maxflow>
+// #include <atcoder/mincostflow>
+// #include <atcoder/scc>
+// #include <atcoder/twosat>
+// using namespace atcoder;
+using namespace std;
+
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -21,8 +36,6 @@
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
-using namespace std;
-using namespace atcoder;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
