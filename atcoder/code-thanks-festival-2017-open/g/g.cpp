@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <atcoder/all>
+// #include <atcoder/all>
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -22,7 +22,7 @@
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
 using namespace std;
-using namespace atcoder;
+// using namespace atcoder;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
@@ -60,9 +60,98 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+int N1, N2;
+vi A, B;
+vi n12AvaliableS2;
+
+bool ok(ll s){
+    rep(i, M){
+        int a = A[i];
+        int b = B[i];
+        if(((s >> a) & 1LL) == 1LL && ((s >> b) & 1LL) == 1LL){
+            return false;
+        }
+    }
+    return true;
+}
+
+int calcS2(int s1){
+    int res = bn(N2);
+    rep(ni1, N1){
+        if(((s1 >> ni1) & 1) == 1){
+            res &= n12AvaliableS2[ni1];
+        }
+    }
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+    N1 = N / 2;
+    N2 = N - N1;
+
+    rep(i, M){
+        ll a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+        if(a > b){
+            swap(a, b);
+        }
+        A.pb(a);
+        B.pb(b);
+    }
+
+    n12AvaliableS2 = vi(N1, bn(N2));
+    rep(n1, N1){
+        rep(mi, M){
+            if(A[mi] == n1 && N1 <= B[mi]){
+                int b2 = B[mi] - N1;
+
+                n12AvaliableS2[n1] &= (~(1 << b2));
+            }
+        }
+    }
+
+    vi dp1(1 << N1, 0);
+    vi dp2(1 << N2, 0);
+
+    rep(s1, 1 << N1){
+        if(ok(s1)){
+            dp1[s1] = pcnt(s1);
+            continue;
+        }
+
+        rep(ni, N1){
+            if(((s1 >> ni) & 1) == 1){
+                chmax(dp1[s1], dp1[s1 ^ (1 << ni)]);
+            }
+        }
+    }
+
+    rep(s2, 1 << N2){
+        ll lls2 = s2;
+        if(ok(lls2 << N1)){
+            dp2[s2] = pcnt(s2);
+            continue;
+        }
+
+        rep(ni, N2){
+            if(((s2 >> ni) & 1) == 1){
+                chmax(dp2[s2], dp2[s2 ^ (1 << ni)]);
+            }
+        }
+    }
+
+    int ans = 0;
+    rep(s1, 1 << N1){
+        int s2 = calcS2(s1);
+        chmax(ans, dp1[s1] + dp2[s2]);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
