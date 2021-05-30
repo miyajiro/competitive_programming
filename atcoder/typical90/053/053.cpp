@@ -75,23 +75,26 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int fib[16] = { 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597 };
+
 int T, N;
-double l, r;
-double cl, cr;
-const double goldR = 2 / (3 + sqrt(5));
-int A[1501];
+int l, r;
+int cl, cr;
+
+int A[1609];
+int ans = 0;
+
 
 void init(){
     rep(i, N+1){
         A[i] = -1;
     }
+    srep(i, N+1, 1601){
+        A[i] = -i;
+    }
 }
 
-int getA(double id){
-    int i = (int)(id);
-    if(i < 1 || N < i){
-        return -1;
-    }
+int getA(int i){
     if(A[i] == -1){
         cout << "? " << i << "\n" << flush;
         cin >> A[i];
@@ -106,52 +109,56 @@ void solve()
         cin >> N;
         init();
 
-        l = 1.9999;
-        r = N + 0.001;
+        ans = 0;
+        if(N <= 15){
+            rep1(i, N){
+                chmax(ans, getA(i));
+            }
+            goto out;
+        }
 
-        cl = l + goldR * (r - l);
-        cr = r - goldR * (r - l);
+        l = 0;
+        r = 1597;
+        cl = 610;
+        cr = 987;
 
-        while(floor(cl) != floor(cr)){
-            // cout << "\n\n";
-            // show(l);
-            // show(r);
-            // show(cl);
-            // show(cr);
+        chmax(ans, getA(cl));
+        chmax(ans, getA(cr));
 
+        if(getA(cl) < getA(cr)){
+            l = cl;
+            cl = cr;
+            cr = -1;
+        } else {
+            r = cr;
+            cr = cl;
+            cl = -1;
+        }
+
+        rrep(i, 13){
+            if(cl == -1){
+                cl = l + fib[i];
+            } else {
+                cr = r - fib[i];
+            }
+            ans = max({ans, getA(cl), getA(cr)});
             if(getA(cl) < getA(cr)){
                 l = cl;
                 cl = cr;
-                cr = r - goldR * (r - l);
+                cr = -1;
             } else {
                 r = cr;
                 cr = cl;
-                cl = l + goldR * (r - l);
+                cl = -1;
             }
         }
 
-        int iL = floor(l);
-        int iR = floor(r);
-        int iC = floor(cl);
-
-        int ans = getA(iC);
-        if(iC < iR && getA(iC) < getA(iC + 1)){
-            for(int i = iC; i <= iR; i++){
-                chmax(ans, getA(i));
-                if(i < iR && getA(i) > getA(i + 1)){
-                    break;
-                }
-            }
-        } else {
-            for(int i = iC; i >= iL; i--){
-                chmax(ans, getA(i));
-                if(i > iL && getA(i) > getA(i - 1)){
-                    break;
-                }
-            }
+        srep(i, l + 1, r){
+            chmax(ans, getA(i));
         }
 
-        cout << "! " << ans << "\n";
+        out:
+        cout << "! " << ans << "\n" << flush;
     }
     return;
 }
