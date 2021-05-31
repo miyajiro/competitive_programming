@@ -75,9 +75,61 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi X, Y, Z, M;
+vi hxMin, hxMax, hyMin, hyMax, hzMin, hzMax;
+vvi HXArray, HYArray, HZArray;
+vi game;
+
 void solve()
 {
-    
+    cin >> N;
+    HXArray = vvi(N);
+    HYArray = vvi(N);
+    HZArray = vvi(N);
+    rep(i, N){
+        int x, y, z;
+        cin >> x >> y >> z;
+        X.pb(x);
+        Y.pb(y);
+        Z.pb(z);
+        int m;
+        cin >> m;
+        M.pb(m);
+        rep(j, m){
+            int hx, hy, hz;
+            cin >> hx >> hy >> hz;
+            HXArray[i].pb(hx);
+            HYArray[i].pb(hy);
+            HZArray[i].pb(hz);
+        }
+        hxMin.pb(*min_element(rng(HXArray[i])));
+        hxMax.pb(*max_element(rng(HXArray[i])));
+        hyMin.pb(*min_element(rng(HYArray[i])));
+        hyMax.pb(*max_element(rng(HYArray[i])));
+        hzMin.pb(*min_element(rng(HZArray[i])));
+        hzMax.pb(*max_element(rng(HZArray[i])));
+    }
+
+    rep(i, N){
+        game.pb(hxMin[i]);
+        game.pb(X[i] - hxMax[i] - 1);
+        game.pb(hyMin[i]);
+        game.pb(Y[i] - hyMax[i] - 1);
+        game.pb(hzMin[i]);
+        game.pb(Z[i] - hzMax[i] - 1);
+    }
+
+    int grundy = 0;
+    for(auto g : game){
+        grundy ^= g;
+    }
+
+    if(grundy == 0){
+        puts("LOSE");
+    } else {
+        puts("WIN");
+    }
 }
 
 int main()
