@@ -75,9 +75,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi X, Y;
+vvi ch, to;
+
+void dfs1(int now, int par){
+    for(auto nex : to[now]){
+        if(nex == par){
+            continue;
+        }
+        ch[now].pb(nex);
+        dfs1(nex, now);
+    }
+}
+
+int calc(int now){
+    int res = 0;
+    for(auto nex : ch[now]){
+        res ^= (calc(nex) + 1);
+    }
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    ch = vvi(N);
+    to = vvi(N);
+    rep(i, N - 1){
+        int x, y;
+        cin >> x >> y;
+        X.pb(--x);
+        Y.pb(--y);
+        to[x].pb(y);
+        to[y].pb(x);
+    }
+    dfs1(0, -1);
+
+    cout << (calc(0) != 0 ? "Alice" : "Bob") << "\n";
 }
 
 int main()
