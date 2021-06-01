@@ -34,7 +34,7 @@ using namespace std;
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
 #define show(x) cout << #x << " = " << x << endl;
-#define PQ(T) priority_queue<T, v(T), greater<T>>
+#define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
@@ -46,6 +46,7 @@ using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
+using vvl = vector<vl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
