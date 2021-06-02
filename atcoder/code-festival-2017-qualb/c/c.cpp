@@ -76,9 +76,50 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vi color;
+ll N, M;
+vi A, B;
+vvi to;
+bool ng = false;
+ll numR = 0;
+
+void dfs(int v, int c){
+    color[v] = c;
+    if(c == 0){
+        numR++;
+    }
+
+    for(auto nex : to[v]){
+        if(color[nex] == -1){
+            dfs(nex, 1 - c);
+        } else if(color[nex] == c){
+            ng = true;
+        }
+    }
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+    color = vi(N, -1);
+    to = vvi(N);
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        --a;
+        --b;
+        A.pb(a);
+        B.pb(b);
+        to[a].pb(b);
+        to[b].pb(a);
+    }
+
+    dfs(0, 0);
+    if(ng){
+        cout << N * (N - 1) / 2 - M << "\n";
+    } else {
+        cout << numR * (N - numR) - M << "\n";
+    }
 }
 
 int main()
