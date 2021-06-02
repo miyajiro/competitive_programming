@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+int mfSize;
+vi A, B, C, D;
+
 void solve()
 {
-    
+    cin >> N;
+    mfSize = 2 * N + 2;
+    rep(n, N){
+        int a, b;
+        cin >> a >> b;
+        A.pb(a);
+        B.pb(b);
+    }
+    rep(n, N){
+        int c, d;
+        cin >> c >> d;
+        C.pb(c);
+        D.pb(d);
+    }
+
+    mf_graph<int> mfg(mfSize);
+    int s = 2 * N;
+    int t = 2 * N + 1;
+
+    rep(n, N){
+        mfg.add_edge(s, n, 1);
+        mfg.add_edge(N + n, t, 1);
+    }
+
+    rep(n1, N){
+        rep(n2, N){
+            if(A[n1] < C[n2] && B[n1] < D[n2]){
+                mfg.add_edge(n1, N + n2, 1);
+            }
+        }
+    }
+
+    cout << mfg.flow(s, t) << "\n";
 }
 
 int main()
