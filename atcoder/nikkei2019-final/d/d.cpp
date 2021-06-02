@@ -76,9 +76,56 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll B = 447LL; // sqrt(200000)
+ll N, M;
+ll lastQuery[200000];
+ll lastQueryB[448];
+
+// b1: 0~B-1  b2: B~2B-1
+
+vl T;
+vl L, R;
+
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(m, M){
+        ll t, l, r;
+        cin >> t >> l >> r;
+        --l;
+
+        ll lBn = dup(l, B);
+        ll rBn = r / B;
+
+        if(lBn >= rBn){
+            srep(i, l, r){
+                lastQuery[i] = t;
+            }
+            continue;
+        }
+
+        srep(b_n, lBn, rBn){
+            lastQueryB[b_n] = t;
+        }
+
+        srep(i, l, lBn * B){
+            lastQuery[i] = t;
+        }
+
+        srep(i, rBn * B, r){
+            lastQuery[i] = t;
+        }
+    }
+
+    ll ans = 0;
+    rep(i, N){
+        // show(i);
+        // show(lastQuery[i]);
+        // show(lastQueryB[i / B]);
+        ans += max(lastQuery[i], lastQueryB[i / B]);
+    }
+    cout << ans << "\n";
 }
 
 int main()
