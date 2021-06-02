@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -76,9 +76,60 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const ll inf = 0xfffffff;
+int H, W;
+vector<string> S;
+int N;
+int sN, tN;
+
 void solve()
 {
-    
+    cin >> H >> W;
+    N = H * W + H + W;
+    mf_graph<ll> mfg(N);
+    S = vector<string>(H);
+    rep(h, H){
+        cin >> S[h];
+    }
+
+    rep(h, H){
+        rep(w, W){
+            int n = h * W + w;
+            int tateN = H * W + w;
+            int yokoN = H * W + W + h;
+
+            if(S[h][w] == 'o'){
+                mfg.add_edge(n, tateN, inf);
+                mfg.add_edge(tateN, n, 1);
+
+                mfg.add_edge(n, yokoN, inf);
+                mfg.add_edge(yokoN, n, 1);
+            }
+
+            if(S[h][w] == 'S'){
+                mfg.add_edge(n, tateN, inf);
+                mfg.add_edge(tateN, n, inf);
+
+                mfg.add_edge(n, yokoN, inf);
+                mfg.add_edge(yokoN, n, inf);
+                sN = n;
+            }
+            if(S[h][w] == 'T'){
+                mfg.add_edge(n, tateN, inf);
+                mfg.add_edge(tateN, n, inf);
+
+                mfg.add_edge(n, yokoN, inf);
+                mfg.add_edge(yokoN, n, inf);
+                tN = n;
+            }
+        }
+    }
+
+    ll ans = mfg.flow(sN, tN);
+    if(ans >= inf){
+        ans = -1LL;
+    }
+    cout << ans << "\n";
 }
 
 int main()
