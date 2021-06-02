@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -75,9 +75,79 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi X, Y, Z;
+vi W;
+map<int, int> w2I;
+int mfgSize;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int x, y, z;
+        cin >> x >> y >> z;
+        rep1(subX, x / 2){
+            W.pb(subX * y * z);
+            W.pb((x - subX) * y * z);
+        }
+        rep1(subY, y / 2){
+            W.pb(subY * x * z);
+            W.pb((y - subY) * x * z);
+        }
+        rep1(subZ, z / 2){
+            W.pb(subZ * y * x);
+            W.pb((z - subZ) * y * x);
+        }
+        X.pb(x);
+        Y.pb(y);
+        Z.pb(z);
+    }
+
+    sort(rng(W));
+    uni(W);
+
+    int szW = sz(W);
+    // show(szW);
+    mfgSize = szW * 2 + 2;
+    mf_graph<int> mfg(mfgSize);
+
+    int s = szW * 2;
+    int t = s + 1;
+
+    rep(i, szW){
+        w2I[W[i]] = i;
+        mfg.add_edge(s, i, 1);
+        mfg.add_edge(szW + i, t, 1);
+    }
+
+    rep(i, N){
+        int x = X[i];
+        int y = Y[i];
+        int z = Z[i];
+
+        rep1(subX, x / 2){
+            int wi1 = w2I[subX * y * z];
+            int wi2 = w2I[(x - subX) * y * z];
+            mfg.add_edge(wi1, szW + wi2, 1);
+            mfg.add_edge(wi2, szW + wi1, 1);
+        }
+        rep1(subY, y / 2){
+            int wi1 = w2I[subY * x * z];
+            int wi2 = w2I[(y - subY) * x * z];
+            mfg.add_edge(wi1, szW + wi2, 1);
+            mfg.add_edge(wi2, szW + wi1, 1);
+        }
+        rep1(subZ, z / 2){
+            int wi1 = w2I[subZ * y * x];
+            int wi2 = w2I[(z - subZ) * y * x];
+            mfg.add_edge(wi1, szW + wi2, 1);
+            mfg.add_edge(wi2, szW + wi1, 1);
+        }
+    }
+
+    int flow = mfg.flow(s, t);
+    cout << flow + 2 * (szW - flow) << "\n";
 }
 
 int main()
