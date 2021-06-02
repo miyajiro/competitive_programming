@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -76,9 +76,56 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int vy[4] = {1, 0, -1, 0};
+int vx[4] = {0, 1, 0, -1};
+int H, W;
+vector<string> C;
+
 void solve()
 {
-    
+    cin >> H >> W;
+    C = vector<string>(H);
+    int N = H * W + 2;
+    int s = H * W;
+    int t = H * W + 1;
+
+    mf_graph<ll> mfg(N);
+
+    rep(h, H){
+        cin >> C[h];
+    }
+
+    int cnt = 0;
+
+    rep(h, H){
+        rep(w, W){
+            if(C[h][w] == '*'){
+                continue;
+            }
+            cnt++;
+            bool isEven = ((h + w) % 2 == 0);
+
+            if(isEven){
+                mfg.add_edge(s, h * W + w, 1);
+            } else {
+                mfg.add_edge(h * W + w, t, 1);
+            }
+
+            rep(i, 4){
+                int ny = h + vy[i];
+                int nx = w + vx[i];
+                if(isin(ny, 0, H) && isin(nx, 0, W) && C[h][w] == '.'){
+                    if(isEven){
+                        mfg.add_edge(h * W + w, ny * W + nx, 1);
+                    } else {
+                        mfg.add_edge(ny * W + nx, h * W + w, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    cout << cnt - mfg.flow(s, t) << "\n";
 }
 
 int main()
