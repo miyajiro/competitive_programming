@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,34 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+bool visited[3001][3001];
+mint dp[3001][3001];
+
+int N, K;
+
+mint calc(int N, int K){
+    if(N < K){
+        return 0;
+    }
+    if(visited[N][K]){
+        return dp[N][K];
+    }
+    visited[N][K] = true;
+
+    if(N == K){
+        return dp[N][K] = 1;
+    }
+    if(K == 0){
+        return dp[N][K] = 0;
+    }
+    return dp[N][K] = calc(N - 1, K - 1) + calc(N, 2 * K);
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    cout << calc(N, K).val() << "\n";
 }
 
 int main()
