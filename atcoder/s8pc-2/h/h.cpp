@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
@@ -76,9 +76,62 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+
+using S = struct{
+    ll val;
+    ll size;
+}; // fr: val, sc: size
+
+S op(S a, S b){
+    return S{a.val + b.val, a.size + b.size};
+}
+
+S e(){
+    return S{0, 0};
+}
+
+using F = bool;
+
+S mapping(F f, S s){
+    if(!f){
+        return s;
+    }
+    return S{s.size - s.val, s.size};
+}
+
+F composition(F f, F g){
+    return f != g;
+}
+
+F id(){
+    return false;
+}
+
+ll N, Q;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    vector<S> A;
+    rep(i, N){
+        A.pb(S{0, 1});
+    }
+
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(A);
+
+    rep(_, Q){
+        int q, l, r;
+        cin >> q >> l >> r;
+        if(q == 1){
+            seg.apply(l, r, true);
+        } else {
+            cout << seg.prod(l, r).val << "\n";
+        }
+        // rep(i, N){
+        //     show(i);
+        //     show(seg.get(i).val);
+        // }
+    }
 }
 
 int main()
