@@ -1,12 +1,12 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,65 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+
+vl Xs, Ys;
+vl X, Y;
+ll N;
+vp points;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll x, y;
+        cin >> x >> y;
+        X.pb(x);
+        Y.pb(y);
+        Xs.pb(x);
+        Ys.pb(y);
+    }
+
+    sort(rng(Xs));
+    uni(Xs);
+    sort(rng(Ys));
+    uni(Ys);
+
+    fenwick_tree<ll> fwL(sz(Ys)), fwR(sz(Ys));
+
+    rep(i, N){
+        X[i] = lower_bound(rng(Xs), X[i]) - Xs.begin();
+        Y[i] = lower_bound(rng(Ys), Y[i]) - Ys.begin();
+        points.pb(P(X[i], Y[i]));
+
+        fwR.add(Y[i], 1);
+    }
+
+    sort(rng(points));
+
+    mint ans = 0;
+    mint m2 = 2;
+
+    for(auto p : points){
+        int x = p.fr;
+        int y = p.sc;
+
+        fwL.add(y, 1);
+
+        ll ld = fwL.sum(0, y);
+        ll lu = fwL.sum(y + 1, sz(Ys));
+        ll rd = fwR.sum(0, y);
+        ll ru = fwR.sum(y + 1, sz(Ys));
+
+        ans += m2.pow(N - 1); // 点が含まれる場合
+        ans += (m2.pow(lu) - 1) * (m2.pow(rd) - 1) * m2.pow(ld) * m2.pow(ru);
+        ans += (m2.pow(ld) - 1) * (m2.pow(ru) - 1) * m2.pow(rd) * m2.pow(lu);
+        ans -= (m2.pow(ld) - 1) * (m2.pow(ru) - 1) * (m2.pow(lu) - 1) * (m2.pow(rd) - 1);
+
+        fwR.add(y, -1);
+    }
+
+    cout << ans.val() << "\n";
 }
 
 int main()
