@@ -76,9 +76,65 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vl A, B;
+
+bool ok(int K){
+    vl C;
+    rep(i, N){
+        C.pb(B[i] * K);
+    }
+
+    vlp Bugs; // 放出量、許容量
+    // vector<bool> isRemoved(N, false); // 除外されていたらtrue
+    PQ(LP) pq; // 許容量、id
+    rep(i, N){
+        Bugs.pb(LP(A[i], C[i]));
+    }
+    sort(rng(Bugs));
+
+    int cnt = 0;
+    ll foo = 0;
+    rep(bi, sz(Bugs)){
+        LP bug = Bugs[bi];
+        if(cnt < K){
+            cnt++;
+            foo += bug.fr;
+            pq.push(LP(bug.sc, bi));
+        }
+        if(cnt == K){
+            while(!pq.empty() && pq.top().fr < foo){
+                int removeBi = pq.top().sc;
+                pq.pop();
+                foo -= Bugs[removeBi].fr;
+                cnt--;
+            }
+        }
+    }
+    return cnt >= K;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll a, b;
+        cin >> a >> b;
+        A.pb(a);
+        B.pb(b);
+    }
+
+    int l = 0, r = N + 1;
+    while(r - l > 1){
+        int mid = (l + r) / 2;
+        if(ok(mid)){
+            l = mid;
+        } else {
+            r = mid;
+        }
+    }
+
+    cout << l << "\n";
 }
 
 int main()
