@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,33 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int Q;
+fenwick_tree<ll> fwt(200001);
+
 void solve()
 {
-    
+    cin >> Q;
+    rep(i, Q){
+        int t, x;
+        cin >> t >> x;
+        if(t == 1){
+            fwt.add(x, 1);
+        } else {
+            int low, high, mid; // low以下の個数より大きく、high以下の個数以下
+            low = -1;
+            high = 200000;
+            while(high - low > 1){
+                mid = (high + low) / 2;
+                if(fwt.sum(0, mid + 1) < x){
+                    low = mid;
+                } else {
+                    high = mid;
+                }
+            }
+            cout << high << "\n";
+            fwt.add(high, -1);
+        }
+    }
 }
 
 int main()
