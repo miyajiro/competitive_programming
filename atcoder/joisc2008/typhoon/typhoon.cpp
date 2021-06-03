@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -41,13 +41,13 @@ using namespace std;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
-using P = pair<int, int>;
+// using P = pair<int, int>;
 using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
-using vp = vector<P>;
+// using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
 {
@@ -76,9 +76,91 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, M, K;
+vl Ks;
+vl A, B;
+vl P, Q, R;
+vl ans;
+vvl station2QueryIds, station2TyphoonIdsL, station2TyphoonIdsR;
+
+void input(){
+    cin >> N >> M >> K;
+    rep(i, N){
+        ll a, b;
+        cin >> a >> b;
+        A.pb(--a);
+        B.pb(b);
+    }
+    rep(m, M){
+        ll p, q, r;
+        cin >> p >> q >> r;
+        P.pb(--p);
+        Q.pb(--q);
+        R.pb(r);
+    }
+}
+
+void compress(){
+    for(auto a : A){
+        Ks.pb(a);
+    }
+    for(auto b : B){
+        Ks.pb(b);
+    }
+    for(auto p : P){
+        Ks.pb(p);
+    }
+    sort(rng(Ks));
+    uni(Ks);
+    rep(i, N){
+        A[i] = lower_bound(rng(Ks), A[i]) - Ks.begin();
+        B[i] = lower_bound(rng(Ks), B[i]) - Ks.begin();
+    }
+    rep(i, M){
+        P[i] = lower_bound(rng(Ks), P[i]) - Ks.begin();
+    }
+    K = sz(Ks);
+}
+
 void solve()
 {
-    
+    input();
+    compress();
+
+    ans = vl(M, -1LL);
+    station2QueryIds = vvl(K);
+    station2TyphoonIdsL = vvl(K);
+    station2TyphoonIdsR = vvl(K);
+
+    rep(m, M){
+        station2QueryIds[P[m]].pb(m);
+    }
+
+    rep(n, N){
+        station2TyphoonIdsL[A[n]].pb(n);
+        station2TyphoonIdsR[B[n]].pb(n);
+    }
+
+    fenwick_tree<ll> fwt(N);
+
+    rep(stationId, K){
+        for(auto typhoonIdR : station2TyphoonIdsR[stationId]){
+            fwt.add(typhoonIdR, -1LL);
+        }
+        for(auto typhoonIdL : station2TyphoonIdsL[stationId]){
+            fwt.add(typhoonIdL, 1LL);
+        }
+
+        for(auto queryId : station2QueryIds[stationId]){
+            int tL = Q[queryId];
+            int tR = R[queryId];
+            ans[queryId] = fwt.sum(tL, tR);
+        }
+    }
+
+    for(auto a : ans){
+        cout << a << "\n";
+    }
 }
 
 int main()
