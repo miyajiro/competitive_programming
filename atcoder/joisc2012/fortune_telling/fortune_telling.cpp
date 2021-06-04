@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
@@ -76,9 +76,117 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+struct S{
+    ll val;
+    ll size;
+};
+
+S op(S a, S b){
+    return S{a.val + b.val, a.size + b.size};
+}
+
+S e(){
+    return S{0, 0};
+}
+
+using F = bool;
+
+S mapping(F f, S x){
+    if(!f){
+        return x;
+    }
+    return S{x.size - x.val, x.size};
+}
+
+F composition(F f, F g){
+    return f != g;
+}
+
+F id(){
+    return false;
+}
+
+ll H, W;
+ll K;
+vl A, B, C, D;
+vl Ys, Xs;
+vvl x2QueryIdsL, x2QueryIdsR;
+
+void input(){
+    cin >> H >> W >> K;
+    rep(i, K){
+        ll a, b, c, d;
+        cin >> a >> b >> c >> d;
+        A.pb(--a);
+        B.pb(b);
+        C.pb(--c);
+        D.pb(d);
+        Ys.pb(a);
+        Ys.pb(b);
+        Xs.pb(c);
+        Xs.pb(d);
+    }
+    Ys.pb(0);
+    Ys.pb(H);
+    Xs.pb(0);
+    Xs.pb(W);
+}
+
+void compress(){
+    sort(rng(Ys));
+    uni(Ys);
+    sort(rng(Xs));
+    uni(Xs);
+
+    rep(k, K){
+        A[k] = lower_bound(rng(Ys), A[k]) - Ys.begin();
+        B[k] = lower_bound(rng(Ys), B[k]) - Ys.begin();
+        C[k] = lower_bound(rng(Xs), C[k]) - Xs.begin();
+        D[k] = lower_bound(rng(Xs), D[k]) - Xs.begin();
+    }
+
+    H = sz(Ys);
+    W = sz(Xs);
+}
+
 void solve()
 {
-    
+    input();
+    compress();
+
+    x2QueryIdsL = vvl(W);
+    x2QueryIdsR = vvl(W);
+
+    rep(queryId, K){
+        x2QueryIdsL[C[queryId]].pb(queryId);
+        x2QueryIdsR[D[queryId]].pb(queryId);
+    }
+
+    vector<S> initSeg;
+    rep(i, H - 1){
+        initSeg.pb(S{Ys[i + 1] - Ys[i], Ys[i + 1] - Ys[i]});
+    }
+    initSeg.pb(S{0, 0});
+
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(initSeg);
+
+    ll ans = 0;
+
+    rep(w, W){
+        for(auto queryIdR : x2QueryIdsR[w]){
+            seg.apply(A[queryIdR], B[queryIdR], true);
+        }
+        for(auto queryIdL : x2QueryIdsL[w]){
+            seg.apply(A[queryIdL], B[queryIdL], true);
+        }
+
+        ll tate = seg.all_prod().val;
+        ll yoko = (w == W - 1 ? 0 : (Xs[w + 1] - Xs[w]));
+
+        ans += tate * yoko;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
