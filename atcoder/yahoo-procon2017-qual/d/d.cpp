@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
@@ -76,9 +76,92 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using S = ll;
+S op(S a, S b){
+    return a + b;
+}
+S e(){
+    return 0;
+}
+using F = bool;
+S mapping(F f, S x){
+    if(f){
+        return 0;
+    }
+    return x;
+}
+F composition(F f, F g){
+    return (f || g);
+}
+F id(){
+    return false;
+}
+
+ll Q, K;
+vl C, D, A, Ds, imosStocks;
+
+void input(){
+    cin >> Q >> K;
+    rep(i, Q){
+        ll c, d, a = 0;
+        cin >> c >> d;
+        if(c == 1LL){
+            cin >> a;
+        }
+        C.pb(c);
+        D.pb(d);
+        Ds.pb(d);
+        A.pb(a);
+    }
+}
+
+void compress(){
+    sort(rng(Ds));
+    uni(Ds);
+    rep(i, sz(D)){
+        D[i] = lower_bound(rng(Ds), D[i]) - Ds.begin();
+    }
+}
+
 void solve()
 {
-    
+    input();
+    compress();
+    vector<S> initialSeg;
+    rep(i, sz(Ds)){
+        if(i == 0){
+            imosStocks.pb(Ds[0] * K);
+            initialSeg.pb(Ds[0] * K);
+            continue;
+        }
+        imosStocks.pb((imosStocks[i - 1] + Ds[i]) * K);
+        initialSeg.pb((Ds[i] - Ds[i-1]) * K);
+    }
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(initialSeg);
+
+    rep(qi, Q){
+        int a = A[qi];
+        int c = C[qi];
+        int d = D[qi];
+        if(c == 1LL){
+            int l = -1, r = d + 1; // [r, d]を0にして、lは必要な分減らす
+            while(r - l > 1){
+                int mid = (l + r) / 2;
+                if(seg.prod(mid, d + 1) <= a){
+                    r = mid;
+                } else {
+                    l = mid;
+                }
+            }
+            a -= seg.prod(r, d + 1);
+            if(l == -1){
+                continue;
+            }
+            seg.set(l, seg.get(l) - a);
+        } else {
+            cout << imosStocks[d] - seg.prod(0, d + 1) << "\n";
+        }
+    }
 }
 
 int main()
