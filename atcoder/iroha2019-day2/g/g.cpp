@@ -76,9 +76,78 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using S = pair<ll, P>; // cost, 駅, 花の本数
+int N, M, K;
+const ll INF = 0xffffffffffff;
+vvl dp;
+struct edge{
+    int to;
+    ll cost;
+};
+vector<vector<edge>> edges;
+vi X;
+vl Y;
+
+void input(){
+    cin >> N >> M >> K;
+    edges = vector<vector<edge>>(N);
+    dp = vvl(N, vl(K + 1, INF));
+    rep(i, M){
+        int a, b;
+        ll c;
+        cin >> a >> b >> c;
+        --a;
+        --b;
+        edges[a].pb(edge{b, c});
+        edges[b].pb(edge{a, c});
+    }
+    rep(i, N){
+        int x;
+        ll y;
+        cin >> x >> y;
+        X.pb(x);
+        Y.pb(y);
+    }
+}
+
 void solve()
 {
-    
+    input();
+    PQ(S) pq; // cost, station, honsu
+    dp[0][0] = 0;
+    pq.push(S(0, P(0, 0)));
+
+    while(!pq.empty()){
+        S s = pq.top();
+        pq.pop();
+        ll cost = s.fr;
+        int node = s.sc.fr;
+        int k = s.sc.sc;
+        if(dp[node][k] < cost){
+            continue;
+        }
+
+        // 花を買う場合
+        for(int n = 1; X[node] > 0 && k + n * X[node] < K + X[node]; n++){
+            int nextK = min(K, k + n * X[node]);
+            if(chmin(dp[node][nextK], cost + n * Y[node])){
+                pq.push(S(dp[node][nextK], P(node, nextK)));
+            }
+        }
+
+        // 駅を移動する場合
+        for(auto edge : edges[node]){
+            if(chmin(dp[edge.to][k], cost + edge.cost)){
+                pq.push(S(dp[edge.to][k], P(edge.to, k)));
+            }
+        }
+    }
+
+    ll ans = dp[N-1][K];
+    if(ans == INF){
+        ans = -1LL;
+    }
+    cout << ans << "\n";
 }
 
 int main()
