@@ -1,7 +1,7 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
-// #include <atcoder/segtree>
+#include <atcoder/segtree>
 #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
@@ -76,29 +76,28 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
-using S = ll;
-S op(S a, S b){
-    return a + b;
+struct S{
+    ll stockNum; // 区間内の在庫
+    ll requestNum; // 区間内のリクエスト数
+    ll maxSold; // 区間内で最高で売れる数
+};
+
+S op(S l, S r){
+    ll sNum = l.stockNum + r.stockNum;
+    ll rNum = l.requestNum + r.requestNum;
+    ll maxS = l.maxSold + r.maxSold;
+    ll sDiff = min(r.requestNum - r.maxSold, l.stockNum - l.maxSold);
+    maxS += sDiff;
+    assert(maxS <= sNum && maxS <= rNum);
+    return S{sNum, rNum, maxS};
 }
+
 S e(){
-    return 0;
-}
-using F = bool;
-S mapping(F f, S x){
-    if(f){
-        return 0;
-    }
-    return x;
-}
-F composition(F f, F g){
-    return (f || g);
-}
-F id(){
-    return false;
+    return S{0, 0, 0};
 }
 
 ll Q, K;
-vl C, D, A, Ds, imosStocks;
+vl C, D, A, Ds;
 
 void input(){
     cin >> Q >> K;
@@ -130,36 +129,26 @@ void solve()
     vector<S> initialSeg;
     rep(i, sz(Ds)){
         if(i == 0){
-            imosStocks.pb(Ds[0] * K);
-            initialSeg.pb(Ds[0] * K);
+            initialSeg.pb(S{Ds[0] * K, 0, 0});
             continue;
         }
-        imosStocks.pb((imosStocks[i - 1] + Ds[i]) * K);
-        initialSeg.pb((Ds[i] - Ds[i-1]) * K);
+        initialSeg.pb(S{(Ds[i] - Ds[i - 1]) * K, 0, 0});
     }
-    lazy_segtree<S, op, e, F, mapping, composition, id> seg(initialSeg);
+
+    segtree<S, op, e> seg(initialSeg);
 
     rep(qi, Q){
-        int a = A[qi];
-        int c = C[qi];
-        int d = D[qi];
+        ll c = C[qi];
+        ll d = D[qi];
+        ll a = A[qi];
         if(c == 1LL){
-            int l = -1, r = d + 1; // [r, d]を0にして、lは必要な分減らす
-            while(r - l > 1){
-                int mid = (l + r) / 2;
-                if(seg.prod(mid, d + 1) <= a){
-                    r = mid;
-                } else {
-                    l = mid;
-                }
-            }
-            a -= seg.prod(r, d + 1);
-            if(l == -1){
-                continue;
-            }
-            seg.set(l, seg.get(l) - a);
+            S now = seg.get(d);
+            ll sNum = now.stockNum;
+            ll rNum = now.requestNum + a;
+            ll maxS = min(sNum, rNum);
+            seg.set(d, S{sNum, rNum, maxS});
         } else {
-            cout << imosStocks[d] - seg.prod(0, d + 1) << "\n";
+            cout << seg.prod(0, d + 1).maxSold << "\n";
         }
     }
 }
