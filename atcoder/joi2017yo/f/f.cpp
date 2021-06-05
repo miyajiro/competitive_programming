@@ -76,9 +76,98 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+#define COLD 0
+#define HOT 1
+#define COMFORT -1
+
+const ll INF = 0xffffffffffff;
+using S = pair<LP, LP>;
+
+PQ(S) pq; // dist, N, temp, X
+ll N, M, X;
+vl T;
+vl A, B, D;
+vector<vvl> dp;
+struct edge{
+    ll to;
+    ll cost;
+};
+vector<vector<edge>> edges;
+
+// dp[N][temp][x]; // 部屋Nにおり、tempな状態があとx分で解除される。
+
+void input(){
+    cin >> N >> M >> X;
+    dp = vector<vvl>(N, vvl(2, vl(X + 1, INF)));
+    edges = vector<vector<edge>>(N);
+    rep(i, N){
+        ll t;
+        cin >> t;
+        if(t == 0){
+            t = COLD;
+        } else if(t == 1){
+            t = COMFORT;
+        } else if(t == 2){
+            t = HOT;
+        }
+        T.pb(t);
+    }
+    rep(i, M){
+        ll a, b, d;
+        cin >> a >> b >> d;
+        a--;
+        b--;
+        edges[a].pb(edge{b, d});
+        edges[b].pb(edge{a, d});
+    }
+}
+
 void solve()
 {
-    
+    input();
+        // pq: dist, N, temp, X
+    dp[0][COLD][X] = 0;
+    pq.push(S(LP(0, 0), LP(COLD, X)));
+
+    while(!pq.empty()){
+        S s = pq.top();
+        pq.pop();
+        ll dist = s.fr.fr;
+        ll node = s.fr.sc;
+        ll temp = s.sc.fr;
+        ll x = s.sc.sc;
+        if(dist > dp[node][temp][x]){
+            continue;
+        }
+
+        for(auto edge : edges[node]){
+            ll newNode = edge.to;
+            ll destTemp = T[newNode];
+            ll newX = max(0LL, x - edge.cost);
+            ll newTemp = temp;
+
+            if(newX > 0 && destTemp != COMFORT && temp != destTemp){ // 温度が合わないときは無理
+                continue;
+            }
+
+            if(destTemp != COMFORT){ // 快適じゃないときは絶対これ
+                newTemp = destTemp;
+                newX = X;
+            }
+
+            if(chmin(dp[newNode][newTemp][newX], dist + edge.cost)){
+                pq.push(S(LP(dp[newNode][newTemp][newX], newNode), LP(newTemp, newX)));
+            }
+        }
+    }
+
+    ll ans = INF;
+    rep(x, X + 1){
+        chmin(ans, dp[N-1][HOT][x]);
+        chmin(ans, dp[N-1][COLD][x]);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
