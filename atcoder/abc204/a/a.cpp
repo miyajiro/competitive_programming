@@ -78,7 +78,13 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int x, y;
+    cin >> x >> y;
+    if(x == y){
+        cout << x << "\n";
+    } else {
+        cout << 3 - x - y << "\n";
+    }
 }
 
 int main()

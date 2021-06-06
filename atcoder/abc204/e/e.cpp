@@ -76,9 +76,91 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+
+const ll INF = INT64_MAX;
+ll N, M;
+struct E{
+    ll to;
+    ll cost;
+    ll rash;
+};
+vector<vector<E>> edges;
+vector<ll> dp;
+
+void input(){
+    cin >> N >> M;
+
+    edges = vector<vector<E>>(N);
+    rep(i, M){
+        ll a, b, c, d;
+        cin >> a >> b >> c >> d;
+        a--;
+        b--;
+
+        edges[a].pb(E{b, c, d});
+        edges[b].pb(E{a, c, d});
+    }
+}
+
+ll calcRash(ll d, ll t){
+    return d / (t + 1LL);
+}
+
+ll calcBestTime(ll now, ll d){
+    if(now >= d){
+        return now;
+    }
+
+    ll sqrtD = floor(sqrt(d));
+    ll t1 = max(sqrtD - 1, now);
+    ll t2 = max(sqrtD, now);
+
+    if(now + calcRash(d, now) > t1 + calcRash(d, t1)){
+        now = t1;
+    }
+    if(now + calcRash(d, now) > t2 + calcRash(d, t2)){
+        now = t2;
+    }
+
+    return now;
+}
+
 void solve()
 {
-    
+    input();
+    dp = vl(N, INF);
+    PQ(LP) pq;
+
+    dp[0] = 0;
+    pq.push(LP(0, 0));
+
+    while(!pq.empty()){
+        LP lp = pq.top();
+        pq.pop();
+        ll dist = lp.fr;
+        ll from = lp.sc;
+        if(dp[from] < dist){
+            continue;
+        }
+
+        for(auto edge : edges[from]){
+            ll to = edge.to;
+            ll cost = edge.cost;
+            ll rash = edge.rash;
+
+            ll departureTime = calcBestTime(dist, rash);
+            if(chmin(dp[to], departureTime + cost + calcRash(rash, departureTime))){
+                pq.push(LP(dp[to], to));
+            }
+        }
+    }
+
+    ll ans = dp[N-1];
+    if(ans == INF){
+        ans = -1LL;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

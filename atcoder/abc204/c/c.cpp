@@ -76,9 +76,47 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vvi toArray = vvi(N);
+int ans = 0;
+
+void calc(int s){
+    vector<bool> reachable(N, false);
+    queue<int> q;
+    q.push(s);
+    reachable[s] = true;
+    ans++;
+    while(!q.empty()){
+        int now = q.front();
+        q.pop();
+
+        for(auto to : toArray[now]){
+            if(!reachable[to]){
+                reachable[to] = true;
+                ans++;
+                q.push(to);
+            }
+        }
+    }
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+    toArray = vvi(N);
+
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        --a;
+        --b;
+        toArray[a].pb(b);
+    }
+    rep(i, N){
+        calc(i);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

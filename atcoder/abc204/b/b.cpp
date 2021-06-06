@@ -76,9 +76,20 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+
 void solve()
 {
-    
+    ll ans = 0;
+    cin >> N;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        if(a > 10LL){
+            ans += a - 10;
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()
