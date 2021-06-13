@@ -76,9 +76,24 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+
 void solve()
 {
-    
+    cin >> N;
+    vector<bool> isUsed(N, false);
+    rep(i, N){
+        int x; 
+        cin >> x;
+        x--;
+        if(isUsed[x]){
+            cout << "No" << "\n";
+            return;
+        }
+        isUsed[x] = true;
+    }
+    cout << "Yes" << "\n";
+
 }
 
 int main()

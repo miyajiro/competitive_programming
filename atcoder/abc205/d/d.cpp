@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, Q;
+vl A;
+vl B; // B[i] 1, 2, ..., A[i]までにある未使用数の個数
+vl K;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.pb(a);
+        if(i == 0){
+            B.pb(a - 1LL);
+            continue;
+        }
+        B.pb(B[i - 1] + A[i] - A[i-1] - 1LL);
+    }
+
+    rep(i, Q){
+        ll k;
+        cin >> k;
+        ll low = -1LL, high = N, mid; // B[low] < k <= B[high]以下
+        while(high - low > 1LL){
+            mid = (high + low) / 2LL;
+            if(B[mid] < k){
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+        if(low == -1LL){
+            cout << k << "\n";
+        } else {
+            ll b = B[low];
+            ll diff = k - b;
+            cout << A[low] + diff << "\n";
+        }
+    }
 }
 
 int main()

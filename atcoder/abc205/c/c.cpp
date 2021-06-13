@@ -76,9 +76,25 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll A, B, C;
+
 void solve()
 {
-    
+    cin >> A >> B >> C;
+    if(C % 2LL == 0LL){
+        A = A * A;
+        B = B * B;
+        C /= 2LL;
+    }
+    if(A < B){
+        cout << "<" << "\n";
+    } else if(A > B){
+        cout << ">" << "\n";
+
+    } else {
+        cout << "=" << "\n";
+
+    }
 }
 
 int main()
