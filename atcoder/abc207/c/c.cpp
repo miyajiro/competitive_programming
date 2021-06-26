@@ -76,9 +76,70 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl T, L, R;
+vl Xs;
+vl x2LNum, x2ExclusiveLNum, x2RNum, x2ExclusiveRNum;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll t, l, r;
+        cin >> t >> l >> r;
+        T.pb(t);
+        L.pb(l);
+        R.pb(r);
+        Xs.pb(l);
+        Xs.pb(r);
+    }
+    N = sz(L);
+    sort(rng(Xs));
+    uni(Xs);
+
+    x2LNum = vl(sz(Xs), 0);
+    x2ExclusiveLNum = vl(sz(Xs), 0);
+    x2RNum = vl(sz(Xs), 0);
+    x2ExclusiveRNum = vl(sz(Xs), 0);
+
+    rep(i, N){
+        L[i] = lower_bound(rng(Xs), L[i]) - Xs.begin();
+        R[i] = lower_bound(rng(Xs), R[i]) - Xs.begin();
+        if(T[i] == 1LL){
+            x2LNum[L[i]]++;
+            x2RNum[R[i]]++;
+        }
+        if(T[i] == 2LL){
+            x2LNum[L[i]]++;
+            x2ExclusiveRNum[R[i]]++;
+        }
+        if(T[i] == 3LL){
+            x2ExclusiveLNum[L[i]]++;
+            x2RNum[R[i]]++;
+        }
+        if(T[i] == 4LL){
+            x2ExclusiveLNum[L[i]]++;
+            x2ExclusiveRNum[R[i]]++;
+        }
+    }
+
+    ll cnt = 0;
+    ll ans = 0;
+
+    rep(x, sz(Xs)){
+        cnt -= x2ExclusiveRNum[x];
+        rep(_, x2LNum[x]){
+            ans += cnt;
+            cnt++;
+        }
+        cnt -= x2RNum[x];
+        rep(_, x2ExclusiveLNum[x]){
+            ans += cnt;
+            cnt++;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

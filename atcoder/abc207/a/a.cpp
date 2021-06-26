@@ -76,9 +76,17 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vl A;
+
 void solve()
 {
-    
+    ll a, b, c;
+    cin >> a >> b >> c;
+    A.pb(a);
+    A.pb(b);
+    A.pb(c);
+    sort(rng(A));
+    cout << A[1] + A[2] << "\n";
 }
 
 int main()

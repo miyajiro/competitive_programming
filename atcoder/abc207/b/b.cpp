@@ -76,9 +76,31 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll a, b, c, d;
+
+bool ok(ll x){
+    return a + b * x <= d * c * x;
+}
+
 void solve()
 {
-    
+    cin >> a >> b >> c >> d;
+    if(c * d <= b){
+        cout << -1 << "\n";
+        return;
+    }
+
+    ll l = -1LL;
+    ll r = 1e8;
+    while(r - l > 1LL){
+        ll mid = (r + l) / 2LL;
+        if(ok(mid)){
+            r = mid;
+        } else {
+            l = mid;
+        }
+    }
+    cout << r << "\n";
 }
 
 int main()
