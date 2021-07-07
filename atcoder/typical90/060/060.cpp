@@ -76,9 +76,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+const int INF = 0x3fffffff;
+
+vi calc(vi A){ // return B: B[i]はA[i]まで見たときのLISの長さ。
+    vi B;
+    vi C(N + 1, INF); // C[i]: i個のLISにおける最終要素の最小値
+    C[0] = -1;
+    int nowMax = 0;
+    rep(i, N){
+        int a = A[i];
+        int ci = lower_bound(rng(C), a) - C.begin();
+        if(C[ci] == INF){
+            nowMax = ci;
+        }
+        C[ci] = a;
+        B.pb(nowMax);
+    }
+    return B;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    vi A(N);
+    rep(i, N){
+        cin >> A[i];
+    }
+    vi revA = A;
+    reverse(rng(revA));
+
+    vi B = calc(A);
+    vi revB = calc(revA);
+
+    int ans = 0;
+    rep(i, N){ // i, N - 1 - i
+        chmax(ans, B[i] + revB[N - 1 - i] - 1);
+    }
+    cout << ans << "\n";
 }
 
 int main()
