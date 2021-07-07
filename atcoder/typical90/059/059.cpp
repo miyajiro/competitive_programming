@@ -76,9 +76,71 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M, Q;
+vi X, Y, A, B;
+vector<ull> dp;
+vvi toArray;
+vector<bool> ans;
+
 void solve()
 {
-    
+    cin >> N >> M >> Q;
+    toArray = vvi(N);
+    rep(i, M){
+        int x, y;
+        cin >> x >> y;
+        x--;
+        y--;
+        X.eb(x);
+        Y.eb(y);
+        toArray[x].pb(y);
+    }
+
+    rep(i, Q){
+        int a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+        A.pb(a);
+        B.pb(b);
+    }
+
+    int origQ = Q;
+    Q += (64 - Q % 64) % 64;
+    rep(_, Q - origQ){
+        A.pb(0);
+        B.pb(1);
+    }
+
+    // ここでQは64の倍数
+    for(int baseQ = 0; baseQ < Q; baseQ += 64){ // Q / 64
+        // [baseQ, baseQ + 64)を処理
+        dp = vector<ull>(N, 0ULL);
+        rep(i, 64){
+            int q = baseQ + i;
+            dp[A[q]] |= (1ULL << i);
+        }
+
+        rep(n, N){
+            int from = n;
+            for(auto to : toArray[from]){
+                dp[to] |= dp[from];
+            }
+        }
+
+        rep(i, 64){
+            int q = baseQ + i;
+            ans.eb((dp[B[q]] >> i) % 2ULL == 1ULL);
+        }
+    }
+
+    rep(q, origQ){
+        if(ans[q]){
+            cout << "Yes\n";
+        } else {
+            cout << "No\n";
+        }
+    }
 }
 
 int main()
