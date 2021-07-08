@@ -76,9 +76,38 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+map<int, int> mp;
+int Q;
+int top = 0, bottom = 0;
+int t, x;
+bool isEmpty = true;
+
 void solve()
 {
-    
+    cin >> Q;
+    rep(q, Q){
+        cin >> t >> x;
+        if(isEmpty && (t == 1 || t == 2)){
+            isEmpty = false;
+            mp[0] = x;
+            continue;
+        }
+
+        if(t == 1){
+            mp[++top] = x;
+            continue;
+        }
+
+        if(t == 2){
+            mp[--bottom] = x;
+            continue;
+        }
+
+        if(t == 3){
+            cout << mp[top - x + 1] << "\n";
+            continue;
+        }
+    }
 }
 
 int main()
