@@ -76,9 +76,75 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+vvi G;
+vvi A;
+vvi s2IndexArray;
+
 void solve()
 {
-    
+    cin >> H >> W;
+    G = vvi(H, vi(W, 0));
+    A = vvi(1 << H, vi(W, 0));
+    s2IndexArray = vvi(1 << H);
+
+    rep(h, H){
+        rep(w, W){
+            cin >> G[h][w];
+        }
+    }
+
+    rep(s, 1 << H){
+        rep(i, H){
+            if((s >> i) % 2 == 1){
+                s2IndexArray[s].eb(i);
+            }
+        }
+    }
+
+    rep(s, 1 << H){
+        if(s == 0){
+            continue;
+        }
+        rep(w, W){
+            // show(s);
+            // show(w);
+            // show(A[s][w]);
+            int val = G[s2IndexArray[s][0]][w];
+            bool isSame = true;
+            for(auto h : s2IndexArray[s]){
+                isSame &= (val == G[h][w]);
+            }
+
+            if(isSame){
+                A[s][w] = val;
+            }
+        }
+    }
+
+    int ans = 0;
+    map<int, int> mp;
+    rep(s, 1 << H){
+        if(s == 0){
+            continue;
+        }
+        int height = sz(s2IndexArray[s]);
+        mp.clear();
+        rep(w, W){
+            int a = A[s][w];
+            if(a == 0){
+                continue;
+            }
+
+            if(mp.find(a) == mp.end()){
+                mp[a] = 1;
+            } else {
+                mp[a]++;
+            }
+            chmax(ans, mp[a] * height);
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()
