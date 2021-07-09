@@ -76,9 +76,64 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+vvi toArray;
+vi ansRev;
+
+vector<bool> toSelf;
+vector<bool> isUsed;
+
+void dfs(int now){
+    ansRev.pb(now + 1);
+    isUsed[now] = true;
+    for(auto nex : toArray[now]){
+        if(!isUsed[nex]){
+            dfs(nex);
+        }
+    }
+}
+
 void solve()
 {
-    
+    cin >> N;
+    A = vi(N);
+    B = vi(N);
+    toArray = vvi(N);
+    toSelf = vector<bool>(N, false);
+    isUsed = vector<bool>(N, false);
+
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        a--;
+        b--;
+        A.pb(a);
+        B.pb(b);
+
+        toSelf[i] = (i == a || i == b);
+        if(i != a){
+            toArray[a].pb(i);
+        }
+        if(i != b){
+            toArray[b].pb(i);
+        }
+    }
+
+    rep(i, N){
+        if(!isUsed[i] && toSelf[i]){
+            dfs(i);
+        }
+    }
+
+    if(sz(ansRev) != N){
+        cout << "-1\n";
+        return;
+    }
+
+    rrep(i, N){
+        cout << ansRev[i] << "\n";
+    }
 }
 
 int main()
