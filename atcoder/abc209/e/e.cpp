@@ -76,9 +76,97 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const int WIN = 0;
+const int LOSE = 1;
+const int DRAW = -2;
+const int UNDEF = -1;
+
+int N, M;
+vvi toArray;
+vvi fromArray;
+
+vi deg;
+vi result;
+
+vector<string> S1, S2;
+vector<string> Ss;
+vi A, B;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        string s;
+        cin >> s;
+        S1.eb(s.substr(0, 3));
+        S2.eb(s.substr(s.size() - 3, 3));
+        Ss.pb(S1[i]);
+        Ss.pb(S2[i]);
+    }
+    sort(rng(Ss));
+    uni(Ss);
+
+    M = Ss.size();
+    toArray = vvi(M);
+    fromArray = vvi(M);
+    result = vi(M, UNDEF); // その盤面が自分に回ってきたら勝てるかどうか
+    deg = vi(M, 0); // そのノードの出次数
+
+
+    rep(i, N){
+        int a = lower_bound(rng(Ss), S1[i]) - Ss.begin();
+        int b = lower_bound(rng(Ss), S2[i]) - Ss.begin();
+
+        A.eb(a);
+        B.eb(b);
+        toArray[a].eb(b);
+        fromArray[b].eb(a);
+        deg[a]++;
+    }
+
+    queue<int> q;
+    rep(m, M){
+        if(deg[m] == 0){
+            result[m] = LOSE;
+            q.push(m);
+        }
+    }
+
+    while(!q.empty()){
+        int m = q.front();
+        q.pop();
+
+        for(auto from : fromArray[m]){
+            if(result[from] != UNDEF){
+                continue;
+            }
+
+            deg[from]--;
+
+            if(result[m] == LOSE){
+                result[from] = WIN;
+                q.push(from);
+            }
+
+            if(result[m] == WIN){
+                if(deg[from] == 0){
+                    result[from] = LOSE;
+                    q.push(from);
+                }
+            }
+        }
+    }
+
+    rep(i, N){
+        int res = result[B[i]];
+        if(res == WIN){
+            cout << "Aoki\n";
+        } else if(res == LOSE){
+            cout << "Takahashi\n";
+        } else {
+            cout << "Draw\n";
+        }
+    }
 }
 
 int main()

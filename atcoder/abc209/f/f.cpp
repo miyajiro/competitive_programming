@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,21 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+ll N;
+vi H;
+vector<vector<mint>> dp;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int h;
+        cin >> h;
+        H.eb(h);
+    }
+
+    dp = vector<vector<mint>>(N, vector<mint>(N));
 }
 
 int main()

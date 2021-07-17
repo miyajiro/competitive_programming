@@ -75,10 +75,27 @@ bool chmin(T &a, const T &b)
     }
     return false;
 }
+int N, X;
+vi A;
+
 
 void solve()
 {
-    
+    cin >> N >> X;
+    A = vi(N);
+    int x = 0;
+    rep(i, N){
+        cin >> A[i];
+        if(i % 2 == 1){
+            A[i]--;
+        }
+        x += A[i];
+    }
+    if(x <= X){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()

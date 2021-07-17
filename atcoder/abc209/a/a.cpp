@@ -78,7 +78,9 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int a, b;
+    cin >> a >> b;
+    cout << max(0, b - a + 1) << "\n";
 }
 
 int main()
