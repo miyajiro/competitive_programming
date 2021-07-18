@@ -76,9 +76,16 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, X, Y, A;
+
 void solve()
 {
-    
+    cin >> N >> A >> X >> Y;
+    if(N <= A){
+        cout << N * X << "\n";
+    } else {
+        cout << X * A + Y * (N - A) << "\n";
+    }
 }
 
 int main()

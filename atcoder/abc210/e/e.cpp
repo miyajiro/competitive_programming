@@ -76,9 +76,50 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll gcd(ll x, ll y){
+    if(y == 0){
+        return x;
+    }
+    return gcd(y, x % y);
+}
+
+
+ll N, M;
+vlp A; // cost, x
+ll ans = 0;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, M){
+        ll a, c;
+        cin >> a >> c;
+        A.eb(LP(c, a));
+    }
+
+    sort(rng(A));
+
+    rep(i, M){
+        ll a = A[i].sc;
+        ll c = A[i].fr;
+        a %= N;
+        if(a == 0){
+            continue;
+        }
+        a = gcd(a, N);
+
+        ll b = N / a;
+
+        ans += a * (b - 1) * c;
+
+        N = a;
+    }
+
+    if(N == 1LL){
+        cout << ans << "\n";
+    } else {
+        cout << "-1\n";
+    }
 }
 
 int main()

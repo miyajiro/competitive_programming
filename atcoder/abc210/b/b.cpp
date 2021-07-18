@@ -75,10 +75,25 @@ bool chmin(T &a, const T &b)
     }
     return false;
 }
+int N;
+string s;
 
 void solve()
 {
-    
+    cin >> N >> s;
+    int x = 0;
+    rep(i, N){
+        if(s[i] == '1'){
+            x = i;
+            break;
+        }
+    }
+
+    if(x % 2 == 0){
+        cout << "Takahashi\n";
+    } else {
+        cout << "Aoki\n";
+    }
 }
 
 int main()

@@ -76,9 +76,60 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+ll C;
+vvl A;
+vvl B;
+ll ans = 0xffffffffffff;
+
 void solve()
 {
-    
+    cin >> H >> W >> C;
+    A = vvl(H);
+    B = vvl(H);
+
+    rep(h, H){
+        rep(w, W){
+            ll a;
+            cin >> a;
+            A[h].eb(a);
+            B[h].eb(a);
+        }
+    }
+
+    rep(w, W){ // タテ方向
+        ll now = B[0][w];
+        rep1(h, H - 1){ // 上から下
+            now += C;
+            chmin(ans, now + A[h][w]); // タテ移動のみ
+            chmin(now, B[h][w]);
+            B[h][w] = now;
+        }
+
+        rrep1(h, H - 1){ // 下から上
+            now += C;
+            chmin(now, B[h][w]);
+            B[h][w] = now;
+        }
+    }
+
+    rep(h, H){ // 横方向
+        ll now = B[h][0];
+        rep1(w, W - 1){ // 左から右
+            now += C;
+            chmin(ans, now + A[h][w]); // 横, 縦横
+            chmin(now, B[h][w]);
+        }
+
+        now = B[h][W - 1];
+        rrep(w, W - 1){ // 左から右
+            now += C;
+            chmin(ans, now + A[h][w]); // 横, 縦横
+            chmin(now, B[h][w]);
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

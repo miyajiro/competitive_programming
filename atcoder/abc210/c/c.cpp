@@ -78,7 +78,48 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int N, K;
+    vi C;
+    cin >> N >> K;
+    rep(i, N){
+        int c;
+        cin >> c;
+        C.eb(c);
+    }
+
+    map<int, int> mp;
+    int cnt = 0;
+    rep(i, K){
+        int c = C[i];
+        auto ite = mp.find(c);
+
+        if(ite == mp.end() || (ite->sc == 0)){
+            mp[c] = 1;
+            cnt++;
+        } else {
+            mp[c]++;
+        }
+    }
+    int ans = cnt;
+    rep(i, N - K){ // i抜いてi+K足す。
+        int c1 = C[i];
+        mp[c1]--;
+        if(mp[c1] == 0){
+            cnt--;
+        }
+        int c2 = C[i + K];
+
+        auto ite2 = mp.find(c2);
+        if(ite2 == mp.end() || (ite2->sc == 0)){
+            mp[c2] = 1;
+            cnt++;
+        } else {
+            mp[c2]++;
+        }
+
+        chmax(ans, cnt);
+    }
+    cout << ans << "\n";
 }
 
 int main()
