@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,43 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, Q;
+vl A, B, V;
+vl L, R;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    ll ans = 0;
+
+    rep(i, N - 1LL){
+        ans += abs(A[i + 1] - A[i]);
+        B.eb(A[i + 1] - A[i]);
+    }
+
+    rep(i, Q){
+        ll l, r, v;
+        cin >> l >> r >> v;
+        l--;
+        r--;
+        if(l > 0){
+            ans += abs(B[l-1] + v) - abs(B[l - 1]);
+            B[l - 1] += v;
+        }
+
+        if(r < N - 1){
+            ans += abs(B[r] - v) - abs(B[r]);
+            B[r] -= v;
+        }
+
+        cout << ans << "\n";
+    }
 }
 
 int main()
