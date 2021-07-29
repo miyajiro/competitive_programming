@@ -5,8 +5,8 @@
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
-// #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/convolution>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,100 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+#ifndef TO_BE_SUBMITTED
+#include <bits/stdc++.h>
+using namespace std;
+#endif
+
+#include <atcoder/modint>
+
+// 二項係数ライブラリ
+template <class mint, atcoder::internal::is_static_modint_t<mint> * = nullptr>
+struct BinomialCoefficient
+{
+    vector<mint> fact_, inv_, finv_;
+    constexpr BinomialCoefficient(int n) noexcept : fact_(n, 1), inv_(n, 1), finv_(n, 1)
+    {
+        int MOD = mint::mod();
+        for (int i = 2; i < n; i++)
+        {
+            fact_[i] = fact_[i - 1] * i;
+            inv_[i] = -inv_[MOD % i] * (MOD / i);
+            finv_[i] = finv_[i - 1] * inv_[i];
+        }
+    }
+    constexpr mint com(int n, int k) const noexcept
+    {
+        if (n < k || n < 0 || k < 0)
+            return 0;
+        return fact_[n] * finv_[k] * finv_[n - k];
+    }
+    constexpr mint fact(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return fact_[n];
+    }
+    constexpr mint inv(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return inv_[n];
+    }
+    constexpr mint finv(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return finv_[n];
+    }
+};
+
+using mint = modint998244353;
+int R, G, B, K, X, Y, Z, N;
+int minR, minG, minB;
+
+void input(){
+    cin >> R >> G >> B >> K >> X >> Y >> Z;
+}
+
 void solve()
 {
-    
+    input();
+    N = R + G + B;
+    BinomialCoefficient<mint> bC(N);
+    minR = K - Y;
+    minG = K - Z;
+    minB = K - X;
+
+    vector<mint> r(R + 1), g(G + 1), b(B + 1);
+    rep(i, R + 1){
+        if(i < minR){
+            r[i] = 0;
+        } else {
+            r[i] = bC.com(R, i);
+        }
+    }
+
+    rep(i, G + 1){
+        if(i < minG){
+            g[i] = 0;
+        } else {
+            g[i] = bC.com(G, i);
+        }
+    }
+
+    rep(i, B + 1){
+        if(i < minB){
+            b[i] = 0;
+        } else {
+            b[i] = bC.com(B, i);
+        }
+    }
+
+    auto rg = convolution(r, g);
+    auto rgb = convolution(rg, b);
+
+    cout << rgb[K].val() << "\n";
 }
 
 int main()
