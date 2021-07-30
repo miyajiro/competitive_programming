@@ -76,9 +76,69 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll eightToNum(string n){
+    ll res = 0;
+    ll base = 1;
+    rrep(i, n.size()){
+        res += base * (n[i] - '0');
+        base *= 8LL;
+    }
+    return res;
+}
+
+string numToEight(ll n){
+    string res;
+    while(n > 0){
+        res = (char)((n % 8LL) + '0') + res;
+        n /= 8LL;
+    }
+    return res;
+}
+
+ll nineToNum(string n){
+    ll res = 0;
+    ll base = 1;
+    rrep(i, n.size()){
+        res += base * (n[i] - '0');
+        base *= 9LL;
+    }
+    return res;
+}
+
+string numToNine(ll n){
+    string res;
+    while(n > 0){
+        res = (char)((n % 9LL) + '0') + res;
+        n /= 9LL;
+    }
+    return res;
+}
+
+string f(string n){
+    ll nNum = eightToNum(n);
+    string n9 = numToNine(nNum);
+    rep(i, n9.size()){
+        if(n9[i] == '8'){
+            n9[i] = '5';
+        }
+    }
+    string res = n9;
+    if(res == ""){
+        res = "0";
+    }
+    return res;
+}
+
 void solve()
 {
-    
+    string N;
+    int K;
+    cin >> N >> K;
+    rep(i, K){
+        N = f(N);
+    }
+
+    cout << N << "\n";
 }
 
 int main()

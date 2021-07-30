@@ -76,9 +76,43 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi L, R;
+double ans = 0;
+
+double calc(int l1, int r1, int l2, int r2){ // 左1, 右2。2のが低くなる期待値
+    double d1 = r1 - l1 + 1;
+    double d2 = r2 - l2 + 1;
+    double res = 0;
+    srep(i1, l1, r1 + 1){
+        if(i1 > r2){
+            res += 1.0 / d1;
+        }
+        if(l2 < i1 && i1 <= r2){
+            res += ((i1 - l2) / d2) / d1;
+        }
+    }
+
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int l, r;
+        cin >> l >> r;
+        L.eb(l);
+        R.eb(r);
+    }
+
+    rep(i, N - 1){
+        srep(j, i + 1, N){
+            ans += calc(L[i], R[i], L[j], R[j]);
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
