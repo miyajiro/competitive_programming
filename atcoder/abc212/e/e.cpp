@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,59 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+int N, M, K;
+vi U, V;
+mint dp[5001][5000]; // dp[i][j] i日目に都市jにいる場合の数
+vi notFrom[5000]; // ここからはこれないよ
+
 void solve()
 {
-    
+    cin >> N >> M >> K;
+
+    rep(i, M){
+        int u, v;
+        cin >> u >> v;
+        u--;
+        v--;
+        U.eb(u);
+        V.eb(v);
+
+        notFrom[u].eb(v);
+        notFrom[v].eb(u);
+    }
+
+    rep(i, N){
+        notFrom[i].eb(i);
+    }
+
+    rep(i, K + 1){
+        rep(j, N){
+            dp[i][j] = 0;
+        }
+    }
+    dp[0][0] = 1;
+
+    mint pastSum = 1;
+    mint nowSum = 0;
+    mint nfSum = 0;
+
+    rep1(k, K){ // k日目
+        nowSum = 0;
+
+        rep(n, N){ // 都市nにいる場合の数
+            nfSum = 0;
+            for(auto nf : notFrom[n]){
+                nfSum += dp[k - 1][nf];
+            }
+            dp[k][n] = pastSum - nfSum;
+            nowSum += dp[k][n];
+        }
+
+        swap(pastSum, nowSum);
+    }
+
+    cout << dp[K][0].val() << "\n";
 }
 
 int main()

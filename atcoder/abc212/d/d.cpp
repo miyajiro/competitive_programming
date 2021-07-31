@@ -76,9 +76,62 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll Q;
+vi T;
+vl X;
+vl imosPlus;
+priority_queue<LP, vector<LP>, greater<LP>> pq;
+
 void solve()
 {
-    
+    cin >> Q;
+    imosPlus = vl(Q, 0);
+    T = vi(Q, 0);
+    X = vl(Q, 0LL);
+    rep(qi, Q){
+        int t;
+        ll x;
+        cin >> t;
+        T[qi] = t;
+        if(t == 1 || t == 2){
+            cin >> x;
+            X[qi] = x;
+        }
+
+        if(qi > 0){
+            imosPlus[qi] = imosPlus[qi - 1];
+        }
+
+        if(t == 2){
+            imosPlus[qi] += x;
+        }
+    }
+
+    // rep(i, Q){
+    //     show(i);
+    //     show(imosPlus[i]);
+    // }
+
+    rep(qi, Q){
+        int t = T[qi];
+        if(t == 1){
+            pq.push(LP(X[qi] - imosPlus[qi], qi));
+        }
+        if(t == 3){
+            LP lp = pq.top();
+            pq.pop();
+            int xqi = lp.sc;
+            ll x = X[xqi];
+            ll d = imosPlus[qi] - imosPlus[xqi];
+            // show(qi);
+            // show(xqi);
+            // show(x);
+            // show(imosPlus[qi]);
+            // show(imosPlus[xqi]);
+            // show(d);
+            cout << x + d << "\n";
+        }
+    }
 }
 
 int main()

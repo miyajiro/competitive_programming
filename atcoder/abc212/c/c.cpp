@@ -76,9 +76,37 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, M;
+vl A, B;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+    rep(i, M){
+        ll b;
+        cin >> b;
+        B.eb(b);
+    }
+    sort(rng(A));
+
+    ll ans = 0xffffffffff;
+
+    for(auto b : B){
+        int ai = lower_bound(rng(A), b) - A.begin();
+        if(ai < N){
+            chmin(ans, abs(A[ai] - b));
+        }
+        if(ai > 0){
+            chmin(ans, abs(A[ai - 1] - b));
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

@@ -78,7 +78,15 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    ll a, b;
+    cin >> a >> b;
+    if(0 < a && b == 0){
+        cout << "Gold\n";
+    } else if(a == 0 && 0 < b){
+        cout << "Silver\n";
+    } else {
+        cout << "Alloy\n";
+    }
 }
 
 int main()

@@ -76,9 +76,33 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+bool charRenzoku(char a, char b){
+    if(a == '9' && b == '0'){
+        return true;
+    }
+    int ai = a - '0';
+    int bi = b - '0';
+    return ai + 1 == bi;
+}
+
+bool renzoku(string s){
+    return charRenzoku(s[0], s[1]) && charRenzoku(s[1], s[2]) && charRenzoku(s[2], s[3]);
+}
+
 void solve()
 {
-    
+    string s;
+    cin >> s;
+    if(renzoku(s)){
+        cout << "Weak\n";
+        return;
+    }
+
+    if(s[0] == s[1] && s[1] == s[2] && s[2] == s[3]){
+        cout << "Weak\n";
+    }else {
+        cout << "Strong\n";
+    }
 }
 
 int main()
