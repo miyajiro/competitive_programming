@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,71 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, Q;
+vl T, X, Y, V;
+vl diff;
+vl imos;
+set<int> undefNum;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    rep(i, N){
+        undefNum.insert(i);
+    }
+    diff = vl(N, 0);
+    rep(i, Q){
+        ll t, x, y, v;
+        cin >> t >> x >> y >> v;
+        x--;
+        y--;
+        T.eb(t);
+        X.eb(x);
+        Y.eb(y);
+        V.eb(v);
+
+        if(t == 0){
+            diff[x] = (x % 2 == 0 ? v : -v);
+        }
+    }
+
+    rep(i, N){
+        if(i == 0){
+            imos.eb(diff[0]);
+        } else {
+            imos.eb(diff[i] + imos[i - 1]);
+        }
+    }
+
+    rep(i, Q){
+        int t = T[i];
+        int x = X[i];
+        int y = Y[i];
+        int v = V[i];
+
+        if(t == 0){
+            undefNum.erase(x);
+        } else {
+
+            if(x == y){
+                cout << v << "\n";
+                continue;
+            }
+
+            int lbUndefNum = *(undefNum.lower_bound(min(x, y)));
+            if(lbUndefNum < max(x, y)){
+                cout << "Ambiguous\n";
+                continue;
+            }
+
+            ll imosY = (y - 1 < 0) ? 0 : imos[y - 1];
+            ll imosX = (x - 1 < 0) ? 0 : imos[x - 1];
+            ll lastV = (abs(x - y) % 2 == 1) ? -v : v;
+            ll tashi = (y % 2 == 1) ? imosY - imosX : imosX - imosY;
+
+            cout << lastV + tashi << "\n";
+        }
+    }
 }
 
 int main()
