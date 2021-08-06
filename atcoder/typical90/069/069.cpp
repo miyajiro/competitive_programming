@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -33,7 +33,7 @@ using namespace std;
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
+#define show(x) cerr << #x << " = " << x << endl;
 #define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
@@ -76,9 +76,28 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+
+ll N, K;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    if(N == 1 && K >= 1){
+        cout << K << "\n";
+        return;
+    }
+
+    if(N >= 2 && K == 1){
+        cout << "0\n";
+        return;
+    }
+
+    mint ans = K * (K - 1);
+
+    ans *= ((mint)(K - 2)).pow(N - 2);
+
+    cout << ans.val() << "\n";
 }
 
 int main()
