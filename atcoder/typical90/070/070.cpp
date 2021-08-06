@@ -76,9 +76,31 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl X, Y;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll x, y;
+        cin >> x >> y;
+        X.eb(x);
+        Y.eb(y);
+    }
+    sort(rng(X));
+    sort(rng(Y));
+
+    ll fx = X[N / 2];
+    ll fy = Y[N / 2];
+
+    ll ans = 0;
+    rep(i, N){
+        ans += abs(X[i] - fx);
+        ans += abs(Y[i] - fy);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
