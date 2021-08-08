@@ -2,8 +2,8 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
-// #include <atcoder/string>
+#include <atcoder/lazysegtree>
+#include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
@@ -76,9 +76,69 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+string S;
+vl ans;
+
+vl calc(vi lcp) {
+    // 0~i - 1までのminの合計を返す。
+    ll now = 0;
+    stack<LP> st;
+    st.push(LP(-1, 0));
+
+    vl res;
+    res.eb(now);
+
+    rep(i, N - 1){ // lcp[i]に関するi - 1までの合計
+        ll lcpVal = lcp[i];
+        ll cnt = 1; // lcp[i]に丸める数
+
+        now += lcpVal;
+
+        while(true){
+            LP lp = st.top();
+            if(lp.fr < lcpVal){
+                break;
+            }
+
+            cnt += lp.sc;
+            now += lp.sc * (lcpVal - lp.fr);
+
+            st.pop();
+        }
+
+        res.eb(now);
+        st.push(LP(lcpVal, cnt));
+    }
+
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> S;
+    vi sa = suffix_array(S);
+
+    vi lcp = lcp_array(S, sa);
+
+    vi lcpRev = vi(rrng(lcp));
+    ans = vl(N, -1LL);
+
+    vl calcRes = calc(lcp);
+
+    vl calcResRev = calc(lcpRev);
+
+    rep(i, N){
+        int ansI = sa[i];
+        ll sumVal = N - ansI;
+        sumVal += calcRes[i];
+        sumVal += calcResRev[N - 1 - i];
+        ans[ansI] = sumVal;
+    }
+
+    for(auto an : ans){
+        cout << an << "\n";
+    }
 }
 
 int main()

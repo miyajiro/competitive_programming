@@ -76,9 +76,123 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const int INF = 0xfffffff;
+
+int H, W;
+vector<string> S;
+vector<vector<bool>> isWall;
+vvi dist;
+vi D;
+// コスト1で2マスなら進める。隣が壁じゃないならコスト0で進める
+int ey[4] = {-1, 0, 1, 0};
+int ex[4] = {0, 1, 0, -1};
+
+vi ey1;
+vi ex1;
+
+bool isValid(int y, int x){
+    return 0 <= y && y < H && 0 <= x && x < W;
+}
+
+int yx2N(int y, int x){
+    assert(isValid(y, x));
+    return y * W + x;
+}
+
+P n2YX(int n){
+    return P(n / W, n % W);
+}
+
+struct E{
+    int to;
+    int cost;
+};
+vector<vector<E>> G;
+
+
 void solve()
 {
-    
+    cin >> H >> W;
+    int N = H * W;
+    S = vector<string>(H);
+    isWall = vector<vector<bool>>(H, vector<bool>(W, false));
+    G = vector<vector<E>>(N);
+
+    srep(h, -2, 3){
+        srep(w, -2, 3){
+            if(abs(h) == 2 && abs(w) == 2){
+                continue;
+            }
+            if(h == 0 && w == 0){
+                continue;
+            }
+            ey1.eb(h);
+            ex1.eb(w);
+        }
+    }
+
+    rep(h, H){
+        cin >> S[h];
+        rep(w, W){
+            isWall[h][w] = (S[h][w] == '#');
+        }
+    }
+
+    rep(h, H){
+        rep(w, W){
+            rep(i, 4){
+                int ny = h + ey[i];
+                int nx = w + ex[i];
+                if(!isValid(ny, nx)){
+                    continue;
+                }
+                if(isWall[ny][nx]){
+                    continue;
+                }
+                int nowN = yx2N(h, w);
+                int toN = yx2N(ny, nx);
+
+                G[nowN].eb(E{toN, 0});
+            }
+
+            rep(i, 20){
+                int ny = h + ey1[i];
+                int nx = w + ex1[i];
+                if(!isValid(ny, nx)){
+                    continue;
+                }
+                int nowN = yx2N(h, w);
+                int toN = yx2N(ny, nx);
+
+                G[nowN].eb(E{toN, 1});
+            }
+        }
+    }
+
+    priority_queue<P, vector<P>, greater<P>> pq;
+
+    vi dp = vi(N, INF);
+
+    dp[0] = 0;
+    pq.push(P(0, 0));
+
+    while(!pq.empty()){
+        P p = pq.top();
+        pq.pop();
+        int now = p.sc;
+
+        if(p.fr > dp[now]){
+            continue;
+        }
+
+        for(auto e : G[now]){
+            if(chmin(dp[e.to], dp[now] + e.cost)){
+                pq.push(P(dp[e.to], e.to));
+            }
+        }
+    }
+
+    cout << dp[yx2N(H - 1, W - 1)] << "\n";
 }
 
 int main()

@@ -76,9 +76,21 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vector<LP> B;
+
 void solve()
 {
-    
+    ll N;
+    cin >> N;
+    rep(i, N){
+        int a;
+        cin >> a;
+        B.eb(LP(-a, 1 + i));
+    }
+
+    sort(rng(B));
+
+    cout << B[1].sc << "\n";
 }
 
 int main()

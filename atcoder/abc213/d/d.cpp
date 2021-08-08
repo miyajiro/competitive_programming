@@ -76,9 +76,64 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+vector<priority_queue<int, vector<int>, greater<int>>> G;
+vi prevN;
+vector<bool> visited;
+
 void solve()
 {
-    
+    cin >> N;
+    G = vector<priority_queue<int, vector<int>, greater<int>>>(N);
+    prevN = vi(N, -1);
+    visited = vector<bool>(N, false);
+
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].push(b);
+        G[b].push(a);
+    }
+
+    int last = -1;
+    int now = 0;
+
+    vi ans;
+    while(true){
+        if(now == -1){
+            break;
+        }
+
+        ans.eb(now);
+
+        if(!visited[now]){
+            visited[now] = true;
+            prevN[now] = last;
+        }
+
+        while(!G[now].empty()){
+            int nex = G[now].top();
+            G[now].pop();
+            if(visited[nex]){
+                continue;
+            }
+            last = now;
+            now = nex;
+            goto nexLoop;
+        }
+
+        last = now;
+        now = prevN[now];
+
+        nexLoop: ;
+    }
+
+    rep(i, sz(ans)){
+        cout << ans[i] + 1 << ((i == (int)((int)sz(ans) - 1)) ? "\n" : " ");
+    }
 }
 
 int main()

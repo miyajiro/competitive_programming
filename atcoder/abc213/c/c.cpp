@@ -76,9 +76,32 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W, N;
+vi A, B;
+vi Ys, Xs;
+
 void solve()
 {
-    
+    cin >> H >> W >> N;
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        A.eb(a);
+        B.eb(b);
+        Ys.eb(a);
+        Xs.eb(b);
+    }
+    sort(rng(Ys));
+    uni(Ys);
+    sort(rng(Xs));
+    uni(Xs);
+
+    rep(i, N){
+        int y = lower_bound(rng(Ys), A[i]) - Ys.begin();
+        int x = lower_bound(rng(Xs), B[i]) - Xs.begin();
+
+        cout << y + 1 << " " << x + 1 << "\n";
+    }
 }
 
 int main()

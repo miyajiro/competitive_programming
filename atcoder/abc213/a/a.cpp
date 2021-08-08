@@ -78,7 +78,13 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int A, B;
+    cin >> A >> B;
+    rep(C, 256){
+        if((A ^ C) == B){
+            cout << C << "\n";
+        }
+    }
 }
 
 int main()
