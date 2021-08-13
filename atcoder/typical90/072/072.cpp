@@ -76,9 +76,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+vector<string> C;
+int vy[4] = {1, 0, -1, 0};
+int vx[4] = {0, 1, 0, -1};
+int ans = 0;
+
+bool ok(int y, int x) {
+    return isin(y, 0, H) && isin(x, 0, W) && C[y][x] == '.';
+}
+
+void dfs(int y, int x, int sy, int sx, int cnt){
+    C[y][x] = '#';
+    rep(vI, 4){
+        int ny = y + vy[vI];
+        int nx = x + vx[vI];
+
+        if(ny == sy && nx == sx){
+            chmax(ans, cnt);
+        }
+        if(!ok(ny, nx)){
+            continue;
+        }
+        dfs(ny, nx, sy, sx, cnt + 1);
+    }
+    C[y][x] = '.';
+    return;
+}
+
 void solve()
 {
-    
+    cin >> H >> W;
+    rep(h, H){
+        string c;
+        cin >> c;
+        C.eb(c);
+    }
+    rep(h, H){
+        rep(w, W){
+            if(ok(h, w)){
+                dfs(h, w, h, w, 1);
+            }
+            C[h][w] = '#';
+        }
+    }
+
+    if(ans <= 2){
+        ans = -1;
+    }
+    cout << ans << "\n";
 }
 
 int main()
