@@ -76,9 +76,19 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+string S;
+
 void solve()
 {
-    
+    cin >> N >> S;
+    ll ans = 0;
+    ll base = 1;
+    rep(i, N){
+        ans += base * (S[i] - 'a');
+        base <<= 1;
+    }
+    cout << ans << "\n";
 }
 
 int main()
