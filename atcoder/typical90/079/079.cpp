@@ -76,9 +76,60 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+vvl A;
+
 void solve()
 {
-    
+    cin >> H >> W;
+    A = vvl(H, vl(W, 0));
+    rep(y, H){
+        rep(x, W){
+            cin >> A[y][x];
+        }
+    }
+
+    rep(y, H){
+        rep(x, W){
+            ll a;
+            cin >> a;
+            A[y][x] -= a;
+        }
+    }
+
+    int vy[4] = {0, 1, 0, 1};
+    int vx[4] = {0, 0, 1, 1};
+
+    ll cnt = 0;
+    rep(y, H - 1){
+        rep(x, W - 1){
+            ll a = A[y][x];
+            cnt += abs(a);
+            rep(ei, 4){
+                int ny = y + vy[ei];
+                int nx = x + vx[ei];
+
+                A[ny][nx] -= a;
+            }
+        }
+    }
+
+    rep(y, H){
+        if(A[y][W - 1] != 0LL){
+            cout << "No\n";
+            return;
+        }
+    }
+
+    rep(x, W){
+        if(A[H - 1][x] != 0LL){
+            cout << "No\n";
+            return;
+        }
+    }
+
+    cout << "Yes\n" << cnt << "\n";
+    return;
 }
 
 int main()

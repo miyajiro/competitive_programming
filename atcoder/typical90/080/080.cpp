@@ -76,9 +76,51 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, D;
+vl A;
+vvl dp;
+vi d2S;
+
 void solve()
 {
-    
+    cin >> N >> D;
+
+    if(D == 0){
+        cout << "0\n";
+        return;
+    }
+
+    dp = vvl(D + 1, vl(1 << N, 0)); // dp[d][s]; d桁目までで、集合sを満たす場合の数。配るDP
+    d2S = vi(D, 0); // d2S[d]: dのビットを立てたときに被覆できる集合
+
+    rep(n, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    rep(d, D){
+        int s = 0;
+        rep(n, N){
+            ll a = A[n];
+            if((a >> d) % 2LL == 1LL){
+                s |= (1 << n);
+            }
+        }
+        d2S[d] = s;
+    }
+
+    dp[0][0] += 1;
+    dp[0][d2S[0]] += 1;
+
+    rep(d, D - 1){
+        rep(s, 1 << N){
+            dp[d + 1][s] += dp[d][s]; // d+1ビット目立てない
+            dp[d + 1][s | d2S[d + 1]] += dp[d][s]; // d+1ビット目立てる
+        }
+    }
+
+    cout << dp[D - 1][(1 << N) - 1] << "\n";
 }
 
 int main()
