@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,66 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+int N;
+vi A, B, b2I;
+
+mint dfs(int n, int k){ // 0~nまで埋めてn以下をk個使った場合の数(見えていないものは全て同一視)
+    // n - 1 k - 1
+    // n - 1 k の2つから遷移
+
+}
+
 void solve()
 {
-    
+    cin >> N;
+    b2I = vi(N + 1);
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+    }
+    rep(i, N){
+        int b;
+        cin >> b;
+        b2I[b] = i;
+    }
+    rep(i, N){
+        A[i] = b2I[A[i]];
+        show(A[i]);
+    }
+
+    vector<vector<mint>> dp(N, vector<mint>(N, 0));
+    priority_queue<int, vector<int>, greater<int>> pq;
+    int underCnt = 0;
+    int sameCnt = 0;
+    int overCnt = 0;
+    rep(n, N){
+        while(!pq.empty() && pq.top() <= n - 1){
+            if(pq.top() == n - 1){
+                sameCnt++;
+            } else {
+                underCnt++;
+            }
+            pq.pop();
+
+        }
+        rep(k, n + 1){
+            int _n = N - n;
+            if(n > _n){
+                continue;
+            }
+
+            if(k == 0){
+                dp[n][0] = 1;
+                continue;
+            }
+
+            dp[n][k] = dp[n - 1][k - 1];
+            
+        }
+        pq.push(A[n]);
+    }
 }
 
 int main()
