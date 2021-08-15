@@ -76,9 +76,42 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl S, T;
+vl ans;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll s;
+        cin >> s;
+        S.eb(s);
+    }
+
+    rep(i, N){
+        ll t;
+        cin >> t;
+        T.eb(t);
+    }
+
+    rep(i, N){
+        S.eb(S[i]);
+        T.eb(T[i]);
+    }
+
+    rep(i, 2 * N){
+        if(i == 0){
+            ans.eb(T[i]);
+            continue;
+        }
+
+        ans.eb(min(T[i], ans[i - 1] + S[i - 1]));
+
+        if(i >= N){
+            cout << ans[i] << "\n";
+        }
+    }
 }
 
 int main()

@@ -1,7 +1,7 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
-// #include <atcoder/segtree>
+#include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
@@ -76,9 +76,97 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
-void solve()
+using S = ll; // 個数1以上の最小のindex。個数0しかないなら-1LL
+
+S op(S a, S b){
+    if(a == -1LL){
+        return b;
+    }
+    if(b == -1LL){
+        return a;
+    }
+    return min(a, b);
+}
+
+S e(){
+    return -1LL;
+}
+
+ll N;
+vl L, R, Xs, origL, origR;
+vl Cap;
+
+using T = pair<pair<ll, ll>, ll>; // ((R, L), id);
+
+
+void solve(){
+    cin >> N;
+    L.clear();
+    R.clear();
+    Xs.clear();
+    origL.clear();
+    origR.clear();
+    Cap.clear();
+    rep(i, N){
+        ll l, r;
+        cin >> l >> r;
+        L.eb(l);
+        R.eb(++r);
+        origL.eb(l);
+        origR.eb(r);
+        Xs.eb(l);
+        Xs.eb(r);
+    }
+    sort(rng(Xs));
+    uni(Xs);
+
+    ll SIZE = sz(Xs) - 1; // 箱の数
+    rep(xi, SIZE){
+        Cap.eb(Xs[xi + 1] - Xs[xi]);
+    }
+
+    vector<T> tArray;
+    rep(i, N){
+        L[i] = lower_bound(rng(Xs), L[i]) - Xs.begin();
+        R[i] = lower_bound(rng(Xs), R[i]) - Xs.begin();
+        tArray.eb(T(LP(R[i], L[i]), i));
+    }
+    sort(rng(tArray));
+
+    segtree<S, op, e> seg(SIZE);
+    rep(i, SIZE){
+        if(Cap[i] > 0){
+            seg.set(i, i);
+        } else {
+            seg.set(i, -1LL);
+        }
+    }
+
+    for(auto t : tArray){
+        int i = t.sc;
+        ll l = L[i];
+        ll r = R[i];
+        ll res = seg.prod(l, r);
+        if(res == -1LL){
+            cout << "No\n";
+            return;
+        }
+
+        Cap[res]--;
+        if(Cap[res] == 0){
+            seg.set(res, -1LL);
+        }
+    }
+    cout << "Yes\n";
+}
+
+void solve_()
 {
-    
+    int t;
+    cin >> t;
+    rep(i, t){
+        solve();
+    }
 }
 
 int main()
@@ -86,6 +174,6 @@ int main()
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
     cout << fixed << setprecision(15);
-    solve();
+    solve_();
     return 0;
 }

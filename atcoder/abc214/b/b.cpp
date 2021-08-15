@@ -76,9 +76,23 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll S, T;
+
 void solve()
 {
-    
+    cin >> S >> T;
+
+    ll ans = 0;
+    rep(a, S + 1){ // 0~S
+        rep(b, S - a + 1){
+            rep(c, S - a - b + 1){
+                if(a * b * c <= T){
+                    ans++;
+                }
+            }
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()

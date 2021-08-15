@@ -76,9 +76,28 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, 214){
+        if(i < 125){
+            A.eb(4);
+        } else if(i < 211){
+            A.eb(6);
+        } else {
+            A.eb(8);
+        }
+    }
+
+    int ans = 0;
+    rep(i, N){
+        ans += A[i];
+    }
+
+    cout << A[N - 1] << "\n";
 }
 
 int main()
