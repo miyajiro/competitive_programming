@@ -76,9 +76,47 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl A;
+
 void solve()
 {
-    
+    cin >> N;
+    ll allSum = 0;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+        allSum += a;
+    }
+    if(allSum % 10LL != 0){
+        cout << "No\n";
+        return;
+    }
+
+    ll dAllSum = allSum / 10LL;
+
+    rep(i, N){
+        A.eb(A[i]);
+    }
+
+    int l = 0;
+    int r = 0;
+    ll sum = 0;
+    while(l < N && r < 2 * N){
+        while(r < 2 * N && sum < dAllSum){
+            sum += A[r++];
+        }
+
+        if(sum == dAllSum){
+            cout << "Yes\n";
+            return;
+        }
+
+        sum -= A[l++];
+    }
+
+    cout << "No\n";
 }
 
 int main()

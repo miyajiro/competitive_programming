@@ -33,7 +33,7 @@ using namespace std;
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
+#define show(x) cerr << #x << " = " << x << endl;
 #define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
@@ -76,9 +76,28 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+ll cnt = 0;
+
 void solve()
 {
-    
+    cin >> N;
+    rep1(i, (int)(sqrt(N) + 1)){
+        if(i == 1) continue;
+        while(N % i == 0){
+            N /= (ll)(i);
+            cnt++;
+        }
+    }
+    if(N != 1LL){
+        cnt++;
+    }
+    int ans = 0;
+    while(cnt > 1LL){
+        cnt = (cnt + 1LL) / 2LL;
+        ans++;
+    }
+    cout << ans << "\n";
 }
 
 int main()
