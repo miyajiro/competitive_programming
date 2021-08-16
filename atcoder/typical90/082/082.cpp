@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,35 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+
+ll L, R;
+
+mint sigma2(ll x){
+    mint a = x % 1000000007;
+    return a * (a + 1) * (mint(2).inv());
+}
+
+mint cnt(ll l, ll r){ // Σ(k=l...r)k^2
+    return sigma2(r) - sigma2(l - 1LL);
+}
+
 void solve()
 {
-    
+    cin >> L >> R;
+    ll base = 1LL;
+    mint ans = 0;
+    while(base <= R){
+        show(base);
+        ll l = max(base, L);
+        ans += cnt(l, R);
+        if(base == 1e18){
+            break;
+        }
+        base *= 10LL;
+    }
+
+    cout << ans.val() << "\n";
 }
 
 int main()

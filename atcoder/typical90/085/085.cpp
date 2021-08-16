@@ -76,9 +76,23 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll K;
+
 void solve()
 {
-    
+    cin >> K;
+    ll ans = 0;
+    for(ll a = 1LL; a * a * a <= K; a++){
+        if(K % a != 0LL){
+            continue;
+        }
+        for(ll b = a; a * b * b <= K; b++){
+            if(K % (a * b) == 0LL){
+                ans++;
+            }
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()

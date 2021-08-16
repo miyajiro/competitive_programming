@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, K;
+vi A, B;
+vvi imos(5001, vi(5001, 0));
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(n, N){
+        int a, b;
+        cin >> a >> b;
+        imos[a][b]++;
+        A.eb(a);
+        B.eb(b);
+    }
+
+    rep1(h, 5000){
+        imos[h][0] += imos[h-1][0];
+    }
+
+    rep1(w, 5000){
+        imos[0][w] += imos[0][w-1];
+    }
+
+    rep1(h, 5000){
+        rep1(w, 5000){
+            imos[h][w] += (imos[h][w - 1] + imos[h - 1][w] - imos[h - 1][w - 1]);
+        }
+    }
+
+    int ans = 0;
+    rep1(y1, 5000){
+        rep1(x1, 5000){
+            int y2 = min(y1 + K, 5000);
+            int x2 = min(x1 + K, 5000);
+            chmax(ans, imos[y2][x2] - imos[y2][x1 - 1] - imos[y1 - 1][x2] + imos[y1 - 1][x1 - 1]);
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

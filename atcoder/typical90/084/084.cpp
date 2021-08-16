@@ -76,9 +76,32 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+string S;
+vl A;
+ll ans;
+
 void solve()
 {
-    
+    cin >> N >> S;
+    rep(i, N - 1){
+        if(S[i] != S[i + 1]){
+            A.eb(i);
+        }
+    }
+    int ai = 0;
+    rep(l, N){
+        if(ai < sz(A) && A[ai] < l){
+            ai++;
+        }
+        if(ai == sz(A)){
+            break;
+        }
+        int minR = A[ai] + 1;
+        ans += N - minR;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
