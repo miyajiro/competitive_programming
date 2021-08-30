@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
@@ -76,9 +76,95 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+struct S{
+    int sum;
+    int width;
+};
+
+S op(S a, S b){
+    return S{a.sum + b.sum, a.width + b.width};
+}
+
+S e(){
+    return S{0, 0};
+}
+
+using F = bool;
+
+S mapping(F f, S x){
+    if(f){
+        return S{x.width, x.width};
+    } else {
+        return x;
+    }
+}
+F composition(F f, F g){
+    return g || f;
+}
+
+F id(){
+    return false;
+}
+
+int N, M;
+using G = pair<int, P>;
+vi L, R, X;
+vector<G> RLX;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, M){
+        int l, r, x;
+        cin >> l >> r >> x;
+        l--;
+        RLX.eb(G(r, P(l, x)));
+    }
+    sort(rng(RLX));
+    rep(i, M){
+        R.eb(RLX[i].fr);
+        L.eb(RLX[i].sc.fr);
+        X.eb(RLX[i].sc.sc);
+    }
+
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(N);
+    rep(i, N){
+        seg.set(i, S{0, 1});
+    }
+
+    rep(i, M){
+        int l = L[i];
+        int r = R[i];
+        int x = X[i];
+
+        if(seg.prod(l, r).sum >= x){ // 超えてる
+            continue;
+        }
+
+        int low = l; // [low, r)を埋めれば条件を満たす
+        int high = r; // [high, r)を埋めても条件を満たさない.
+        int mid;
+
+        while(high - low > 1){
+            mid = (high + low) / 2;
+
+            if(seg.prod(l, mid).sum + seg.prod(mid, r).width >= x){
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+
+        seg.apply(low, r, true);
+    }
+    rep(i, N){
+        cout << seg.get(i).sum;
+        if(i == N - 1){
+            cout << "\n";
+        } else {
+            cout << " ";
+        }
+    }
 }
 
 int main()

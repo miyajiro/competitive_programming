@@ -76,9 +76,22 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vector<char> ans;
+
 void solve()
 {
-    
+    cin >> N;
+    rrep(i, 60){
+        ans.eb('B');
+        if((N >> i) % 2LL == 1LL){
+            ans.eb('A');
+        }
+    }
+    rep(i, sz(ans)){
+        cout << ans[i];
+    }
+    cout << "\n";
 }
 
 int main()

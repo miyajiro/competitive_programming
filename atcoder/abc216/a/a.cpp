@@ -76,9 +76,22 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string S;
+
 void solve()
 {
-    
+    cin >> S;
+    int l = S.size();
+    rep(i, l - 2){
+        cout << S[i];
+    }
+    if('0' <= S[l - 1] && S[l - 1] <= '2'){
+        cout << '-';
+    }
+    if('7' <= S[l - 1] && S[l - 1] <= '9'){
+        cout << '+';
+    }
+    cout << "\n";
 }
 
 int main()

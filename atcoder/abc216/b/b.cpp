@@ -76,9 +76,25 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vector<string> Ss;
+
 void solve()
 {
-    
+    int N;
+    cin >> N;
+    rep(i, N){
+        string s, t;
+        cin >> s >> t;
+        Ss.eb(s + "#" + t);
+    }
+    sort(rng(Ss));
+    rep(i, (int)(Ss.size() - 1)){
+        if(Ss[i] == Ss[i + 1]){
+            cout << "Yes\n";
+            return;
+        }
+    }
+    cout << "No\n";
 }
 
 int main()

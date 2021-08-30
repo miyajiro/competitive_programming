@@ -76,9 +76,68 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, K;
+vl A;
+
 void solve()
 {
-    
+    cin >> N >> K;
+
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    sort(rrng(A));
+
+    ll ans = 0;
+    ll maxJoy = A[0];
+    ll maxCnt = 1;
+    int now = 1;
+
+    while(true){
+        if(maxJoy == 0LL){
+            break;
+        }
+
+        if(K <= maxCnt){ // maxアトラクションの数がK個以下の場合
+            // show(K);
+            // show(maxJoy);
+            ans += K * maxJoy;
+            K = 0;
+            break;
+        }
+
+        ll loopNum = min(K / maxCnt, maxJoy); // maxCntで何周できるか
+
+        if(now == N || maxJoy - loopNum > A[now]){ // 目一杯回してもA[now]にはならないとき。
+            ll base = (maxJoy * (maxJoy + 1) / 2LL) - ((maxJoy - loopNum) * (maxJoy - loopNum + 1) / 2LL);
+            K -= maxCnt * loopNum;
+            // show(loopNum);
+            // show(maxJoy);
+            // show(maxCnt);
+            ans += base * maxCnt;
+            maxJoy -= loopNum;
+            continue;
+        }
+
+        // nowを進める場合
+        loopNum = min(maxJoy - A[now++], maxJoy);
+
+        // show(loopNum);
+        // show(maxJoy);
+        // show(maxCnt);
+
+        ll base = (maxJoy * (maxJoy + 1) / 2LL) - ((maxJoy - loopNum) * (maxJoy - loopNum + 1) / 2LL);
+        K -= maxCnt * loopNum;
+        ans += base * maxCnt;
+        maxJoy -= loopNum;
+
+        maxCnt++;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
