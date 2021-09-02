@@ -1,12 +1,12 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -43,7 +43,7 @@ using uint = unsigned;
 using ull = unsigned long long;
 using P = pair<int, int>;
 using LP = pair<ll, ll>;
-using vi = vector<int>;
+using vi = vector<ll>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
@@ -76,9 +76,69 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+ll N, K;
+vi A, _A;
+vi C;
+
+vector<mint> dp, dpImos;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    dp = vector<mint>(N + 1, 0); // dp[r]: A[r - 1]まで分断したときの答え。
+    dpImos = vector<mint>(N + 1, 0); // dpImos[r] := dp[0] + ... + dp[r]
+    dp[0] = 1;
+    dpImos[0] = 1;
+
+    C = vi(N + 1, 0); // C[r]: A[r - 1]まで分断したときの最も左側のインデックス
+    fenwick_tree<ll> fw(N + 1); // fw[i]: 数字iが格納されている個数
+
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+        _A.eb(a);
+    }
+    sort(rng(_A));
+    uni(_A);
+    for(auto &a : A){
+        a = (lower_bound(rng(_A), a) - _A.begin());
+    }
+
+    ll l = N;
+    ll numOfPartitions = 0;
+    rrep1(r, N){
+        // while(l >= 0 && numOfPartitions <= K){
+        while(true){
+            if(l == 0 || numOfPartitions + fw.sum(0, A[l - 1]) > K){ // lが左端か、A[l - 1]加えるとK超えるか
+                break;
+            }
+
+            numOfPartitions += fw.sum(0, A[--l]);
+            fw.add(A[l], 1);
+        }
+        C[r] = l;
+        numOfPartitions -= fw.sum(A[r - 1] + 1, N + 1);
+        fw.add(A[r - 1], -1LL);
+    }
+
+    rep1(r, N){ // dp[r]: A[r - 1]まで分断したときの答え。
+        int cl = C[r];
+
+        if(cl == 0){
+            dp[r] = dpImos[r - 1];
+        } else {
+            dp[r] = dpImos[r - 1] - dpImos[cl - 1];
+        }
+
+        dpImos[r] = dp[r];
+        if(r > 0){
+            dpImos[r] += dpImos[r - 1];
+        }
+    }
+
+    cout << dp[N].val() << "\n";
 }
 
 int main()

@@ -76,9 +76,97 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, Q;
+vi A, X, Y;
+vector<LP> sum2S;
+const LP UNDEFINED = LP(-1LL, -1LL);
+const int HALF = 44;
+vector<vector<bool>> ok;
+
+void printAns(LP lp){
+    vi ans;
+    rep(i, HALF){
+        if((lp.fr >> i) % 2LL == 1LL){
+            ans.eb(i + 1);
+        }
+    }
+    rep(i, N - HALF){
+        if((lp.sc >> i) % 2LL == 1LL){
+            ans.eb(i + 1 + HALF);
+        }
+    }
+    cout << sz(ans) << "\n";
+    rep(ai, sz(ans)){
+        cout << ans[ai] << (ai == sz(ans) - 1 ? "\n" : " ");
+    }
+}
+
+bool is1(LP lp, int n){ // lpにおいてA[n]を使ってるか。
+    if(n < HALF){
+        return (lp.fr >> n) % 2LL == 1LL;
+    } else {
+        return (lp.sc >> (n - HALF)) % 2LL == 1LL;
+    }
+}
+
+bool dfs(int n, LP lp, int sumVal){ // n番目まで埋めた状態で集合がlp, 合計値sumValの場合。
+    // show(n);
+    // show(lp.fr);
+    // show(lp.sc);
+
+    if(sum2S[sumVal] != UNDEFINED && sumVal != 0 && lp != sum2S[sumVal]){
+        printAns(sum2S[sumVal]);
+        printAns(lp);
+        return true;
+    }
+    sum2S[sumVal] = lp;
+
+    if(n == N - 1){ // N - 1番目まで来てたらアウト
+        return false;
+    }
+
+    if(dfs(n + 1, lp, sumVal)){ // n + 1番目が0の場合
+        return true;
+    }
+
+    rep(ni, N){
+        if(is1(lp, ni) && !ok[ni][n + 1]){ // 使ってるもので、そんでn + 1が1無理だった場合
+            return false;
+        }
+    }
+
+    if(n + 1 < HALF){
+        lp.fr |= (1LL << (n + 1));
+    } else {
+        lp.sc |= (1LL << (n + 1 - HALF));
+    }
+
+    return dfs(n + 1, lp, sumVal + A[n + 1]);
+}
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    sum2S = vector<LP>(8881, UNDEFINED);
+    ok = vector<vector<bool>>(N, vector<bool>(N, true));
+    rep(n, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    rep(q, Q){
+        int x, y;
+        cin >> x >> y;
+        X.eb(--x);
+        Y.eb(--y);
+        ok[x][y] = ok[y][x] = false;
+    }
+
+    if(!dfs(0, LP(0, 0), 0)){
+        dfs(0, LP(1LL, 0LL), A[0]);
+    }
+    return;
 }
 
 int main()

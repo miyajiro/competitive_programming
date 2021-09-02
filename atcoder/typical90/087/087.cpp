@@ -41,13 +41,13 @@ using namespace std;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
-using P = pair<int, int>;
+// using P = pair<int, int>;
 using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
-using vp = vector<P>;
+// using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
 {
@@ -76,9 +76,89 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, P, K;
+vvl A;
+
+ll cnt(ll X){
+    vvl D(N, vl(N, 0));
+    rep(h, N){
+        rep(w, N){
+            D[h][w] = (A[h][w] == -1LL ? X : A[h][w]);
+        }
+    }
+
+    rep(k, N){
+        rep(n1, N){
+            rep(n2, N){
+                chmin(D[n1][n2], D[n1][k] + D[k][n2]);
+            }
+        }
+    }
+
+    ll res = 0;
+    rep(n1, N){
+        srep(n2, n1 + 1, N){
+            if(D[n1][n2] <= P){
+                res++;
+            }
+        }
+    }
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> P >> K;
+    A = vvl(N, vl(N));
+    rep(h, N){
+        rep(w, N){
+            cin >> A[h][w];
+        }
+    }
+
+    ll l1 = -1LL; // K個以上
+    ll r1 = 1e9 + 2LL; // K個未満
+    ll mid1;
+
+    ll l2 = -1LL; // K個より多い
+    ll r2 = 1e9 + 2LL; // K個以下
+    ll mid2;
+
+    while(r1 - l1 > 1LL){
+        mid1 = (r1 + l1) / 2LL;
+        if(cnt(mid1) >= K){
+            l1 = mid1;
+        } else {
+            r1 = mid1;
+        }
+    }
+
+    while(r2 - l2 > 1LL){
+        // show(l2);
+        // show(r2);
+        mid2 = (r2 + l2) / 2LL;
+        if(cnt(mid2) > K){
+            l2 = mid2;
+        } else {
+            r2 = mid2;
+        }
+    }
+
+    if(l1 == l2 || l1 == -1LL){
+        cout << "0\n";
+        return;
+    }
+
+    if(l1 == 1e9 + 1LL){
+        cout << "Infinity\n";
+        return;
+    }
+
+    if(r2 == 0LL){
+        r2++;
+    }
+
+    cout << l1 - r2 + 1 << "\n";
 }
 
 int main()
