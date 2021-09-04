@@ -76,9 +76,40 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, K, H, W;
+vector<string> S;
+vector<vector<bool>> isBlack;
+vector<vvi> dp;
+vi blackS;
+
+// dp[h][n][s] hまで埋めて、n個使い、hの埋め方がsの場合の数
+
 void solve()
 {
-    
+    cin >> N >> K;
+    H = N + 1;
+    W = N;
+    blackS = vi(H, 0);
+    dp = vector<vvi>(H, vvi(N, vi(1 << W, 0)));
+    isBlack = vector<vector<bool>>(H, vector<bool>(W, false));
+
+    blackS[0] = (1 << W) - 1;
+    rep(w, W){
+        isBlack[0][w] = true;
+    }
+    rep1(h, H - 1){
+        string s;
+        cin >> s;
+        S.eb(s);
+        rep(w, N){
+            if(S[h][w] == '#'){
+                isBlack[h][w] = true;
+            }
+        }
+    }
+
+    dp[0][0][0] = 1;
+
 }
 
 int main()
