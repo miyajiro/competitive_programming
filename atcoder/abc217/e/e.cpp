@@ -78,7 +78,33 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int Q;
+    priority_queue<int, vi, greater<int>> pq;
+    queue<int> que;
+    cin >> Q;
+    rep(q, Q){
+        int c, x;
+        cin >> c;
+        if(c == 1){
+            cin >> x;
+            que.push(x);
+        }
+        if(c == 2){
+            if(pq.empty()){
+                cout << que.front() << "\n";
+                que.pop();
+            } else {
+                cout << pq.top() << "\n";
+                pq.pop();
+            }
+        }
+        if(c == 3){
+            while(!que.empty()){
+                pq.push(que.front());
+                que.pop();
+            }
+        }
+    }
 }
 
 int main()

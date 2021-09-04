@@ -76,9 +76,27 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string s;
+map<string, bool> mp;
+
 void solve()
 {
-    
+    rep(i, 3){
+        cin >> s;
+        mp[s] = true;
+    }
+    if(mp.find("ABC") == mp.end()){
+        cout << "ABC\n";
+    }
+        if(mp.find("ARC") == mp.end()){
+        cout << "ARC\n";
+    }
+        if(mp.find("AGC") == mp.end()){
+        cout << "AGC\n";
+    }
+            if(mp.find("AHC") == mp.end()){
+        cout << "AHC\n";
+    }
 }
 
 int main()

@@ -76,9 +76,22 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+
 void solve()
 {
-    
+    cin >> N;
+    A = vi(N);
+    B = vi(N);
+    rep(i, N){
+        int a;
+        cin >> a;
+        B[--a] = i + 1;
+    }
+    rep(i, N){
+        cout << B[i] << (i == N - 1 ? "\n" : " ");
+    }
 }
 
 int main()

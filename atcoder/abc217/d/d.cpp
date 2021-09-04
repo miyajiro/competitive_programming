@@ -76,9 +76,64 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vi ans;
+int L, Q;
+vi C, X, Xs;
+
+vi W;
+int lef[200001];
+
+int getLef(int n){
+    if(n == lef[n]){
+        return n;
+    }
+    return lef[n] = getLef(lef[n]);
+}
+
 void solve()
 {
-    
+    cin >> L >> Q;
+    Xs.eb(0);
+    Xs.eb(L);
+    rep(q, Q){
+        int c, x;
+        cin >> c >> x;
+        C.eb(c);
+        X.eb(x);
+
+        if(c == 1){
+            Xs.eb(x);
+        }
+    }
+    sort(rng(Xs));
+    uni(Xs);
+    rep(i, sz(Xs) - 1){
+        W.eb(Xs[i+1] - Xs[i]);
+    }
+
+    int M = sz(W);
+    rep(m, M){
+        lef[m] = m;
+    }
+
+    rrep(q, Q){
+        int c = C[q];
+        int x = X[q];
+        if(c == 2){
+            int wi = upper_bound(rng(Xs), x) - Xs.begin() - 1;
+            ans.eb(W[getLef(wi)]);
+        } else {
+            int wi = lower_bound(rng(Xs), x) - Xs.begin();
+            int lefR = getLef(wi);
+            int lefL = getLef(wi - 1);
+            W[lefL] += W[lefR];
+            lef[lefR] = lefL;
+        }
+    }
+
+    rrep(i, ans.size()){
+        cout << ans[i] << "\n";
+    }
 }
 
 int main()

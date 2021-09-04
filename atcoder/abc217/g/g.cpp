@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,48 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+
+bool visited[5001][5001];
+vector<vector<mint>> memo;
+int N, M;
+
+mint calc(int N, int K){ // 0~N-1をK個のグループに分ける
+    // show(N);
+    // show(K);
+    if(visited[N][K]){
+        return memo[N][K];
+    }
+    visited[N][K] = true;
+
+    if(N < K){
+        return memo[N][K] = 0;
+    }
+
+    if(N == K){
+        return memo[N][K] = 1;
+    }
+
+    if(K == 1){
+        if(N <= M){
+            return memo[N][K] = 1;
+        } else {
+            return memo[N][K] = 0;
+        }
+    }
+
+    mint res = 0;
+    res = calc(N - 1, K - 1) + (K - (N - 1) / M) * calc(N - 1, K);
+    return memo[N][K] = res;
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+    memo = vector<vector<mint>>(N + 1, vector<mint>(N + 1, 0));
+    rep1(k, N){
+        cout << calc(N, k).val() << "\n";
+    }
 }
 
 int main()
