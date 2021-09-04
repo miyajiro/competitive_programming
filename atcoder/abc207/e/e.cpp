@@ -6,6 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -26,13 +27,13 @@ using namespace std;
 #define rng(a) a.begin(), a.end()
 #define rrng(a) a.rbegin(), a.rend()
 #define isin(x, l, r) ((l) <= (x) && (x) < (r))
-#define pb emplace_back
+#define pb push_back
 #define eb emplace_back
 #define sz(x) (int)(x).size()
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
+#define show(x) cerr << #x << " = " << x << endl;
 #define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
@@ -75,57 +76,61 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
-const int MOD = 1000000007;
-
+using mint = modint1000000007;
 int N;
-int ans = 0;
-vl A(3030), sum(3030);
-vector<vvi> modMemo(3030, vvi(3030)); // modMemo[k][v]: sum[i + 1]をkで割った余りがvとなるiを格納
+vl A, imosA;
 
-vvi dp(3030, vi(3030, 0)); // x番目までグループkの場合の数
-vvi ik2L(3030, vi(3030, -1));
+vector<vector<mint>> dp;
 
 void solve()
 {
     cin >> N;
 
     rep(i, N){
-        cin >> A[i];
+        ll a;
+        cin >> a;
+        A.eb(a);
     }
-
+    imosA.eb(0);
     rep(i, N){
-        sum[i + 1] = sum[i] + A[i];
-        rep1(k, N){
-            int m = sum[i+1] % k;
-            int szMemo = sz(modMemo[k][m]);
-            if(szMemo > 0){
-                ik2L[i][k] = modMemo[k][m][szMemo - 1];
-            }
-            modMemo[k][m].pb(i);
-        }
+        imosA.eb(imosA.back() + A[i]);
     }
 
-    rep(i, N){
-        rep1(k, i + 1){ // dp[i][k]: A[i]までがキリ良くグループk
-            if(k == 1){
-                dp[i][k] = 1;
-                continue;
-            }
-            int l = ik2L[i][k];
-            if(l < 0){
-                continue;
-            }
-            dp[i][k] = (dp[l][k] + dp[l][k-1]);
-            if(dp[i][k] >= MOD){
-                dp[i][k] -= MOD;
-            }
-        }
-    }
-
+    vvi memo(N+1, vi(N+1, -1)); // memo[n][k] = x: xはimosA[n]-imosA[x]%k==0なる最大のx
     rep1(k, N){
-        ans = (ans + dp[N - 1][k]) % MOD;
+        vvi modVal2IndexArray(k);
+        rep(n, N + 1){
+            modVal2IndexArray[imosA[n] % k].eb(n);
+        }
+
+        rep(i, k){
+            rep1(j, sz(modVal2IndexArray[i]) - 1){
+                int X = modVal2IndexArray[i][j]; // mod kがiとなるインデックス
+                int prevX = modVal2IndexArray[i][j - 1]; // mod kがiとなる1個前のインデックス
+
+                memo[X][k] = prevX;
+            }
+        }
     }
-    cout << ans << "\n";
+
+    // dp[k][n]: A[0]~A[n-1]を1~Kのグループに分ける場合の数
+    dp = vector<vector<mint>>(3001, vector<mint>(3001, 0));
+    dp[0][0] = 1;
+    rep1(k, N){
+        rep1(n, N){
+            int x = memo[n][k];
+            if(x == -1){ // kの倍数となる部分列が無い
+                continue;
+            }
+
+            dp[k][n] = dp[k-1][x] + dp[k][x];
+        }
+    }
+    mint ans = 0;
+    rep1(k, N){
+        ans += dp[k][N];
+    }
+    cout << ans.val() << "\n";
 }
 
 int main()
