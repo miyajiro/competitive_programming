@@ -7,7 +7,7 @@
 // #include <atcoder/math>
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
-// #include <atcoder/dsu>
+#include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
@@ -76,9 +76,63 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi origY, origX, Y, X;
+vp XI;
+vi i2OrigI;
+
 void solve()
 {
-    
+    cin >> N;
+
+    i2OrigI = vi(N);
+    Y = vi(N);
+    X = vi(N);
+
+    rep(i, N){
+        int x, y;
+        cin >> x >> y;
+        origY.eb(y);
+        origX.eb(x);
+        XI.eb(P(x, i));
+    }
+    sort(rng(XI));
+
+    rep(i, N){
+        P xi = XI[i];
+        Y[i] = origY[xi.sc];
+        X[i] = origX[xi.sc];
+        i2OrigI[i] = xi.sc;
+    }
+
+    dsu d(N);
+
+    stack<P> st; // (y, origI)
+
+    rep(i, N){
+        int y = Y[i];
+        int origI = i2OrigI[i];
+        P p;
+        bool merged = false;
+        if(!st.empty() && st.top().fr < y){
+            merged = true;
+            p = st.top();
+        }
+
+        while(!st.empty() && st.top().fr < y){
+            d.merge(origI, st.top().sc);
+            st.pop();
+        }
+        if(merged){
+            st.push(p);
+        } else {
+            st.push(P(y, origI));
+        }
+    }
+
+    rep(k, N){
+        cout << d.size(k) << "\n";
+    }
 }
 
 int main()
