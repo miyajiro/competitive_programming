@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,72 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+int N;
+vector<string> chars = {"A", "C", "G", "T"};
+map<string, bool> ok;
+vector<map<string, mint>> dp;
+vector<string> Ss;
+
 void solve()
 {
-    
+    cin >> N;
+    dp = vector<map<string, mint>>(N+1);
+    if(N == 3){
+        cout << 4 * 4 * 4 - 3 << "\n";
+        return;
+    }
+
+    for(auto c1 : chars){
+        for(auto c2 : chars){
+            for(auto c3 : chars){
+                for(auto c4 : chars){
+                    string s = c1 + c2 + c3 + c4;
+                    ok[s] = true;
+                    Ss.eb(s);
+
+                    rep(i, 4){
+                        string tmpS = s;
+                        if(i < 3){
+                            swap(tmpS[i], tmpS[i + 1]);
+                        }
+
+                        if(tmpS.substr(0, 3) == "AGC" || tmpS.substr(1, 3) == "AGC"){
+                            ok[s] = false;
+                        }
+                    }
+
+
+                    if(ok[s]){
+                        dp[4][s] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    srep(i, 4, N){ // dp[i]
+        for(auto nowS : Ss){
+            if(!ok[nowS]){
+                continue;
+            }
+
+            for(auto c : chars){
+                string nexS = nowS.substr(1, 3) + c;
+                if(!ok[nexS]){
+                    continue;
+                }
+
+                dp[i + 1][nexS] += dp[i][nowS];
+            }
+        }
+    }
+
+    mint ans = 0;
+    for(auto s : Ss){
+        ans += dp[N][s];
+    }
+    cout << ans.val() << "\n";
 }
 
 int main()
