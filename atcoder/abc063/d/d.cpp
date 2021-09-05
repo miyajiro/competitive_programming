@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, A, B;
+vl H;
+
+bool ok(ll m){
+    vl C(N);
+    rep(i, N){
+        C[i] = max(0LL, H[i] - B * m);
+    }
+
+    ll cnt = 0;
+    ll D = A - B;
+
+    rep(i, N){
+        cnt += (C[i] + D - 1) / D;
+    }
+
+    return cnt <= m;
+}
+
 void solve()
 {
-    
+    cin >> N >> A >> B;
+    rep(i, N){
+        ll h;
+        cin >> h;
+        H.eb(h);
+    }
+    ll l = 0;
+    ll r = 1e9 + 1;
+    ll mid;
+    while(r - l > 1){
+        mid = (l + r) / 2;
+        if(ok(mid)){
+            r = mid;
+        } else {
+            l = mid;
+        }
+    }
+    cout << r << "\n";
 }
 
 int main()
