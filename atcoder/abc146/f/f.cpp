@@ -76,9 +76,50 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+string S;
+
 void solve()
 {
-    
+    const int INF = 0xfffffff;
+    cin >> N >> M >> S;
+    vi dp(N+1, INF);
+    dp[N] = 0;
+
+    PQ(P) pq;
+    pq.push(P(0, N));
+
+    rrep(n, N){
+        // dp[n]を埋める
+        if(S[n] == '1'){
+            continue;
+        }
+        while(!pq.empty() && pq.top().sc > n + M){
+            pq.pop();
+        }
+        if(pq.empty()){
+            cout << "-1\n";
+            return;
+        }
+
+        LP lp = pq.top();
+        dp[n] = lp.fr + 1;
+
+        pq.push(P(dp[n], n));
+    }
+
+    int now = 0;
+    vi ans;
+    rep1(nex, N){
+        if(dp[now] - 1 == dp[nex]){
+            ans.eb(nex - now);
+            now = nex;
+        }
+    }
+
+    for(auto a : ans){
+        cout << a << " ";
+    }
 }
 
 int main()
