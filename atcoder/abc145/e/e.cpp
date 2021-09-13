@@ -76,9 +76,46 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, T;
+vi A, B;
+vector<P> AB;
+vi afterMax;
+vi dp;
+
 void solve()
 {
-    
+    cin >> N >> T;
+    --T;
+
+    dp = vi(T + 1, 0);
+    afterMax = vi(N);
+
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        AB.eb(P(a, b));
+    }
+    sort(rng(AB));
+    for(auto ab : AB){
+        A.eb(ab.fr);
+        B.eb(ab.sc);
+    }
+
+    afterMax[N - 1] = 0;
+    rrep(i, N - 1){
+        afterMax[i] = max(B[i + 1], afterMax[i + 1]);
+    }
+
+    int ans = 0;
+    rep(n, N){
+        rrep(t, T + 1){ // もらうDP
+            if(t - A[n] >= 0){
+                chmax(dp[t], dp[t - A[n]] + B[n]);
+            }
+        }
+        chmax(ans, dp[T] + afterMax[n]);
+    }
+    cout << ans << "\n";
 }
 
 int main()
