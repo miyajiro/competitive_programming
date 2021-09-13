@@ -167,43 +167,13 @@ void solve()
 
     S = compress(S);
 
-    // for(auto s : S){
-    //     cout << s << "\n";
-    // }
-
-    // cerr << "\n\n";
-
     T = compress(T);
-
-    // for(auto s : T){
-    //     cout << s << "\n";
-    // }
-
-    // cerr << "\n\n";
 
     S2 = rotate(S);
 
-    // for(auto s : S2){
-    //     cout << s << "\n";
-    // }
-
-    // cerr << "\n\n";
-
     S3 = rotate(S2);
 
-    // for(auto s : S3){
-    //     cout << s << "\n";
-    // }
-
-    cerr << "\n\n";
-
-        S4 = rotate(S3);
-
-    // for(auto s : S4){
-    //     cout << s << "\n";
-    // }
-
-    // cerr << "\n\n";
+    S4 = rotate(S3);
 
     if(same(S, T) || same(S2, T) || same(S3, T) || same(S4, T)){
         cout << "Yes\n";
