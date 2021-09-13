@@ -76,9 +76,17 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string s;
+int n;
+
 void solve()
 {
-    
+    cin >> n >> s;
+    if(s[n - 1] == 'o'){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()

@@ -76,9 +76,41 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi Y, X;
+set<P> yx;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int y, x;
+        cin >> x >> y;
+        Y.eb(y);
+        X.eb(x);
+        yx.insert(P(y, x));
+    }
+
+    int ans = 0;
+
+    rep(n1, N){
+        rep(n2, N){
+            int y1 = Y[n1];
+            int x1 = X[n1];
+            int y2 = Y[n2];
+            int x2 = X[n2];
+
+            if(y1 >= y2 || x1 >= x2){
+                continue;
+            }
+
+            if(yx.find(P(y1, x2)) != yx.end() && yx.find(P(y2, x1)) != yx.end()){
+                ans++;
+            }
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

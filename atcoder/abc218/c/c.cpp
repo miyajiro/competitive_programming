@@ -76,9 +76,140 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+
+vector<string> compress(vector<string> S){
+    int H = sz(S);
+    int W = sz(S[0]);
+
+    int minY = H;
+    int maxY = -1;
+    int minX = W;
+    int maxX = -1;
+
+    rep(h, H){
+        rep(w, W){
+            if(S[h][w] == '#'){
+                chmin(minY, h);
+                chmax(maxY, h);
+                chmin(minX, w);
+                chmax(maxX, w);
+            }
+        }
+    }
+
+    int newH = maxY - minY + 1;
+    int newW = maxX - minX + 1;
+
+    vector<string> res(newH);
+
+    rep(h, newH){
+        rep(w, newW){
+            if(S[minY + h][minX + w] == '#'){
+                res[h] += '#';
+            } else {
+                res[h] += '.';
+            }
+        }
+    }
+
+    return res;
+}
+
+vector<string> rotate(vector<string> S){
+    int H = sz(S);
+    int W = sz(S[0]);
+
+    vector<string> res(W);
+    rep(h, W){
+        rep(w, H){
+            res[h] += S[H - 1 - w][h];
+        }
+    }
+
+    return res;
+}
+
+bool same(vector<string> S, vector<string> T){
+    if(sz(S) != sz(T) || sz(S[0]) != sz(T[0])){
+        return false;
+    }
+
+    int H = sz(S);
+    int W = sz(S[0]);
+
+    rep(h, H){
+        rep(w, W){
+            if(S[h][w] != T[h][w]){
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 void solve()
 {
-    
+    int N;
+    cin >> N;
+
+    vector<string> S(N), T(N);
+    vector<string> S2, S3, S4;
+
+    rep(h, N){
+        cin >> S[h];
+    }
+
+    rep(h, N){
+        cin >> T[h];
+    }
+
+    S = compress(S);
+
+    // for(auto s : S){
+    //     cout << s << "\n";
+    // }
+
+    // cerr << "\n\n";
+
+    T = compress(T);
+
+    // for(auto s : T){
+    //     cout << s << "\n";
+    // }
+
+    // cerr << "\n\n";
+
+    S2 = rotate(S);
+
+    // for(auto s : S2){
+    //     cout << s << "\n";
+    // }
+
+    // cerr << "\n\n";
+
+    S3 = rotate(S2);
+
+    // for(auto s : S3){
+    //     cout << s << "\n";
+    // }
+
+    cerr << "\n\n";
+
+        S4 = rotate(S3);
+
+    // for(auto s : S4){
+    //     cout << s << "\n";
+    // }
+
+    // cerr << "\n\n";
+
+    if(same(S, T) || same(S2, T) || same(S3, T) || same(S4, T)){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()

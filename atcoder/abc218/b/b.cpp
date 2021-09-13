@@ -76,9 +76,17 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int n = 26;
+string ans;
+
 void solve()
 {
-    
+    rep(i, n){
+        int a;
+        cin >> a;
+        ans += a - 1 + 'a';
+    }
+    cout << ans << "\n";
 }
 
 int main()

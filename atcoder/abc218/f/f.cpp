@@ -76,9 +76,101 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int inf = INT32_MAX;
+int hasEdge[400][400];
+int N, M;
+vi S, T;
+bool used[400 * 400];
+int minD = 0;
+
+vi calc(bool s){
+    vvi G(N);
+    vvi revG(N);
+    rep(i, N){
+        rep(j, N){
+            if(hasEdge[i][j] != -1){
+                G[i].eb(j);
+                revG[j].eb(i);
+            }
+        }
+    }
+
+    vi D(N, inf);
+    D[0] = 0;
+    queue<int> q;
+    q.push(0);
+
+    while(!q.empty()){
+        int n = q.front();
+        q.pop();
+
+        for(auto nex : G[n]){
+            if(chmin(D[nex], D[n] + 1)){
+                q.push(nex);
+            }
+        }
+    }
+
+    if(s){
+        if(D[N - 1] == inf){
+            D[N - 1] = -1;
+        }
+        cout << D[N - 1] << "\n";
+        return {};
+    }
+
+    vi res;
+    if(D[N - 1] == inf){
+        minD = -1;
+        return {};
+    }
+    int pos = N - 1;
+    while(pos != 0){
+        res.eb(pos);
+        for(auto prev : revG[pos]){
+            if(D[prev] == D[pos] - 1){
+                used[hasEdge[prev][pos]] = true;
+                pos = prev;
+                break;
+            }
+        }
+    }
+    res.eb(0);
+    minD = D[N - 1];
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+
+    rep(i, N){
+        rep(j, N){
+            hasEdge[i][j] = -1;
+        }
+    }
+
+    rep(i, M){
+        int s, t;
+        cin >> s >> t;
+        S.eb(--s);
+        T.eb(--t);
+        hasEdge[s][t] = i;
+    }
+
+    calc(false);
+    if(minD == inf){
+        minD = -1;
+    }
+    rep(i, M){
+        if(!used[i]){
+            cout << minD << "\n";
+            continue;
+        }
+        hasEdge[S[i]][T[i]] = -1;
+        calc(true);
+        hasEdge[S[i]][T[i]] = i;
+    }
 }
 
 int main()

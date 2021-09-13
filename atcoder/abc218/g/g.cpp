@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,129 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, L;
+vl A;
+vl As;
+vl U, V;
+vvl G;
+vl maxMedians, minMedians;
+fenwick_tree<ll> ft;
+
+void calcMedians(ll now, ll prev){
+    ft.add(A[now], 1); // 今入ってる
+
+    if(sz(G[now]) == 1 && G[now][0] == prev){ // 末端の場合
+        // この時点のftから中央値求める
+        ll ftSum = ft.sum(0, L);
+        if(ftSum % 2 == 0){ // 偶数個
+            ll medVal1 = ftSum / 2;
+            ll l1 = -1LL;
+            ll r1 = L;
+
+            while(r1 - l1 > 1){
+                ll mid = (l1 + r1) / 2;
+                if(ft.sum(0, mid + 1) >= medVal1){
+                    r1 = mid;
+                } else {
+                    l1 = mid;
+                }
+            }
+
+            ll medVal2 = ftSum / 2 + 1;
+            ll l2 = -1LL;
+            ll r2 = L;
+
+            while(r2 - l2 > 1){
+                ll mid = (l2 + r2) / 2;
+                if(ft.sum(0, mid + 1) >= medVal2){
+                    r2 = mid;
+                } else {
+                    l2 = mid;
+                }
+            }
+
+            ll m = (As[r1] + As[r2]) / 2;
+            maxMedians[now] = m;
+            minMedians[now] = m;
+        } else { // 奇数個
+            ll medVal = ftSum / 2 + 1;
+            ll l = -1LL;
+            ll r = L;
+
+            while(r - l > 1){
+                ll mid = (l + r) / 2;
+                if(ft.sum(0, mid + 1) >= medVal){
+                    r = mid;
+                } else {
+                    l = mid;
+                }
+            }
+            maxMedians[now] = As[r];
+            minMedians[now] = As[r];
+        }
+
+        ft.add(A[now], -1LL);
+        return;
+    }
+
+    ll maxMed = 0;
+    ll minMed = 0xfffffffffffffff;
+    for(auto nex : G[now]){
+        if(nex == prev){
+            continue;
+        }
+
+        calcMedians(nex, now);
+
+        chmax(maxMed, minMedians[nex]);
+        chmin(minMed, maxMedians[nex]);
+    }
+
+    maxMedians[now] = maxMed;
+    minMedians[now] = minMed;
+
+    ft.add(A[now], -1LL);
+}
+
 void solve()
 {
-    
+    cin >> N;
+    G = vvl(N);
+    maxMedians = vl(N);
+    minMedians = vl(N);
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+        As.eb(a);
+    }
+    sort(rng(As));
+    uni(As);
+
+    rep(i, N){
+        A[i] = (lower_bound(rng(As), A[i]) - As.begin());
+    }
+    L = sz(As);
+    ft = fenwick_tree<ll>(L);
+
+    rep(i, N - 1){
+        ll u, v;
+        cin >> u >> v;
+        U.eb(--u);
+        V.eb(--v);
+        G[u].eb(v);
+        G[v].eb(u);
+    }
+
+    calcMedians(0, -1LL);
+
+    // rep(i, N){
+    //     show(i + 1);
+    //     show(maxMedians[i]);
+    //     show(minMedians[i]);
+    // }
+
+    cout << maxMedians[0] << "\n";
 }
 
 int main()
