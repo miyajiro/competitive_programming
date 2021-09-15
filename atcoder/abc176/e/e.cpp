@@ -76,9 +76,79 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+int M;
+vi Y, X;
+map<int, int> y2Cnt;
+map<int, int> x2Cnt;
+set<P> exist;
+
 void solve()
 {
-    
+    cin >> H >> W >> M;
+
+    if(M == 1){
+        cout << 1 << "\n";return;
+    }
+    rep(i, M){
+        int y, x;
+        cin >> y >> x;
+        exist.insert(P(y, x));
+        y2Cnt[y]++;
+        x2Cnt[x]++;
+        Y.eb(y);
+        X.eb(x);
+    }
+
+    vp cntAndY;
+    vp cntAndX;
+
+    for(const auto& [y, cnt] : y2Cnt){
+        cntAndY.eb(P(cnt, y));
+    }
+
+    for(const auto [x, cnt] : x2Cnt){
+        cntAndX.eb(P(cnt, x));
+    }
+
+    sort(rrng(cntAndY));
+    sort(rrng(cntAndX));
+
+    int maxYVal = cntAndY[0].fr;
+    int maxXVal = cntAndX[0].fr;
+
+    ll yRng = 0;
+    rep(i, sz(cntAndY)){
+        int cnt = cntAndY[i].fr;
+        if(cnt == maxYVal){
+            yRng++;
+        }
+    }
+
+    ll xRng = 0;
+    rep(i, sz(cntAndX)){
+        int cnt = cntAndX[i].fr;
+        if(cnt == maxXVal){
+            xRng++;
+        }
+    }
+    ll koho = yRng * xRng; // ホットスポット
+
+    rep(i, M){
+        int y = Y[i];
+        int x = X[i];
+        if(y2Cnt[y] == maxYVal && x2Cnt[x] == maxXVal){
+            koho--;
+        }
+    }
+
+    int ans = maxYVal + maxXVal - 1;
+
+    if(koho > 0){
+        ans++;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
