@@ -1,5 +1,22 @@
+#define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-#include <atcoder/all>
+// #include <atcoder/fenwicktree>
+// #include <atcoder/segtree>
+// #include <atcoder/lazysegtree>
+// #include <atcoder/string>
+// #include <atcoder/math>
+// #include <atcoder/convolution>
+// #include <atcoder/modint>
+// #include <atcoder/dsu>
+// #include <atcoder/maxflow>
+// #include <atcoder/mincostflow>
+// #include <atcoder/scc>
+// #include <atcoder/twosat>
+
+namespace atcoder{};
+using namespace atcoder;
+using namespace std;
+
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -16,13 +33,11 @@
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
-#define PQ(T) priority_queue<T, v(T), greater<T>>
+#define show(x) cerr << #x << " = " << x << endl;
+#define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
-using namespace std;
-using namespace atcoder;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
@@ -31,6 +46,7 @@ using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
+using vvl = vector<vl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
@@ -60,9 +76,66 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll pow2Minus[50];
+ll pow2[50];
+bool is1[50];
+int maxKeta;
+
+void calc(ll N){
+    if(N == 0){
+        return;
+    }
+    int cnt = 0;
+    ll r = 1;
+
+    while(true){
+        if(cnt % 2 == 0){
+            if(N <= r && N >= 0){
+                is1[cnt] = true;
+                N -= pow2Minus[cnt];
+                calc(N);
+                return;
+            }
+            r = r - pow2[cnt + 2] + 1;
+        } else {
+            if(r <= N && N < 0){
+                is1[cnt] = true;
+                N -= pow2Minus[cnt];
+                calc(N);
+                return;
+            }
+            r = r + pow2[cnt + 2] - 1;
+        }
+        cnt++;
+    }
+}
+
 void solve()
 {
-    
+    ll N;
+    pow2Minus[0] = 1;
+    pow2[0] = 1;
+    rep1(i, 49){
+        pow2Minus[i] = pow2Minus[i - 1] * -2LL;
+        pow2[i] = pow2[i - 1] * 2LL;
+    }
+    cin >> N;
+    calc(N);
+    string ans;
+    rep(i, 50){
+        if(is1[i]){
+            maxKeta = i;
+        }
+    }
+    rep(i, maxKeta + 1){
+        if(is1[i]){
+            ans = "1" + ans;
+        } else {
+            ans = "0" + ans;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
