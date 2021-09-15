@@ -76,9 +76,56 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+int cnt[26];
+
 void solve()
 {
-    
+    cin >> H >> W;
+    rep(h, H){
+        string s;
+        cin >> s;
+        rep(w, W){
+            cnt[s[w] - 'a']++;
+        }
+    }
+
+    int x = (H / 2) * (W / 2);
+    int y = 0;
+    if(H % 2 == 1){
+        y += W / 2;
+    }
+    if(W % 2 == 1){
+        y += H / 2;
+    }
+
+    rep(_, x){ // 4つずつcnt減らす
+        rep(c, 26){
+            if(cnt[c] >= 4){
+                cnt[c] -= 4;
+                goto nex;
+            }
+        }
+
+        cout << "No\n";
+        return;
+        nex: ;
+    }
+
+    rep(_, y){ // 2つずつcnt減らす
+        rep(c, 26){
+            if(cnt[c] >= 2){
+                cnt[c] -= 2;
+                goto nexg;
+            }
+        }
+
+        cout << "No\n";
+        return;
+        nexg: ;
+    }
+
+    cout << "Yes\n";
 }
 
 int main()
