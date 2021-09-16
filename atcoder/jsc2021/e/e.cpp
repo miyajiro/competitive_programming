@@ -62,31 +62,82 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
-ll K;
-ll N;
-string S;
-v(string) minS;
-v(char) seiyaku[20];
-
-void dfs(int l, int r, int depth){
-    if(depth == K){
-        minS.pb(S.substr(l, r - l));
-        return;
-    }
-
-    if((r - l) % 2 == 1){
-        seiyaku[depth].pb(S[(l + r - 1) / 2]);
-    }
-}
-
 int main()
 {
-    cin >> K;
-    cin >> S;
+    int K;
+    string S;
+    cin >> K >> S;
+    int N = S.size();
+    vector<valarray<int>> c(N, valarray<int>(0, 26));
 
-    N = S.size();
+    rep(i, N){
+        c[i][S[i] - 'a']++;
+    }
 
-    dfs(0, S.size(), 0);
+    if(K > 20 || (K > 0 && (N >> (K - 1)) == 0) || (N >> K) == 1) {
+        cout << "impossible\n";
+        return 0;
+    }
+
+    int ans = 0, x = 0;
+
+    for(; x < K; x++){
+        const int L = N / 2;
+        bool odd = (N % 2 == 1);
+
+        rep(i, L){
+            c[i] += c.back();
+            c.pop_back();
+        }
+
+        if(odd){
+            ans += (1 << x) - c.back().max();
+            c.pop_back();
+        }
+        N = L;
+    }
+
+    if(N == 0){
+        cout << ans << "\n";
+        return 0;
+    }
+
+    const int L = N / 2;
+    bool odd = (N % 2 == 1);
+
+    int costDiff = INT32_MAX;
+
+    rep(i, L){
+        auto &a = c[i];
+        auto &b = c.back();
+
+        vi ia(26), ib(26);
+
+        iota(rng(ia), 0);
+        iota(rng(ib), 0);
+
+        sort(rng(ia), [&](int x, int y){return a[x] > a[y];});
+        sort(rng(ib), [&](int x, int y){return b[x] > b[y];});
+        // partial_sort(ia.begin(), ia.begin() + 2, ia.end(), [&](int x, int y){return a[x] > a[y];});
+        // partial_sort(ib.begin(), ib.begin() + 2, ib.end(), [&](int x, int y){return b[x] > b[y];});
+
+        if(ia[0] != ib[0]){
+            costDiff = 0;
+        }
+
+        ans += (1 << x) - a[ia[0]];
+        ans += (1 << x) - b[ib[0]];
+
+        chmin(costDiff, a[ia[0]] - a[ia[1]]);
+        chmin(costDiff, b[ib[0]] - b[ib[1]]);
+
+        c.pop_back();
+    }
+    if(odd) {
+        ans += (1 << x) - c.back().max();
+    }
+    ans += costDiff;
+    cout << ans << "\n";
 
     return 0;
 }
