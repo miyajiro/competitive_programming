@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,42 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+int N;
+vl A;
+vector<mint> pow2(61, 0);
+
 void solve()
 {
-    
+    pow2[0] = 1;
+    rep1(i, 60){
+        pow2[i] = pow2[i - 1] * 2;
+    }
+    cin >> N;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    mint ans = 0;
+    rep(i, 60){
+        mint cnt0 = 0;
+        mint cnt1 = 0;
+
+        rep(ni, N){
+            ll a = A[ni];
+            if((a >> i) % 2LL == 1LL){
+                cnt1++;
+            } else {
+                cnt0++;
+            }
+        }
+
+        ans += cnt0 * cnt1 * pow2[i];
+    }
+
+    cout << ans.val() << "\n";
 }
 
 int main()
