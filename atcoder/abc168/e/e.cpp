@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,68 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+
+map<LP, int> mp1; // 第１象限+y軸正
+map<LP, int> mp4; // 第４象限+x軸正
+set<LP> st;
+
+int N;
+vl A, B;
+
+ll gcd(ll a, ll b){
+    if(b == 0LL){
+        return a;
+    }
+    return gcd(b, a % b);
+}
+
 void solve()
 {
-    
+    int N;
+    cin >> N;
+    int cnt0 = 0;
+    rep(i, N){
+        ll a, b;
+        cin >> a >> b;
+        A.eb(a);
+        B.eb(b);
+
+        if(a == 0LL && b == 0LL){
+            cnt0++;
+            continue;
+        }
+
+        ll g = gcd(abs(a), abs(b));
+        a /= g;
+        b /= g;
+
+        if(a == 0LL && b < 0LL){
+            b = -b;
+        }
+
+        if(a < 0LL){
+            a = -a;
+            b = -b;
+        }
+
+        if(b > 0LL){ // 第1象限の場合
+            st.insert(LP(a, b));
+            mp1[LP(a, b)] += 1;
+        } else { // 第4象限の場合
+            st.insert(LP(-b, a));
+            mp4[LP(-b, a)] += 1;
+        }
+    }
+
+    mint ans = 1;
+    mint m2 = 2;
+    for(auto lp : st){
+        ans *= (m2.pow(mp1[lp]) + m2.pow(mp4[lp]) - 1);
+    }
+    ans--;
+    ans += cnt0;
+    cout << ans.val() << "\n";
 }
 
 int main()
