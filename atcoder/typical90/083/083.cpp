@@ -135,7 +135,8 @@ void solve()
         P connectedTimeAndColorMax = P(node.tmpTime, node.tmpColor);
         for(auto star : starG[x]){
             T starNode = nodes[star];
-            chmax(connectedTimeAndColorMax, P(starNode.selfTime, starNode.selfColor));
+          	if(connectedTimeAndColorMax.fr < starNode.selfTime)
+              connectedTimeAndColorMax = P(starNode.selfTime, starNode.selfColor);
         }
         cout << connectedTimeAndColorMax.sc << "\n";
 
