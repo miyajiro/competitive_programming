@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,46 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+int H, W, K;
+vector<vector<mint>> dp;
+
 void solve()
 {
-    
+    cin >> H >> W >> K;
+    dp = vector<vector<mint>>(H + 1, vector<mint>(W, 0));
+    dp[0][0] = 1;
+
+    vector<int> S;
+
+    int N = W - 1;
+    rep(s, 1 << N){
+        bool ok = true;
+        rep(i, N - 1){
+            if((s >> i) % 2 == 1 && (s >> (i + 1)) % 2 == 1){
+                ok = false;
+            }
+        }
+        if(ok){
+            S.eb(s);
+        }
+    }
+
+    rep(h, H){
+        rep(w, W){
+            for(auto s : S){
+                if((s >> w) % 2 == 1){ // 右
+                    dp[h + 1][w + 1] += dp[h][w];
+                } else if(w > 0 && ((s >> (w - 1)) % 2 == 1)){ // 左
+                    dp[h + 1][w - 1] += dp[h][w];
+                } else { // そのまま
+                    dp[h + 1][w] += dp[h][w];
+                }
+            }
+        }
+    }
+
+    cout << dp[H][K - 1].val() << "\n";
 }
 
 int main()
