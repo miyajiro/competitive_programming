@@ -76,9 +76,117 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int A[4][4];
+int X[4][4];
+int Y[4][4];
+int a = 0;
+int vy[4] = {1, 0, -1, 0};
+int vx[4] = {0, 1, 0, -1};
+
+bool ok(int y, int x){
+    return isin(y, 0, 4) && isin(x, 0, 4);
+}
+
+void dfs(int y, int x){
+    X[y][x] = 0;
+    rep(i, 4){
+        int ny = y + vy[i];
+        int nx = x + vx[i];
+        if(ok(ny, nx) && X[ny][nx] == 1){
+            dfs(ny, nx);
+        }
+    }
+}
+
+void dfs2(int y, int x){
+    Y[y][x] = 0;
+    rep(i, 4){
+        int ny = y + vy[i];
+        int nx = x + vx[i];
+        if(ok(ny, nx) && Y[ny][nx] == 1){
+            dfs2(ny, nx);
+        }
+    }
+}
+
+bool ok(int b){ // bで表されるやつがaを全部含みかつ
+    if((a & b) != a){
+        return false;
+    }
+
+    // 連結判定
+    rep(i, 4){
+        rep(j, 4){
+            int n = i * 4 + j;
+            if((b >> n) % 2 == 1){
+                X[i][j] = 1;
+                Y[i][j] = 0;
+            } else {
+                X[i][j] = 0;
+                Y[i][j] = 1;
+            }
+        }
+    }
+
+    int cnt = 0;
+    rep(i, 4){
+        rep(j, 4){
+            if(X[i][j] == 1){
+                dfs(i, j);
+                cnt++;
+            }
+        }
+    }
+    if(cnt > 1){
+        return false;
+    }
+
+    // 自己交差判定
+    rep(i, 4){
+        if(Y[i][0] == 1){
+            dfs2(i, 0);
+        }
+        if(Y[0][i] == 1){
+            dfs2(0, i);
+        }
+        if(Y[i][3] == 1){
+            dfs2(i, 3);
+        }
+        if(Y[3][i] == 1){
+            dfs2(3, i);
+        }
+    }
+
+    rep(i, 4){
+        rep(j, 4){
+            if(Y[i][j] == 1){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void solve()
 {
-    
+    rep(i, 4){
+        rep(j, 4){
+            cin >> A[i][j];
+            int n = i * 4 + j;
+            if(A[i][j] == 1){
+                a |= 1 << n;
+            }
+        }
+    }
+
+    int ans = 0;
+    rep(s, 1 << 16){
+        if(ok(s)){
+            ans++;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

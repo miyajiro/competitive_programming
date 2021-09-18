@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const int INF = 0xfffffff;
+int dp[301][301];
+int N, X, Y;
+vi A, B;
+
 void solve()
 {
-    
+    cin >> N >> X >> Y;
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        A.eb(a);
+        B.eb(b);
+    }
+
+    rep(x, X + 1){
+        rep(y, Y + 1){
+            dp[x][y] = INF;
+        }
+    }
+    dp[0][0] = 0;
+
+    rep(ni, N){
+        rrep(x, X + 1){
+            rrep(y, Y + 1){
+                int a = A[ni];
+                int b = B[ni];
+                int nx = min(X, x + a);
+                int ny = min(Y, y + b);
+
+                chmin(dp[nx][ny], dp[x][y] + 1);
+            }
+        }
+    }
+
+    if(dp[X][Y] == INF){
+        dp[X][Y] = -1;
+    }
+    cout << dp[X][Y] << "\n";
 }
 
 int main()

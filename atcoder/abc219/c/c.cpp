@@ -76,9 +76,39 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string X;
+int N;
+vector<string> S;
+using T = pair<string, int>;
+vector<T> mAndI;
+int oldToNew[26];
+
 void solve()
 {
-    
+    cin >> X >> N;
+    rep(i, 26){
+        oldToNew[X[i] - 'a'] = i;
+    }
+
+    rep(i, N){
+        string s;
+        cin >> s;
+        S.eb(s);
+
+        string m;
+        rep(j, sz(s)){
+            char newAlp = oldToNew[s[j] - 'a'] + 'a';
+            m += newAlp;
+        }
+
+        mAndI.eb(T(m, i));
+    }
+    sort(rng(mAndI));
+
+    for(auto t : mAndI){
+        cout << S[t.sc] << "\n";
+    }
+
 }
 
 int main()

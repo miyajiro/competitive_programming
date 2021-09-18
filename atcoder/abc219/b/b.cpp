@@ -76,9 +76,17 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+vector<string> s(3);
+string t;
+    string ans;
+
 void solve()
 {
-    
+    cin >> s[0] >> s[1] >> s[2] >> t;
+    rep(i, sz(t)){
+        ans += s[t[i] - '1'];
+    }
+    cout << ans << "\n";
 }
 
 int main()

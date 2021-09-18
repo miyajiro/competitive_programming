@@ -76,9 +76,21 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int x;
+
+
 void solve()
 {
-    
+    cin >> x;
+    if(x >= 90){
+        cout << "expert\n";
+    } else if(x >= 70) {
+        cout << 90 - x << "\n";
+    } else if(x >= 40){
+        cout << 70 - x << "\n";
+    } else {
+        cout << 40 - x << "\n";
+    }
 }
 
 int main()

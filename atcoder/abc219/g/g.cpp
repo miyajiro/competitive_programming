@@ -76,9 +76,116 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const int B = 650;
+
+struct T{
+    int tmpColor;
+    int tmpTime;
+    int selfColor;
+    int selfTime;
+};
+
+int N, M, Q;
+vi X, Y;
+vvi G, starG;
+vi R;
+vector<bool> isStar;
+vector<T> nodes;
+
 void solve()
 {
-    
+    cin >> N >> M >> Q;
+    G = vvi(N);
+    starG = vvi(N);
+    R = vi(N);
+    isStar = vector<bool>(N, false);
+    nodes = vector<T>(N, T{1, -1, 1, -1});
+
+    rep(i, N){
+        nodes[i].selfColor = i + 1;
+        nodes[i].tmpColor = i + 1;
+    }
+
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        G[--a].eb(--b);
+        G[b].eb(a);
+        R[a]++;
+        R[b]++;
+    }
+
+    rep(n, N){
+        if(R[n] >= B){
+            isStar[n] = true;
+        }
+    }
+
+    rep(n, N){
+        for(auto nex : G[n]){
+            if(isStar[nex]){
+                starG[n].eb(nex);
+            }
+        }
+    }
+
+    rep(q, Q){
+        int x, y;
+        cin >> x;
+        T& node = nodes[--x];
+
+        // 次数B以上の周囲から情報取得
+        P connectedTimeAndColorMax = P(node.tmpTime, node.tmpColor);
+        for(auto star : starG[x]){
+            T starNode = nodes[star];
+            if(connectedTimeAndColorMax.first < starNode.selfTime){
+                connectedTimeAndColorMax = P(starNode.selfTime, starNode.selfColor);
+            }
+        }
+        y = connectedTimeAndColorMax.sc;
+
+        node.selfColor = y;
+        node.selfTime = q;
+        node.tmpColor = y;
+        node.tmpTime = q;
+
+        if(isStar[x]){
+            // 次数B以上の周囲を更新
+            for(auto star : starG[x]){
+                T& starNode = nodes[star];
+                starNode.tmpColor = y;
+                starNode.tmpTime = q;
+            }
+        } else {
+            // 周囲の頂点全部更新
+            for(auto g : G[x]){
+                T& node = nodes[g];
+                node.tmpColor = y;
+                node.tmpTime = q;
+            }
+        }
+    }
+
+    rep(i, N){
+        int x = i;
+        T& node = nodes[x];
+
+        // 次数B以上の周囲から情報取得
+        P connectedTimeAndColorMax = P(node.tmpTime, node.tmpColor);
+        for(auto star : starG[x]){
+            T starNode = nodes[star];
+            if(connectedTimeAndColorMax.first < starNode.selfTime){
+                connectedTimeAndColorMax = P(starNode.selfTime, starNode.selfColor);
+            }
+        }
+        int y = connectedTimeAndColorMax.sc;
+        cout << y;
+        if(i == N - 1){
+            cout << "\n";
+        } else {
+            cout << " ";
+        }
+    }
 }
 
 int main()
