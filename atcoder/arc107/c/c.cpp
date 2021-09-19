@@ -6,8 +6,8 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
-// #include <atcoder/dsu>
+#include <atcoder/modint>
+#include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
@@ -33,7 +33,7 @@ using namespace std;
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
+#define show(x) cerr << #x << " = " << x << endl;
 #define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
@@ -76,9 +76,54 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+int N, K;
+mint kaijo[10001];
+
+mint calc(vector<valarray<int>> rows){
+    vector<bool> used(N, false);
+    dsu d(N);
+    rep(i, N){
+        srep(j, i + 1, N){
+            valarray<int> A = rows[i] + rows[j];
+            int k = A.max();
+            if(k <= K){
+                d.merge(i, j);
+            }
+        }
+    }
+    mint res = 1;
+
+    rep(i, N){
+        int x = d.leader(i);
+        if(used[x]){
+            continue;
+        }
+        used[x] = true;
+        res *= kaijo[d.size(x)];
+    }
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    vector<valarray<int>> yoko(N, valarray<int>(N)), tate(N, valarray<int>(N));
+
+    kaijo[0] = 1;
+    rep1(i, 10000){
+        kaijo[i] = kaijo[i - 1] * i;
+    }
+
+    rep(i, N){
+        rep(j, N){
+            cin >> yoko[i][j];
+            tate[j][i] = yoko[i][j];
+        }
+    }
+
+    mint ans = calc(tate) * calc(yoko);
+    cout << ans.val() << "\n";
 }
 
 int main()
