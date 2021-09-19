@@ -76,9 +76,84 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string s1, s2, s3;
+set<char> st;
+map<char, int> mp;
+
 void solve()
 {
-    
+    cin >> s1 >> s2 >> s3;
+    rep(i, sz(s1)){
+        st.insert(s1[i]);
+    }
+    rep(i, sz(s2)){
+        st.insert(s2[i]);
+    }
+    rep(i, sz(s3)){
+        st.insert(s3[i]);
+    }
+
+    if(st.size() > 10){
+        cout << "UNSOLVABLE" << "\n";
+        return;
+    }
+
+    int C = 0;
+    {
+        for(auto c : st){
+            mp[c] = C;
+            C++;
+        }
+    }
+    vi vec(10);
+    iota(rng(vec), 0);
+    vl pow10(10);
+    pow10[0] = 1LL;
+    rep(i, 9){
+        pow10[i + 1] = pow10[i] * 10LL;
+    }
+
+    do {
+        ll a = 0;
+        ll b = 0;
+        ll c = 0;
+
+        rrep(i, sz(s1)){
+            int n = sz(s1);
+            ll val = vec[mp[s1[i]]];
+            if(i == 0 && val == 0){
+                goto nx;
+            }
+            a += pow10[n - 1 - i] * val;
+        }
+
+        rrep(i, sz(s2)){
+            int n = sz(s2);
+            ll val = vec[mp[s2[i]]];
+            if(i == 0 && val == 0){
+                goto nx;
+            }
+            b += pow10[n - 1 - i] * val;
+        }
+
+        rrep(i, sz(s3)){
+            int n = sz(s3);
+            ll val = vec[mp[s3[i]]];
+            if(i == 0 && val == 0){
+                goto nx;
+            }
+            c += pow10[n - 1 - i] * val;
+        }
+
+        if(a + b == c){
+            cout << a << "\n" << b << "\n" << c << "\n";
+            return;
+        }
+
+        nx: ;
+    } while(next_permutation(rng(vec)));
+
+    cout << "UNSOLVABLE\n";
 }
 
 int main()
