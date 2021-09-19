@@ -76,9 +76,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi L, R;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    if(M == 0){
+        int now = 1;
+        rep(i, N){
+            cout << now << " " << now + 1 << "\n";
+            now += 2;
+        }
+        return;
+    }
+
+    if(M < 0 || N - 1 <= M){
+        cout << "-1\n";
+        return;
+    }
+
+    L.eb(1);
+    R.eb(1e8);
+    int now = 2;
+    rep(i, M + 1){
+        L.eb(now);
+        R.eb(now + 1);
+        now += 2;
+    }
+    now = 1e8 + 1;
+    rep(i, N - M - 2){
+        L.eb(now);
+        R.eb(now + 1);
+        now += 2;
+    }
+
+    rep(i, N){
+        cout << L[i] << " " << R[i] << "\n";
+    }
 }
 
 int main()
