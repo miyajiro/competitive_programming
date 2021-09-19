@@ -76,9 +76,22 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll d, n, m;
+double ans = 0;
+
 void solve()
 {
-    
+    cin >> n >> m >> d;
+    double _n = n;
+
+    ll a = (n - d) * 2;
+    if(d == 0){
+        a = n;
+    }
+
+    ans = ((m - 1) / _n) * (a / _n);
+
+    cout << ans << "\n";
 }
 
 int main()
