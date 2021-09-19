@@ -76,9 +76,77 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, K;
+vl A, imosA;
+int B = 600;
+
+ll calcSum(int l, int r){
+    assert(0 <= l && r <= N);
+    return imosA[r] - imosA[l];
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    ll sumA = 0;
+    ll maxA = 0;
+    imosA = vl(N + 1, 0);
+
+    rep(i, N){
+        ll a;
+        cin >> a;
+        sumA += a;
+        chmax(maxA, a);
+        A.eb(a);
+    }
+
+    if(maxA * N - sumA <= K){ // 全部に同じ数分配する場合
+        K -= (maxA * N - sumA);
+        ll ans = maxA;
+        ans += K / N;
+        cout << ans << "\n";
+        return;
+    }
+
+    sort(rng(A));
+    rep(i, N){
+        imosA[i + 1] = imosA[i] + A[i];
+    }
+
+    int ans = 1; // ここで答えがmaxA未満であると確定
+    rep1(x, B - 1){ // 愚直
+        ll cost = 0;
+        rep(ni, N){
+            ll a = A[ni];
+            if(a % x == 0){
+                continue;
+            }
+            cost += (x - a % x);
+        }
+        if(cost <= K){
+            chmax(ans, x);
+        }
+    }
+
+    srep(x, B, maxA){ // 工夫するところ
+        // x >= 600
+        int sizeB = (maxA - 1) / x + 1;
+        ll cnt = 0;
+        rep(b, sizeB){
+            int minVal = b * x + 1;
+            int maxVal = (b + 1) * x;
+            ll goal = (b + 1) * x;
+
+            ll l = lower_bound(rng(A), minVal) - A.begin();
+            ll r = upper_bound(rng(A), maxVal) - A.begin();
+
+            cnt += (r - l) * goal - (imosA[r] - imosA[l]);
+        }
+        if(cnt <= K){
+            chmax(ans, x);
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()

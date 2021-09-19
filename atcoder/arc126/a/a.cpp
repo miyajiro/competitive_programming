@@ -76,9 +76,49 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+void calc(){
+    ll N2, N3, N4;
+    cin >> N2 >> N3 >> N4;
+    // 4 3 3
+    // 2 2 3 3
+    // 4 4 2
+    // 4 2 2 2
+    // 2 2 2 2 2
+    ll ans = 0;
+
+    ll cnt0 = min(N3 / 2, N4); // 334
+    ans += cnt0;
+    N3 -= cnt0 * 2LL;
+    N4 -= cnt0;
+
+    ll cnt1 = min(N3 / 2LL, N2 / 2LL); // 3322
+    ans += cnt1;
+    N3 -= cnt1 * 2LL;
+    N2 -= cnt1 * 2LL;
+
+    ll cnt2 = min(N4 / 2LL, N2);
+    ans += cnt2;
+    N4 -= cnt2 * 2LL;
+    N2 -= cnt2;
+
+    ll cnt3 = min(N4, N2 / 3LL);
+    ans += cnt3;
+    N4 -= cnt3;
+    N2 -= 3 * cnt3;
+
+    ll cnt4 = N2 / 5LL;
+    ans += cnt4;
+
+    cout << ans << "\n";
+}
+
 void solve()
 {
-    
+    int T;
+    cin >> T;
+    rep(_, T){
+        calc();
+    }
 }
 
 int main()

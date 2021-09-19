@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,106 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, K;
+const int INF = 0xfffffff;
+
+int bitcnt(int s){
+    int cnt = 0;
+    rep(i, K){
+        if((s >> i) % 2 == 1){
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
+int clc(int s, int a){
+    int cnt = 0;
+    srep(i, a + 1, K){
+        if((s >> i) % 2 == 1){
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
+vvi calc(vi A){
+    vvi dp(N + 1, vi(1 << K, INF));
+    rep(i, N + 1){
+        dp[i][0] = 0;
+    }
+
+    rep(i, N){ // dp[i][s]でdp[i+1][s | a]を埋めていく
+        int a = A[i];
+        rep(s, 1 << K){
+            chmin(dp[i+1][s], dp[i][s] + bitcnt(s)); // 使わない
+            if((s >> a) % 2 == 1){
+                continue;
+            }
+            chmin(dp[i+1][s | (1 << a)], dp[i][s] + clc(s, a));
+        }
+    }
+    return dp;
+}
+
+int bubble_sort(int S){
+    vi A;
+    rep(i, K){
+        if((S >> i) % 2 == 1){
+            A.eb(i);
+        }
+    }
+    rep(i, K){
+        if((S >> i) % 2 == 0){
+            A.eb(i);
+        }
+    }
+    int cnt = 0;
+    rep(i, sz(A)){
+        for(int j = sz(A) - 1; j > i; j--){
+            if(A[j] < A[j-1]){
+                swap(A[j], A[j - 1]);
+                cnt++;
+            }
+        }
+    }
+
+    return cnt;
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    vi A(N), B(N);
+    rep(i, N){
+        cin >> A[i];
+        A[i]--;
+        B[N - 1 - i] = K - 1 - A[i];
+    }
+
+    vvi dp1 = calc(A);
+    vvi dp2 = calc(B);
+
+    int ans = 0xfffffff;
+    vi s2REVCnt(1 << K, 0);
+    rep(s, 1 << K){
+        s2REVCnt[s] = bubble_sort(s);
+    }
+
+    rep(i, N + 1){
+        int revI = N - i;
+        rep(s, 1 << K){
+            int revS = 0;
+            rep(j, K){
+                if((s >> j) % 2 == 0){
+                    revS |= (1 << (K - 1 - j));
+                }
+            }
+
+            chmin(ans, dp1[i][s] + dp2[revI][revS] + s2REVCnt[s]);
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()

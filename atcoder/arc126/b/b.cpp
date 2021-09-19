@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -76,9 +76,40 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi A, B;
+vvi G;
+vp X;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    G = vvi(N);
+
+    const int INF = 0xfffffff;
+    vi dp(N, INF);
+
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        X.eb(P(a, -b));
+    }
+    sort(rng(X));
+
+    rep(i, M){
+        X[i].sc = -X[i].sc;
+    }
+
+    rep(i, M){
+        int idx = lower_bound(rng(dp), X[i].sc) - dp.begin();
+        dp[idx] = X[i].sc;
+    }
+
+    int ans = lower_bound(rng(dp), INF) - dp.begin();
+    cout << ans << "\n";
 }
 
 int main()
