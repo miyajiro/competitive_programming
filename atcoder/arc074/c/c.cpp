@@ -76,9 +76,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+
+LP calc(ll H, ll W){ // 小さいピース、大きいピースを返す
+    LP lp1 = LP(0, 0xffffffffff);
+    LP lp2 = LP(0, 0xffffffffff);
+
+    if(H >= 2LL){
+        ll H2 = H / 2LL;
+        lp1.fr = H2 * W;
+        lp1.sc = (H - H2) * W;
+    }
+    if(W >= 2LL){
+        ll W2 = W / 2LL;
+        lp2.fr = W2 * H;
+        lp2.sc = (W - W2) * H;
+    }
+
+    if((lp1.sc - lp1.fr) < (lp2.sc - lp2.fr)){
+        return lp1;
+    }
+    return lp2;
+}
+
 void solve()
 {
-    
+    ll H, W;
+    cin >> H >> W;
+    ll ans = 0xffffffffff;
+    rep1(h, H - 1){
+        ll s1 = W * h;
+        LP lp = calc(H - h, W);
+        chmin(ans, max(abs(s1 - lp.fr), abs(s1 - lp.sc)));
+    }
+    rep1(w, W - 1){
+        ll s1 = w * H;
+        LP lp = calc(H, W - w);
+        chmin(ans, max(abs(s1 - lp.fr), abs(s1 - lp.sc)));
+    }
+    cout << ans << "\n";
 }
 
 int main()
