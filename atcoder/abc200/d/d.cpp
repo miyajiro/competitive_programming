@@ -84,31 +84,25 @@ void ansYes(){
     return;
 }
 
-vector<ll> dp[2][200]; // dp[X]: Xを作るのに必要なAのインデックスを格納
+vi dp[2][200]; // dp[X]: Xを作るのに必要なAのインデックスを格納
 
 int main()
 {
     cin >> N;
     rep(i, N){
-        ll a;
+        int a;
         cin >> a;
-        A.pb(a % 200LL);
+        A.pb(a % 200);
     }
 
     int last = 0;
     int now = 1;
     rep(a_i, N){
-        ll a = A[a_i];
+        int a = A[a_i];
         rep(j, 200){ // lastからnowにコピー
             dp[now][j].clear();
-            ll sumJ = 0;
             for(auto val : dp[last][j]){
                 dp[now][j].pb(val);
-                sumJ += A[val];
-                sumJ %= 200LL;
-            }
-            if(dp[last][j].size() > 0){
-                assert(sumJ == j);
             }
         }
 
@@ -123,21 +117,21 @@ int main()
 
         dp[now][a].pb(a_i); // A[i]単体
 
-        for(ll base = 0LL; base < 200LL; base++){ // baseにAを足したもの
+        rep(base, 200){ // baseにAを足したもの
             if(dp[last][base].size() == 0){
                 continue;
             }
-            ll newVal = (base + a) % 200LL;
+            int newVal = (base + a) % 200;
 
-            if(dp[last][newVal].size() > 0){
-                for(auto dpi : dp[last][newVal]){
-                    ans1.pb(dpi + 1LL);
+            if(dp[now][newVal].size() > 0){
+                for(auto dpi : dp[now][newVal]){
+                    ans1.pb(dpi + 1);
                 }
 
                 for(auto dpi : dp[last][base]){
-                    ans2.pb(dpi + 1LL);
+                    ans2.pb(dpi + 1);
                 }
-                ans2.pb(a_i + 1LL);
+                ans2.pb(a_i + 1);
                 ansYes();
 
                 return 0;
