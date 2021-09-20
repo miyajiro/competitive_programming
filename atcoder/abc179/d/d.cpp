@@ -1,12 +1,12 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,34 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+
+int N;
+int K;
+vp LR;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, K){
+        int l, r;
+        cin >> l >> r;
+        LR.eb(P(l, r));
+    }
+
+    fenwick_tree<mint> fw(N + 1);
+
+    fw.add(1, 1);
+    srep(i, 2, N + 1){
+        for(auto lr : LR){
+            int l = lr.fr;
+            int r = lr.sc;
+            int fl = max(1, i - r);
+            int fr = max(1, i - l + 1);
+            fw.add(i, fw.sum(fl, fr));
+        }
+    }
+    cout << fw.sum(N, N + 1).val() << "\n";
 }
 
 int main()
