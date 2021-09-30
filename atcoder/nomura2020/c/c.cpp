@@ -76,9 +76,38 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vl A, B;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N + 1){
+        ll a;
+        cin >> a;
+        A.eb(a);
+        B.eb(a);
+    }
+    B.eb(0);
+
+    rrep(i, N){
+        B[i] += B[i + 1];
+    }
+
+    ll kosu = 1;
+    ll ans = 0;
+    rep(d, N + 1){
+        ans += kosu;
+        kosu -= A[d];
+        if(kosu < 0){
+            ans = -1LL;
+            break;
+        }
+
+        kosu = min(kosu * 2LL, B[d + 1]);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
