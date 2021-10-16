@@ -76,9 +76,67 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl A, B, B2A;
+vi ans;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    rep(i, N){
+        if(i == 0){
+            B.eb(A[0]);
+            B2A.eb(0);
+            continue;
+        }
+
+        if(A[i] == A[i - 1]){
+            continue;
+        }
+        B.eb(A[i]);
+        B2A.eb(i);
+    }
+
+    int M = sz(B);
+
+    ans = vi(N, 0);
+    if(M == 1){
+        rep(i, N){
+            cout << "0 ";
+        }
+        cout << "\n";
+        return;
+    }
+
+    rep(i, M){
+        if(i == 0){
+            if(B[0] > B[1]){
+                ans[B2A[0]] = 1;
+            }
+            continue;
+        }
+        if(i == M - 1){
+            if(B[M - 2] > B[M - 1]){
+                ans[B2A[M - 1]] = 1;
+            }
+            continue;
+        }
+
+        if((B[i - 1] < B[i] && B[i] > B[i + 1]) || (B[i - 1] > B[i] && B[i] < B[i + 1])){
+            ans[B2A[i]] = 1;
+        }
+    }
+
+    rep(i, N){
+        cout << ans[i] << " ";
+    }
+    cout << "\n";
 }
 
 int main()

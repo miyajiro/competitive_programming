@@ -76,9 +76,63 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, M, S;
+vl A, imosA;
+vector<double> aveA;
+vi maxIds;
+double ave[5001][5001];
+
 void solve()
 {
-    
+    cin >> N >> M >> S;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+        imosA.eb(a);
+    }
+    rep1(i, N - 1){
+        imosA[i] += imosA[i - 1];
+    }
+
+    rep(l, N){
+        srep(r, l + 1, N + 1){
+            double width = r - l;
+            if(l == 0){
+                ave[l][r] = imosA[r - 1] / width;
+            } else {
+                ave[l][r] = (imosA[r - 1] - imosA[l - 1]) / width;
+            }
+        }
+    }
+
+    double ans = 0;
+
+    int r = N;
+    while(true){
+        double maxAve = 0.0;
+        int l = N;
+        rrep(i, r){
+            if(chmax(maxAve, ave[i][r])){
+                l = i;
+            }
+        }
+
+        ll width = r - l;
+        if(M * width >= S){
+            ans += S * ave[l][r];
+            break;
+        } else {
+            ans += width * M * ave[l][r];
+            S -= width * M;
+        }
+        r = l;
+        if(r == 0){
+            break;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

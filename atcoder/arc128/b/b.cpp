@@ -76,9 +76,39 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int T;
+const ll INF = 0xfffffffffff;
+
 void solve()
 {
-    
+    cin >> T;
+    rep(t, T){
+
+        ll ans = INF;
+        ll x, y, z;
+        cin >> x >> y >> z;
+
+        if((y + 2 * z) % 3LL == 0 && (z + 2 * y) % 3LL == 0){
+            ll s = max(2 * y + z, 2 * z + y);
+            chmin(ans, s - y - z);
+        }
+
+        if((x + 2 * y) % 3LL == 0 && (y + 2 * x) % 3LL == 0){
+            ll s = max(2 * x + y, 2 * y + x);
+            chmin(ans, s - x - y);
+        }
+
+        if((x + 2 * z) % 3LL == 0 && (z + 2 * x) % 3LL == 0){
+            ll s = max(2 * x + z, 2 * z + x);
+            chmin(ans, s - x - z);
+        }
+
+        if(ans == INF){
+            cout << -1 << "\n";
+        } else {
+            cout << ans << "\n";
+        }
+    }
 }
 
 int main()
