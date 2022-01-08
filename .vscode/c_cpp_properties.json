@@ -4,7 +4,6 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/local/include/**",
                 "~/Development/ac-library/"
             ],
             "defines": [],
