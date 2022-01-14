@@ -76,9 +76,33 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+
 void solve()
 {
-    
+    cin >> N;
+    if(N % 2 == 1){
+        rep1(i, N - 1){
+            A.eb(N);
+            B.eb(i);
+        }
+        N--;
+    }
+
+    rep1(i, N){
+        srep(j, i + 1, N + 1){
+            if(i + j == N + 1){
+                continue;
+            }
+            A.eb(i);
+            B.eb(j);
+        }
+    }
+    cout << sz(A) << "\n";
+    rep(i, sz(A)){
+        cout << A[i] << " " << B[i] << "\n";
+    }
 }
 
 int main()

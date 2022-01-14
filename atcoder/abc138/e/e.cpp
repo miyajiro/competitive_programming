@@ -76,9 +76,38 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string S, T;
+vi c2Is[26];
+
 void solve()
 {
-    
+    cin >> S >> T;
+    ll N = sz(S);
+    ll ans = 0;
+
+    rep(i, sz(S)){
+        c2Is[S[i] - 'a'].eb(i);
+    }
+
+    ll now = -1LL;
+    rep(i, sz(T)){
+        int t = T[i] - 'a';
+        if(sz(c2Is[t]) == 0){
+            cout << "-1\n";
+            return;
+        }
+
+        int ui = upper_bound(rng(c2Is[t]), now) - c2Is[t].begin();
+        if(ui == sz(c2Is[t])){
+            ans += N;
+            now = c2Is[t][0];
+        } else {
+            now = c2Is[t][ui];
+        }
+    }
+    ans += now + 1;
+
+    cout << ans << "\n";
 }
 
 int main()

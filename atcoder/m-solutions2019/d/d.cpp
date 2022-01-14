@@ -76,9 +76,56 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+vi C, D;
+vvi G;
+int id;
+
+void dfs(int n, int from){
+    if(id == N){
+        return;
+    }
+    D[n] = C[id++];
+
+    for(auto nex : G[n]){
+        if(nex == from || D[nex] != 0){
+            continue;
+        }
+        dfs(nex, n);
+    }
+}
+
 void solve()
 {
-    
+    cin >> N;
+    ll ans = 0, ma = 0;
+    D = vi(N, 0);
+    G = vvi(N);
+    rep(i, N - 1){
+        ll a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        G[b].eb(a);
+    }
+    rep(i, N){
+        ll c;
+        cin >> c;
+        ans += c;
+        chmax(ma, c);
+        C.eb(c);
+    }
+    sort(rrng(C));
+    ans -= ma;
+
+    dfs(0, -1);
+
+    cout << ans << "\n";
+    rep(i, N){
+        cout << D[i] << " ";
+    }
 }
 
 int main()
