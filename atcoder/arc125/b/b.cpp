@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -49,6 +49,8 @@ using vl = vector<ll>;
 using vvl = vector<vl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
+using mint = modint998244353;
+
 inline int getInt()
 {
     int x;
@@ -76,9 +78,19 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+mint ans = 0;
+
 void solve()
 {
-    
+    cin >> N;
+
+    ll sN = sqrt(N);
+    rep1(p, sN){
+        ans += (N / p - p + 2) / 2;
+    }
+
+    cout << ans.val() << "\n";
 }
 
 int main()
