@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,40 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, K;
+vi A;
+vvi imos;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    chmin(K, 100);
+
+    imos = vvi(K + 1, vi(N + 1, 0));
+
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+        imos[0][i] = a;
+    }
+    rep(k, K){
+        rep(i, N){ // imos[k][i]が照らすもの
+            int l = max(0, i - imos[k][i]);
+            int r = min(N, i + imos[k][i] + 1);
+            imos[k + 1][l]++;
+            imos[k + 1][r]--;
+        }
+
+        rep(i, N){
+            imos[k + 1][i + 1] += imos[k + 1][i];
+        }
+    }
+
+    rep(i, N){
+        cout << imos[K][i] << " ";
+    }
+    cout << "\n";
 }
 
 int main()
