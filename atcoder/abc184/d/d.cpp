@@ -76,9 +76,26 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+double dp[100][100][100];
+
+double calc(int a, int b, int c){
+    if(a == 100 || b == 100 || c == 100){
+        return 0.0;
+    }
+    if(dp[a][b][c] != 0.0){
+        return dp[a][b][c];
+    }
+
+    double n = a + b + c;
+
+    return dp[a][b][c] = 1.0 + calc(a + 1, b, c) * a / n  + calc(a, b + 1, c) * b / n + calc(a, b, c + 1) * c / n;
+}
+
 void solve()
 {
-    
+    int A, B, C;
+    cin >> A >> B >> C;
+    cout << calc(A, B, C) << "\n";
 }
 
 int main()
