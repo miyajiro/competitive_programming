@@ -76,9 +76,42 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+// 0123456
+// 0000001
+// 0101111
+// 0121111
+// 0123000
+
+int N;
+vi A;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+        if(i == 0 && a > 0) {
+            cout << "-1\n";
+            return;
+        }
+
+        if(i > 0 && A[i] - A[i - 1] > 1){
+            cout << "-1\n";
+            return;
+        }
+    }
+
+    ll ans = 0;
+    rep(i, N){
+        if(i < N - 1 && A[i + 1] - A[i] == 1){
+            continue;
+        }
+        ans += A[i];
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
