@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+struct E{
+    int to;
+    bool isOdd;
+};
+
+int N;
+vector<vector<E>> G;
+vi ans;
+
+void dfs(int now, int from, bool paintNowBlack){
+    ans[now] = (paintNowBlack ? 1 : 0);
+
+    for(auto e : G[now]){
+        if(e.to == from){
+            continue;
+        }
+
+        dfs(e.to, now, paintNowBlack ^ e.isOdd);
+    }
+}
+
 void solve()
 {
-    
+    cin >> N;
+    G = vector<vector<E>>(N);
+    ans = vi(N, 0);
+    rep(i, N - 1){
+        int u, v, w;
+        cin >> u >> v >> w;
+        bool isOdd = (w % 2 == 1);
+        G[--u].eb(E{--v, isOdd});
+        G[v].eb(E{u, isOdd});
+    }
+
+    dfs(0, -1, true);
+
+    rep(i, N){
+        cout << ans[i] << "\n";
+    }
 }
 
 int main()
