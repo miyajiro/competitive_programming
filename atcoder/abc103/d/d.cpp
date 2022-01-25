@@ -76,9 +76,34 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vp A;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        A.eb(P(--a, --b));
+    }
+    sort(rng(A));
+
+    int ans = 0;
+    const int inf = 0xfffffff;
+    int minR = inf;
+
+    rep(i, M){
+        if(minR <= A[i].fr){
+            ans++;
+            minR = inf;
+        }
+        chmin(minR, A[i].sc);
+    }
+    if(minR != inf){
+        ans++;
+    }
+    cout << ans << "\n";
 }
 
 int main()
