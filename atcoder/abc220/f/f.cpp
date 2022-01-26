@@ -76,9 +76,61 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+ll distSum;
+vl A, B, subTreeSize, ans;
+vvi G;
+
+int dfs(int now, int from, int d){
+    distSum += d;
+    int s = 1;
+    for(auto nex : G[now]){
+        if(nex == from){
+            continue;
+        }
+
+        s += dfs(nex, now, d + 1);
+    }
+    subTreeSize[now] = s;
+    return s;
+}
+
+void dfs2(int now, int from){
+    ans[now] = distSum;
+    for(auto nex : G[now]){
+        if(nex == from){
+            continue;
+        }
+
+        distSum -= subTreeSize[nex];
+        distSum += N - subTreeSize[nex];
+        dfs2(nex, now);
+        distSum += subTreeSize[nex];
+        distSum -= N - subTreeSize[nex];
+    }
+}
+
 void solve()
 {
-    
+    cin >> N;
+    subTreeSize = vl(N);
+    ans = vl(N);
+    G = vvi(N);
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        G[b].eb(a);
+    }
+
+    dfs(0, -1, 0);
+    dfs2(0, -1);
+
+    for(auto a : ans) {
+        cout << a << "\n";
+    }
 }
 
 int main()
