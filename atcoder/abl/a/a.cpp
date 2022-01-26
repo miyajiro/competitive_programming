@@ -76,9 +76,16 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int K;
+string S;
+
 void solve()
 {
-    
+    cin >> K;
+    rep(i, K){
+        S += "ACL";
+    }
+    cout << S << "\n";
 }
 
 int main()

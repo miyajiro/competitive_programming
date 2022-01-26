@@ -2,11 +2,11 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,59 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+
+struct S{
+    mint val;
+    int width;
+};
+
+S op(S a, S b){
+    return S{((mint)(10)).pow(b.width) * a.val + b.val, a.width + b.width};
+}
+
+S e(){
+    return S{0, 0};
+}
+
+using F = int;
+
+S mapping(F f, S x){
+    if(f == 0){
+        return x;
+    }
+
+    int w = x.width;
+    mint nines = ((mint)10).pow(x.width) - 1;
+    mint ones = nines * (((mint)9).inv());
+    return S{ones * f, w};
+}
+
+F composition(F f, F g){
+    if(f == 0){
+        return g;
+    }
+    return f;
+}
+
+F id(){
+    return 0;
+}
+
+int N, Q;
+vi L, R, D;
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(vector<S>(N, S{1, 1}));
+    rep(i, Q){
+        int l, r, d;
+        cin >> l >> r >> d;
+        --l;
+        seg.apply(l, r, d);
+        cout << seg.all_prod().val.val() << "\n";
+    }
 }
 
 int main()

@@ -1,7 +1,7 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
-// #include <atcoder/segtree>
+#include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
@@ -76,9 +76,36 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using S = int;
+S op(S a, S b){
+    return max(a, b);
+}
+S e(){
+    return 0;
+}
+
+// T[k]: 最後の要素kでの最大長さ
+// T[l, r]: 最後の要素l, rでの最大長さ
+// 点操作
+
+int N, K;
+vi A;
+int MAX_A = 300000;
+
 void solve()
 {
-    
+    cin >> N >> K;
+
+    segtree<S, op, e> seg(MAX_A + 1);
+    rep(i, N){
+        int a;
+        cin >> a;
+        int l = max(0, a - K);
+        int r = min(MAX_A, a + K) + 1;
+
+        seg.set(a, seg.prod(l, r) + 1);
+    }
+    cout << seg.all_prod() << "\n";
 }
 
 int main()

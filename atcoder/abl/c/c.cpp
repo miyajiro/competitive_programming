@@ -7,7 +7,7 @@
 // #include <atcoder/math>
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
-// #include <atcoder/dsu>
+#include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
@@ -76,9 +76,27 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    int ans = 0;
+    dsu D(N);
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        D.merge(--a, --b);
+    }
+
+    rep1(i, N - 1){
+        if(D.same(0, i)){
+            continue;
+        }
+        D.merge(0, i);
+        ans++;
+    }
+    cout << ans << "\n";
 }
 
 int main()

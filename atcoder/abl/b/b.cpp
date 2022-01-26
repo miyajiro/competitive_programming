@@ -76,9 +76,16 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll A, B, C, D;
+
 void solve()
 {
-    
+    cin >> A >> B >> C >> D;
+    if(B < C || D < A){
+        cout << "No\n";
+    } else {
+        cout << "Yes\n";
+    }
 }
 
 int main()
