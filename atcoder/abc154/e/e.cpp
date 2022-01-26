@@ -76,9 +76,65 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int K;
+string S;
+vi A;
+
+vector<vvl> dp; // dp[n][k][isJust]: 上からn桁下ってて0以外の数字k個でisJustなら上からぴったり
+
 void solve()
 {
-    
+    cin >> S >> K;
+
+    int N = sz(S);
+    rep(i, N){
+        A.eb(S[i] - '0');
+    }
+
+    dp = vector<vvl>(N, vvl(K + 1, vl(2, 0)));
+    dp[0][0][0] = 1;
+    dp[0][0][1] = 0;
+    dp[0][1][0] = A[0] - 1;
+    dp[0][1][1] = 1;
+
+    rep(n, N - 1){
+        int a = A[n + 1];
+
+        rep(k, K + 1){
+            // show(n);
+            // show(k);
+            // show(dp[n][k][0]);
+            // show(dp[n][k][1]);
+
+            // dp[n][k][0]から配るもの
+            // - 0を選ぶ場合
+            dp[n + 1][k][0] += dp[n][k][0];
+
+            // - 数字を選ぶ場合
+            if(k < K) {
+                dp[n + 1][k + 1][0] += dp[n][k][0] * 9;
+            }
+
+            // dp[n][k][1]から配る
+            if(a == 0){
+                // 0を選ぶより他ない。
+                dp[n + 1][k][1] = dp[n][k][1];
+            } else {
+                if(k < K){
+                    // - 維持する場合
+                    dp[n + 1][k + 1][1] += dp[n][k][1];
+
+                    // - 維持せず、数字を選ぶ場合
+                    dp[n + 1][k + 1][0] += dp[n][k][1] * (a - 1);
+                }
+
+                // - 維持せず、0を選ぶ場合
+                dp[n + 1][k][0] += dp[n][k][1];
+            }
+        }
+    }
+
+    cout << dp[N - 1][K][0] + dp[N - 1][K][1] << "\n";
 }
 
 int main()
