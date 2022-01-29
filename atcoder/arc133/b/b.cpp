@@ -13,7 +13,9 @@
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
 
-namespace atcoder{};
+namespace atcoder
+{
+};
 using namespace atcoder;
 using namespace std;
 
@@ -76,9 +78,68 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+template <typename T>
+size_t LongestIncreasingSubsequence(const vector<T> &a, bool strict)
+{
+    vector<T> lis;
+    for (auto &p : a)
+    {
+        typename vector<T>::iterator it;
+        if (strict)
+            it = lower_bound(begin(lis), end(lis), p);
+        else
+            it = upper_bound(begin(lis), end(lis), p);
+        if (end(lis) == it)
+            lis.emplace_back(p);
+        else
+            *it = p;
+    }
+    return lis.size();
+}
+
+int N;
+vi A, B;
+vi invA, invB;
+
 void solve()
 {
-    
+    cin >> N;
+    A = vi(N);
+    invA = vi(N + 1);
+    B = vi(N);
+    invB = vi(N + 1);
+    rep(i, N)
+    {
+        cin >> A[i];
+        invA[A[i]] = i;
+    }
+    rep(i, N)
+    {
+        cin >> B[i];
+        invB[B[i]] = i;
+    }
+
+    vp C;
+
+    rep1(a, N){
+        for(int b = a; b <= N; b += a){
+            C.eb(P(invA[a], invB[b]));
+        }
+    }
+    sort(rng(C), [](const P& a, const P& b){
+        if(a.fr != b.fr){
+            return a.fr < b.fr;
+        }
+        return a.sc > b.sc;
+    });
+
+    vi D;
+
+    for(auto c : C){
+        D.eb(c.sc);
+    }
+
+    cout << LongestIncreasingSubsequence(D, true) << "\n";
 }
 
 int main()
