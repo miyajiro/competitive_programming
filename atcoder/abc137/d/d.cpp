@@ -76,9 +76,38 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi A, B;
+vp C;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        C.eb(P(a, b));
+    }
+    sort(rng(C));
+
+    int now = 0;
+    ll ans = 0;
+    priority_queue<int> pq;
+
+    rep1(i, M){
+        while(now < N && C[now].fr <= i){
+            pq.push(C[now].sc);
+            now++;
+        }
+
+        if(pq.empty()){
+            continue;
+        }
+        ans += pq.top();
+        pq.pop();
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
