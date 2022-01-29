@@ -76,9 +76,24 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string S;
+ll K;
+
 void solve()
 {
-    
+    cin >> S >> K;
+    int cnt1 = 0;
+    K--;
+    while(S[cnt1] == '1'){
+        cnt1++;
+    }
+    char val = S[cnt1];
+
+    if(K < cnt1){
+        cout << 1 << "\n";
+    } else {
+        cout << val << "\n";
+    }
 }
 
 int main()

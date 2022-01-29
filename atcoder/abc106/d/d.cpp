@@ -76,9 +76,44 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M, Q;
+vi L, R;
+vi X, Y;
+vvi dp;
+vvi cnt;
+
 void solve()
 {
-    
+    cin >> N >> M >> Q;
+    cnt = vvi(N, vi(N));
+    dp = vvi(N, vi(N));
+    rep(i, M){
+        int l, r;
+        cin >> l >> r;
+        L.eb(--l);
+        R.eb(--r);
+        cnt[l][r]++;
+    }
+
+    rep(l, N){
+        srep(r, l, N){
+            if(l == r){
+                dp[l][r] = cnt[l][r];
+                continue;
+            }
+            dp[l][r] = dp[l][r - 1];
+
+            srep(tl, l, r + 1){
+                dp[l][r] += cnt[tl][r];
+            }
+        }
+    }
+
+    rep(i, Q){
+        int x, y;
+        cin >> x >> y;
+        cout << dp[--x][--y] << "\n";
+    }
 }
 
 int main()

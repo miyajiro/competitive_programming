@@ -76,9 +76,12 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int a, b;
+
 void solve()
 {
-    
+    cin >> a >> b;
+    cout << (a - 1) * (b - 1) << "\n";
 }
 
 int main()
