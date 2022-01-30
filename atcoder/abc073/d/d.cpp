@@ -76,9 +76,63 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const ll INF = 0xffffffffffffff;
+int N, M, R;
+vi X;
+vi A, B, C;
+vvl D1, D2;
+int s, g;
+
 void solve()
 {
-    
+    cin >> N >> M >> R;
+
+    s = N - 2;
+    g = N - 1;
+    N += 2;
+
+    rep(i, R){
+        int x;
+        cin >> x;
+        X.eb(x);
+    }
+    X.eb(s);
+    X.eb(g);
+    R += 2;
+
+    D1 = vvl(N, vl(N, INF));
+
+    rep(i, M){
+        int a, b, c;
+        cin >> a >> b >> c;
+        A.eb(--a);
+        B.eb(--b);
+        C.eb(c);
+        D1[a][b] = D1[b][a] = c;
+    }
+
+    rep(i, N){
+        D1[i][i] = 0;
+        D1[s][i] = 0;
+        D1[i][g] = 0;
+    }
+
+    rep(k, N){
+        rep(i, N){
+            rep(j, N){
+                chmin(D1[i][j], D1[i][k] + D1[k][j]);
+            }
+        }
+    }
+
+    // R: 頂点数
+    // D2: 距離行列
+    D2 = vvl
+    rep(i, R){
+        rep(j, R){
+
+        }
+    }
 }
 
 int main()
