@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -41,13 +41,12 @@ using namespace std;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
-using P = pair<int, int>;
+// using P = pair<int, int>;
 using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
-using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
 {
@@ -76,9 +75,78 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint1000000007;
+
+ll N;
+vl A;
+vector<bool> isPrime(10001, true);
+vi primes;
+vi maxJisu;
+
 void solve()
 {
-    
+    cin >> N;
+
+    isPrime[0] = isPrime[1] = false;
+    srep(p, 2, 10001){
+        if(!isPrime[p]){
+            continue;
+        }
+
+        primes.eb(p);
+        for(int j = 2 * p; j <= 10000; j += p){
+            isPrime[j] = false;
+        }
+    }
+
+    int P = sz(primes);
+    maxJisu = vi(P);
+
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+
+        rep(j, P){
+            int p = primes[j];
+            int cnt = 0;
+            while(a % p == 0) {
+                cnt++;
+                a /= p;
+            }
+            chmax(maxJisu[j], cnt);
+        }
+
+        if(a > 1LL){
+            primes.eb(a);
+            maxJisu.eb(1);
+            P++;
+        }
+    }
+
+    mint ans = 0;
+    for(auto a : A){
+        // show(a);
+
+        mint val = 1;
+        rep(j, P){
+            int p = primes[j];
+
+            int cnt = 0;
+            while(a % p == 0) {
+                cnt++;
+                a /= p;
+            }
+
+            rep(k, maxJisu[j] - cnt){
+                val *= p;
+            }
+        }
+        // show(val.val());
+        ans += val;
+    }
+
+    cout << ans.val() << "\n";
 }
 
 int main()
