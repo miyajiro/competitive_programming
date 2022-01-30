@@ -76,9 +76,70 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const ll INF = 0xfffffffffffffff;
+int A, B, Q;
+vl S, T, X;
+vl S_Near, T_Near;
+
 void solve()
 {
-    
+    cin >> A >> B >> Q;
+
+    S.eb(-INF);
+    T.eb(-INF);
+    rep(i, A){
+        ll s;
+        cin >> s;
+        S.eb(s);
+    }
+    rep(i, B){
+        ll t;
+        cin >> t;
+        T.eb(t);
+    }
+    S.eb(INF);
+    T.eb(INF);
+
+    A += 2;
+    B += 2;
+
+    S_Near = vl(A);
+    T_Near = vl(B);
+
+    srep(i, 1, A - 1){
+        ll s = S[i];
+        ll tri = lower_bound(rng(T), s) - T.begin();
+        ll tli = tri - 1LL;
+
+        // show(s);
+        // show(T[tri]);
+        // show(T[tli]);
+
+        S_Near[i] = min(T[tri] - s, s - T[tli]);
+        // show(S_Near[i]);
+    }
+
+    srep(i, 1, B - 1){
+        ll t = T[i];
+        ll sri = lower_bound(rng(S), t) - S.begin();
+        ll sli = sri - 1LL;
+
+        T_Near[i] = min(S[sri] - t, t - S[sli]);
+        // show(T_Near[i]);
+    }
+
+    rep(i, Q){
+        ll x;
+        cin >> x;
+
+        ll tri = lower_bound(rng(T), x) - T.begin();
+        ll tli = tri - 1LL;
+
+        ll sri = lower_bound(rng(S), x) - S.begin();
+        ll sli = sri - 1LL;
+
+        cout << min({abs(T[tri] - x) + T_Near[tri], abs(T[tli] - x) + T_Near[tli], abs(S[sri] - x) + S_Near[sri], abs(S[sli] - x) + S_Near[sli]}) << "\n";
+    }
 }
 
 int main()
