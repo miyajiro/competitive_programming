@@ -76,9 +76,56 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vl X, Y, Z;
+vl A;
+ll ans = 0;
+vvl dp;
+const ll INF = 0xfffffffffffff;
+
+void calc(){
+    dp = vvl(N + 1, vl(M + 1, -INF));
+    dp[0][0] = 0;
+
+    rep1(i, N){
+        dp[i][0] = 0;
+        rep1(j, M){
+            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1] + A[i - 1]);
+        }
+    }
+
+    chmax(ans, dp[N][M]);
+}
+
 void solve()
 {
-    
+    cin >> N >> M;
+
+    A = vl(N);
+
+    rep(i, N){
+        ll x, y, z;
+        cin >> x >> y >> z;
+        X.eb(x);
+        Y.eb(y);
+        Z.eb(z);
+    }
+
+    rep(x, 2){
+        rep(y, 2){
+            rep(z, 2){
+                rep(i, N){
+                    A[i] = 0;
+                    A[i] += (x == 1 ? X[i] : -X[i]);
+                    A[i] += (y == 1 ? Y[i] : -Y[i]);
+                    A[i] += (z == 1 ? Z[i] : -Z[i]);
+                }
+                calc();
+            }
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
