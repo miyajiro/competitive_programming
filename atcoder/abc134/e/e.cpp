@@ -76,9 +76,36 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A;
+int ans;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    multiset<int> st;
+    for(auto a : A){
+        // a未満の要素のうち最大値があるならそれを削除
+        if(!st.empty()){
+            auto ite = st.lower_bound(a);
+
+            if(ite != st.begin()){
+                --ite;
+                st.erase(ite);
+            }
+        }
+
+        st.insert(a);
+    }
+
+    ans = st.size();
+    cout << ans << "\n";
 }
 
 int main()
