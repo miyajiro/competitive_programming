@@ -76,9 +76,22 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+ll A, B, a, b;
+
 void solve()
 {
-    
+    cin >> N;
+    A = B = 1;
+    rep(i, N){
+        cin >> a >> b;
+
+        ll cnt = max((A - 1) / a, (B - 1) / b) + 1;
+        A = cnt * a;
+        B = cnt * b;
+    }
+
+    cout << A + B << "\n";
 }
 
 int main()
