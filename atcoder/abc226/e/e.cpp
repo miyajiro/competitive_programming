@@ -6,8 +6,8 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
-// #include <atcoder/dsu>
+#include <atcoder/modint>
+#include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
@@ -76,9 +76,43 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi U, V;
+vvi G;
+using mint = modint998244353;
+mint ans = 1;
+
 void solve()
 {
-    
+    cin >> N >> M;
+
+    dsu D(N);
+    G = vvi(N);
+
+    rep(i, M){
+        int u, v;
+        cin >> u >> v;
+        U.eb(--u);
+        V.eb(--v);
+
+        D.merge(u, v);
+        G[u].eb(v);
+    }
+
+    for(auto group : D.groups()){
+        int cnt = 0;
+        for(auto a : group){
+            cnt += sz(G[a]);
+        }
+
+        if(cnt == sz(group)){
+            ans *= 2;
+        } else {
+            ans = 0;
+        }
+    }
+
+    cout << ans.val() << '\n';
 }
 
 int main()
