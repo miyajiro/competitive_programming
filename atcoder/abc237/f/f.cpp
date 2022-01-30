@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,93 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+using vm = vector<mint>;
+using vvm = vector<vm>;
+using vvvm = vector<vvm>;
+using vvvvm = vector<vvvm>;
+
+int N;
+int M;
+
+
+
 void solve()
 {
-    
+    cin >> N >> M;
+
+    vvvm dp2(N + 1, vvm(M + 3, vm(M + 3, 0))); // LIS2以下
+    vvvvm dp3(N + 1, vvvm(M + 3, vvm(M + 3, vm(M + 3, 0)))); // LIS3以下
+
+    dp2[0][M][M + 1] = 1;
+    dp3[0][M][M + 1][M + 2] = 1;
+
+    rep(i, N){
+        rep(a, M + 3){
+            srep(b, a + 1, M + 3){
+                // dp2
+                rep(nex, M){
+                    int newA = a;
+                    int newB = b;
+                    if(nex <= a){
+                        newA = nex;
+                    } else if(a < nex && nex <= b){
+                        newB = nex;
+                    } else {
+                        continue;
+                    }
+
+                    dp2[i + 1][newA][newB] += dp2[i][a][b];
+                }
+
+                // dp3
+                srep(c, b + 1, M + 3){
+                    rep(nex, M){
+                        if(c < nex){
+                            continue;
+                        }
+
+                        int newA = a;
+                        int newB = b;
+                        int newC = c;
+                        if(nex <= a){
+                            newA = nex;
+                        } else if(a < nex && nex <= b){
+                            newB = nex;
+                        } else if(b < nex && nex <= c){
+                            newC = nex;
+                        } else {
+                            continue;
+                        }
+
+                        dp3[i + 1][newA][newB][newC] += dp3[i][a][b][c];
+                    }
+                }
+            }
+        }
+    }
+
+    mint ika2 = 0;
+    rep(a, M + 1){
+        srep(b, a + 1, M + 2){
+            ika2 += dp2[N][a][b];
+        }
+    }
+    mint ika3 = 0;
+    rep(a, M + 1){
+        srep(b, a + 1, M + 2){
+            srep(c, b + 1, M + 3){
+                ika3 += dp3[N][a][b][c];
+            }
+        }
+    }
+
+    mint zentai = ((mint)M).pow(N); // MのN乗
+    mint ijo3 = zentai - ika2;
+    mint ijo4 = zentai - ika3;
+
+    mint ans = ijo3 - ijo4;
+    cout << ans.val() << '\n';
 }
 
 int main()

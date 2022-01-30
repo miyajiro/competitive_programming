@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
-// #include <atcoder/lazysegtree>
+#include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
@@ -41,13 +41,13 @@ using namespace std;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
-using P = pair<int, int>;
+// using P = pair<int, int>;
 using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
-using vp = vector<P>;
+// using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
 {
@@ -76,9 +76,94 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+struct S{
+    int xIjo;
+    int width;
+};
+
+S op(S a, S b){ // 個数の合計
+    return S{a.xIjo + b.xIjo, a.width + b.width};
+}
+
+S e(){
+    return S{0, 0};
+}
+
+using F = int; // 0: 0にしろ, 1: 1にしろ, -1: 何もしない
+
+S mapping(F f, S x){
+    if(f == -1){
+        return x;
+    }
+    if(f == 1){
+        return S{x.width, x.width};
+    } else {
+        return S{0, x.width};
+    }
+}
+
+F composition(F f, F g){
+    if(f == -1){
+        return g;
+    } else {
+        return f;
+    }
+}
+
+F id(){
+    return -1;
+}
+
+const int INF = 0xfffffff;
+int N, Q, X;
+vi P, I, L, R;
+
 void solve()
 {
-    
+    cin >> N >> Q >> X;
+
+    int now;
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(N);
+    rep(i, N){
+        int p;
+        cin >> p;
+        if(p >= X){
+            seg.set(i, S{1, 1});
+        } else {
+            seg.set(i, S{0, 1});
+        }
+
+        if(p == X){
+            now = i;
+        }
+    }
+
+    rep(q, Q){
+        int c, l, r;
+        cin >> c >> l >> r;
+        l--;
+
+        int ijo = seg.prod(l, r).xIjo;
+        int miman = r - l - ijo;
+
+        if(c == 1){
+            seg.apply(l, l + miman, 0);
+            seg.apply(l + miman, r, 1);
+
+            if(l <= now && now < r){
+                now = l + miman;
+            }
+        } else {
+            seg.apply(l, l + ijo, 1);
+            seg.apply(l + ijo, r, 0);
+
+            if(l <= now && now < r){
+                now = l + ijo - 1;
+            }
+        }
+    }
+
+    cout << now + 1 << '\n';
 }
 
 int main()

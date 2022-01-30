@@ -76,9 +76,16 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+
 void solve()
 {
-    
+    cin >> N;
+    if(-(1LL << 31) <= N && N < (1LL << 31)){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()

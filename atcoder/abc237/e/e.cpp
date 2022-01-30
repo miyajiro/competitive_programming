@@ -76,9 +76,62 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vl H, U, V;
+vvi G;
+vl J;
+const ll INF = 0xffffffffffffff;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    G = vvi(N);
+    J = vl(N, -INF);
+
+    rep(i, N){
+        ll h;
+        cin >> h;
+        H.eb(h);
+    }
+    rep(i, M){
+        ll u, v;
+        cin >> u >> v;
+        U.eb(--u);
+        V.eb(--v);
+        G[u].eb(v);
+        G[v].eb(u);
+    }
+
+    priority_queue<LP> pq;
+
+    J[0] = 0;
+    pq.push(LP(0, 0));
+    ll ans = 0;
+
+    while(!pq.empty()){
+        LP lp = pq.top();
+        pq.pop();
+        int now = lp.sc;
+        ll joy = lp.fr;
+
+        chmax(ans, joy);
+        if(J[now] > joy){
+            continue;
+        }
+
+        for(auto nex : G[now]){
+            if(H[now] > H[nex]){
+                if(chmax(J[nex], J[now] + H[now] - H[nex])){
+                    pq.push(LP(J[nex], nex));
+                }
+            } else {
+                if(chmax(J[nex], J[now] + 2LL * H[now] - 2LL * H[nex])){
+                    pq.push(LP(J[nex], nex));
+                }
+            }
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main()

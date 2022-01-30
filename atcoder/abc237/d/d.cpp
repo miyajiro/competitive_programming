@@ -76,9 +76,27 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+deque<int> dq;
+string S;
+
 void solve()
 {
-    
+    cin >> N >> S;
+
+    dq.push_back(N);
+    rrep(i, sz(S)){
+        if(S[i] == 'L'){
+            dq.push_back(i);
+        } else {
+            dq.push_front(i);
+        }
+    }
+
+    rep(i, N + 1){
+        cout << dq.front() << (i == N ? "\n" : " ");
+        dq.pop_front();
+    }
 }
 
 int main()

@@ -76,9 +76,24 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W;
+vvi A;
+
 void solve()
 {
-    
+    cin >> H >> W;
+    A = vvi(W, vi(H));
+    rep(h, H){
+        rep(w, W){
+            cin >> A[w][h];
+        }
+    }
+
+    rep(w, W){
+        rep(h, H){
+            cout << A[w][h] << (h == H - 1 ? "\n" : " ");
+        }
+    }
 }
 
 int main()

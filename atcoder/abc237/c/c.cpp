@@ -76,9 +76,42 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string S;
+
 void solve()
 {
-    
+    cin >> S;
+    int N = sz(S);
+    int lCnt = 0;
+    int rCnt = 0;
+    int r = N;
+    int l = 0;
+    while(r > 0 && S[r - 1] == 'a'){
+        r--;
+        rCnt++;
+    }
+
+    while(l < N && S[l] == 'a'){
+        l++;
+        lCnt++;
+    }
+
+    if(lCnt > rCnt){
+        puts("No");
+        return;
+    }
+    S = S.substr(l, (r - l));
+    // show(S);
+    N = sz(S);
+
+    bool isP = true;
+    rep(i, N / 2){
+        if(S[i] != S[N - 1 - i]){
+            isP = false;
+        }
+    }
+
+    cout << (isP ? "Yes\n" : "No\n");
 }
 
 int main()
