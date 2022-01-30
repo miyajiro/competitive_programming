@@ -76,9 +76,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, A, B, C;
+vi L;
+
 void solve()
 {
-    
+    cin >> N >> A >> B >> C;
+    rep(i, N){
+        int l;
+        cin >> l;
+        L.eb(l);
+    }
+
+    int ans = 0xfffffff;
+
+    rep(s, 1 << (2 * N)) {// 4 ^ N = 2 ^ (2N)
+        int a = 0;
+        int aCnt = 0;
+        int b = 0;
+        int bCnt = 0;
+        int c = 0;
+        int cCnt = 0;
+
+        rep(i, N){
+            int k = (s >> (2 * i)) % 4;
+            if(k == 1){
+                a += L[i];
+                aCnt++;
+                continue;
+            }
+            if(k == 2){
+                b += L[i];
+                bCnt++;
+                continue;
+            }
+            if(k == 3){
+                c += L[i];
+                cCnt++;
+                continue;
+            }
+        }
+
+        if(aCnt == 0 || bCnt == 0 || cCnt == 0){
+            continue;
+        }
+
+        chmin(ans, abs(A - a) + abs(B - b) + abs(C - c) + 10 * (aCnt + bCnt + cCnt - 3));
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
