@@ -87,14 +87,14 @@ void solve()
 {
     cin >> N >> M >> R;
 
-    s = N - 2;
-    g = N - 1;
+    s = N;
+    g = N + 1;
     N += 2;
 
     rep(i, R){
         int x;
         cin >> x;
-        X.eb(x);
+        X.eb(--x);
     }
     X.eb(s);
     X.eb(g);
@@ -127,12 +127,28 @@ void solve()
 
     // R: 頂点数
     // D2: 距離行列
-    D2 = vvl
+    D2 = vvl(R, vl(R));
     rep(i, R){
         rep(j, R){
-
+            D2[i][j] = D1[X[i]][X[j]];
         }
     }
+    int S = R - 2;
+    int G = R - 1;
+
+    vvl dp(1 << R, vl(R, INF));
+    dp[0][S] = 0;
+
+    rep(s, 1 << R){
+        rep(i, R){
+            rep(j, R){
+                int newS = (s | (1 << j));
+                chmin(dp[newS][j], dp[s][i] + D2[i][j]);
+            }
+        }
+    }
+
+    cout << dp[bn(R)][G] << "\n";
 }
 
 int main()
