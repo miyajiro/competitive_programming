@@ -76,9 +76,40 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+vp P1, P2;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int a, b;
+        cin >> a >> b;
+        A.eb(a);
+        B.eb(b);
+        P1.eb(P(a, b));
+        P2.eb(P(a, b));
+    }
+    sort(rng(P1));
+    sort(rng(P2), [&](const P& a, const P& b){
+        if(a.sc == b.sc){
+            return a.fr < b.fr;
+        }
+        return a.sc < b.sc;
+    });
+
+    if(N % 2 == 1){
+        int n2 = N / 2;
+        int l = P1[n2].fr;
+        int r = P2[n2].sc;
+        cout << r - l + 1 << "\n";
+    } else {
+        int n2 = N / 2;
+        int l = P1[n2 - 1].fr + P1[n2].fr;
+        int r = P2[n2 - 1].sc + P2[n2].sc;
+        cout << r - l + 1 << "\n";
+    }
 }
 
 int main()
