@@ -76,9 +76,64 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, N3;
+string S;
+vector<string> T(3);
+vi ans;
+
+void calc(int val, string K){ // K = ABCとか
+    int cnt = 0xfffffff;
+
+    rep(d, 3){
+        int cntD = 0;
+        rep(i, N){
+            int idx = d * N + i;
+            if(S[idx] == K[d] && ans[idx] == 0){
+                cntD++;
+            }
+        }
+        chmin(cnt, cntD);
+    }
+
+    rep(d, 3){
+        int cntD = 0;
+        rep(i, N){
+            if(cntD == cnt){
+                continue;
+            }
+
+            int idx = d * N + i;
+            if(S[idx] == K[d] && ans[idx] == 0){
+                ans[idx] = val;
+                cntD++;
+            }
+        }
+    }
+
+    return;
+}
+
 void solve()
 {
-    
+    cin >> N >> S;
+
+    ans = vi(3 * N);
+
+    rep(i, 3){
+        T[i] = S.substr(N * i, N);
+    }
+
+    calc(1, "ABC");
+    calc(2, "ACB");
+    calc(3, "BAC");
+    calc(4, "BCA");
+    calc(5, "CAB");
+    calc(6, "CBA");
+
+    rep(i, 3 * N){
+        cout << ans[i];
+    }
+    cout << "\n";
 }
 
 int main()
