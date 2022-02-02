@@ -76,9 +76,43 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vvi ans;
+
 void solve()
 {
-    
+    cin >> N;
+    int A = 0;
+    for(int a = 0; a * (a - 1) / 2 <= N; a++){
+        if(a * (a - 1) / 2 == N){
+            A = a;
+        }
+    }
+    if(A == 0){
+        cout << "No\n";
+        return;
+    }
+
+    ans = vvi(A);
+    int now = 1;
+
+    rep(a, A){
+        srep(b, a + 1, A){
+            ans[a].eb(now);
+            ans[b].eb(now);
+            now++;
+        }
+    }
+
+    cout << "Yes\n";
+    cout << A << "\n";
+    for(auto a : ans){
+        cout << sz(a);
+        for(auto e_a : a){
+            cout << " " << e_a;
+        }
+        cout << "\n";
+    }
 }
 
 int main()
