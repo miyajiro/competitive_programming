@@ -76,9 +76,29 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vl A, C;
+map<ll, ll> mp;
+
 void solve()
 {
-    
+    cin >> N;
+    C.eb(0);
+    mp[C.back()]++;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+
+        C.eb(C.back() + (i % 2 == 0 ? a : -a));
+        mp[C.back()]++;
+    }
+
+    ll ans = 0;
+    for(auto e : mp){
+        ans += e.sc * (e.sc - 1) / 2LL;
+    }
+    cout << ans << "\n";
 }
 
 int main()
