@@ -76,9 +76,86 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+struct Node{
+    int par; // 親のindex
+    vi chs; // 子供達のindex
+    ll fromPar; // 親からの自分含む遅延クエリ
+    ll c; // 今の値
+};
+
+int N, Q;
+vi A, B, T, E, X;
+vvi G;
+using Nodes = vector<Node>;
+Nodes nodes;
+
+void initNodesDfs(int now, int from){
+    nodes[now].par = from;
+
+    for(auto nex : G[now]){
+        if(nex == from){
+            continue;
+        }
+        nodes[now].chs.eb(nex);
+
+        initNodesDfs(nex, now);
+    }
+}
+
+void dfs(ll now, ll x){ // x降ってきた。
+    nodes[now].fromPar += x; // 上から降ってきたものを加算
+    nodes[now].c += nodes[now].fromPar;
+
+    for(auto ch : nodes[now].chs){
+        dfs(ch, nodes[now].fromPar);
+    }
+
+    nodes[now].fromPar = 0;
+}
+
 void solve()
 {
-    
+    cin >> N;
+    G = vvi(N);
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        G[b].eb(a);
+    }
+    nodes = Nodes(N, Node{-1, vi(), 0, 0});
+    initNodesDfs(0, -1);
+
+    cin >> Q;
+    rep(i, Q){
+        int t, e, x;
+        cin >> t >> e >> x;
+        T.eb(t);
+        E.eb(--e);
+        X.eb(x);
+
+        int a = A[e];
+        int b = B[e];
+
+        if(t == 2){ // aから開始すると仮定、bを通らない
+            swap(a, b);
+        }
+
+        if(nodes[a].par == b){ // aが子供の場合
+            nodes[a].fromPar += x;
+        } else { // aが親で、bが子供の場合
+            nodes[0].fromPar += x;
+            nodes[b].fromPar -= x;
+        }
+    }
+
+    dfs(0, 0);
+
+    for(auto node : nodes){
+        cout << node.c << "\n";
+    }
 }
 
 int main()
