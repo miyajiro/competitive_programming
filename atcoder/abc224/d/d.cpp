@@ -76,9 +76,77 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N = 9;
+int M;
+vvi G;
+map<string, int> mp;
+
+using T = pair<int, string>;
+
 void solve()
 {
-    
+    cin >> M;
+
+    G = vvi(N);
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        G[--a].eb(--b);
+        G[b].eb(a);
+    }
+
+    PQ(T) pq;
+    string s = "000000000";
+    string g = "123456780";
+    rep(i, 8){
+        int a;
+        cin >> a;
+        s[--a] = '1' + i;
+    }
+
+    // show(s);
+    // show(g);
+
+    mp[s] = 0;
+    pq.push(T{0, s});
+
+    while(!pq.empty()){
+        T t = pq.top();
+        pq.pop();
+
+        int cost = t.fr;
+        string now = t.sc;
+
+        if(mp[now] < cost){
+            continue;
+        }
+
+        int zeroI = 0;
+        while(now[zeroI] != '0'){
+            zeroI++;
+        }
+
+        for(auto swapee : G[zeroI]){
+            string nex = now;
+            swap(nex[zeroI], nex[swapee]);
+
+            auto ite = mp.find(nex);
+
+            if(ite == mp.end() || (ite->sc > cost + 1)){
+                // if(ite != mp.end()){
+                //     show(4);
+                // }
+                mp[nex] = cost + 1;
+                pq.push(T{cost + 1, nex});
+            }
+        }
+    }
+
+    if(mp.find(g) == mp.end()){
+        cout << -1 << "\n";
+    } else {
+        cout << mp[g] << "\n";
+    }
 }
 
 int main()
