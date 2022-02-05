@@ -76,9 +76,60 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const int INF = 0xfffffff;
+int N;
+vi A, B;
+vvi G;
+vi D; // F: 偶数, S: 奇数
+int fCnt, sCnt;
+
 void solve()
 {
-    
+    cin >> N;
+
+    G = vvi(N);
+    D = vi(N, INF);
+
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        G[--a].eb(--b);
+        G[b].eb(a);
+    }
+
+    PQ(P) pq;
+
+    D[0] = 0;
+    pq.push(P(0, 0));
+    fCnt++;
+
+    D[N - 1] = 1;
+    pq.push(P(1, N - 1));
+    sCnt++;
+
+    while(!pq.empty()){
+        P p = pq.top();
+        pq.pop();
+        int now = p.sc;
+        int cost = p.fr;
+
+        if(D[now] < cost){
+            continue;
+        }
+
+        for(auto nex : G[now]){
+            if(chmin(D[nex], cost + 2)){
+                pq.push(P(D[nex], nex));
+                if(D[nex] % 2 == 0){
+                    fCnt++;
+                } else {
+                    sCnt++;
+                }
+            }
+        }
+    }
+
+    cout << (fCnt > sCnt ? "Fennec" : "Snuke") << "\n";
 }
 
 int main()
