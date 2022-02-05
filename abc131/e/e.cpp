@@ -76,9 +76,51 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+int N;
+int K;
+vvb G;
+int cnt = 0;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    G = vvb(N, vb(N, false));
+    rep1(i, N - 1){
+        G[0][i] = true;
+        G[i][0] = true;
+    }
+    cnt = (N - 1) * (N - 2) / 2;
+    if(cnt < K){
+        cout << "-1\n";
+        return;
+    }
+
+    rep1(i, N - 1){
+        srep(j, i + 1, N){
+            if(cnt == K || G[i][j]){
+                continue;
+            }
+            G[i][j] = true;
+            cnt--;
+        }
+    }
+
+    vi A, B;
+    rep(i, N){
+        srep(j, i + 1, N){
+            if(G[i][j]){
+                A.eb(i + 1);
+                B.eb(j + 1);
+            }
+        }
+    }
+
+    cout << sz(A) << "\n";
+    rep(i, sz(A)){
+        cout << A[i] << " " << B[i] << "\n";
+    }
 }
 
 int main()
