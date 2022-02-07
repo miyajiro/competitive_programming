@@ -76,9 +76,29 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+
 void solve()
 {
-    
+    cin >> N;
+    int now = 0;
+    B.eb(0);
+    rep(i, N){
+        int a;
+        cin >> a;
+        now += a;
+        now %= 360;
+        B.eb(now);
+    }
+    sort(rng(B));
+    B.eb(360);
+    int ans = 0;
+    rep(i, sz(B) - 1){
+        chmax(ans, B[i + 1] - B[i]);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

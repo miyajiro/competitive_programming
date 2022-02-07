@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,59 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+using vm = vector<mint>;
+using vvm = vector<vm>;
+using vvvm = vector<vvm>;
+int N, K;
+vi A, B;
+vp C;
+vvvm dp;
+
 void solve()
 {
-    
+    cin >> N >> K;
+
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(--a);
+    }
+
+    rep(i, N){
+        int b;
+        cin >> b;
+        B.eb(--b);
+    }
+    rep(i, N){
+        C.eb(P(A[i], B[i]));
+    }
+    sort(rng(C));
+
+    dp = vvvm(N + 1, vvm(K + 1, vm(N + 1, 0))); // dp[i][s][t]: i番目まで見て、s人選び、落とした人の一番いい成績がt位
+
+    dp[0][0][N] = 1;
+
+    rep(i, N){ // 配るDP
+        rep(s, K + 1){
+            rep(t, N + 1){
+                // 受からせる場合
+                if(s < K && t > C[i].sc){ // 募集人数余裕あり、落とした人よりいい順位
+                    dp[i + 1][s + 1][t] += dp[i][s][t];
+                }
+
+                // 落とす場合
+                dp[i + 1][s][min(t, C[i].sc)] += dp[i][s][t];
+            }
+        }
+    }
+
+    mint ans = 0;
+    rep(i, N + 1){
+        ans += dp[N][K][i];
+    }
+
+    cout << ans.val() << '\n';
 }
 
 int main()

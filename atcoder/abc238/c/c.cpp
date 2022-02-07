@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,32 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+
+ll N;
+
+mint sumA(ll n){
+    mint res = n;
+    res *= (n + 1);
+    res /= 2LL;
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N;
+
+    mint ans = 0;
+    ll base = 1;
+
+    while(base * 10LL <= N){
+        ans += sumA(base * 9LL);
+        base *= 10LL;
+    }
+
+    ans += sumA(N - base + 1LL);
+
+    cout << ans.val() << "\n";
 }
 
 int main()

@@ -76,9 +76,18 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+ll x;
+
 void solve()
 {
-    
+    cin >> N;
+
+    if(N >= 5 || N == 1LL){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()

@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int T;
+ll A, S;
+ll pow10[62];
+
+void solve1(){
+    cin >> A >> S;
+
+    ll kuri = 0;
+
+    rep(d, 62){ // 2 ^ dを見る
+        if((A >> d) % 2LL == 1LL){ // 11の場合
+            if((S >> d) % 2LL != kuri){
+                cout << "No\n";
+                return;
+            }
+            kuri = 1LL;
+        } else {
+            // 00 or 10の場合
+            if(kuri == 1LL && ((S >> d) % 2LL == 0LL)){ // 繰り上がりあり
+                kuri = 1LL;
+            } else { // 繰り上がりなし
+                kuri = 0LL;
+            }
+        }
+    }
+
+    if(kuri == 1LL){
+        cout << "No\n";
+    } else {
+        cout << "Yes\n";
+    }
+}
+
 void solve()
 {
-    
+    cin >> T;
+    rep(i, T){
+        solve1();
+    }
 }
 
 int main()
