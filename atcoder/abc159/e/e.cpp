@@ -76,9 +76,73 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int H, W, K;
+vector<string> S;
+vvi A;
+
+
 void solve()
 {
-    
+    cin >> H >> W >> K;
+    A = vvi(H, vi(W, 0));
+    S = vector<string>(H);
+
+    rep(h, H){
+        cin >> S[h];
+        rep(w, W){
+            A[h][w] = S[h][w] - '0';
+        }
+    }
+
+    int ans = H * W;
+    const int INF = H * W;
+
+    rep(s, 1 << (H - 1)){
+        int B = pcnt(s) + 1; // ブロック数
+        int cnt = pcnt(s);
+
+        vvi C(B, vi(W, 0));
+        {
+            int b = 0;
+            rep(h, H){
+                rep(w, W){
+                    C[b][w] += A[h][w];
+                }
+                if((s >> h) % 2 == 1){
+                    b++;
+                }
+            }
+        }
+
+        vi whiteCnt(B, 0);
+        rep(w, W){
+            bool mustCut = false;
+
+            rep(b, B){
+                if(C[b][w] > K){
+                    goto con;
+                }
+
+                whiteCnt[b] += C[b][w];
+                if(whiteCnt[b] > K){
+                    mustCut = true;
+                }
+            }
+
+            if(mustCut){
+                cnt++;
+                rep(b, B){
+                    whiteCnt[b] = C[b][w];
+                }
+            }
+        }
+
+        chmin(ans, cnt);
+
+        con: ;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
