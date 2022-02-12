@@ -1,5 +1,22 @@
+#define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-#include <atcoder/all>
+// #include <atcoder/fenwicktree>
+// #include <atcoder/segtree>
+// #include <atcoder/lazysegtree>
+// #include <atcoder/string>
+// #include <atcoder/math>
+// #include <atcoder/convolution>
+#include <atcoder/modint>
+// #include <atcoder/dsu>
+// #include <atcoder/maxflow>
+// #include <atcoder/mincostflow>
+// #include <atcoder/scc>
+// #include <atcoder/twosat>
+
+namespace atcoder{};
+using namespace atcoder;
+using namespace std;
+
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -16,15 +33,11 @@
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
-#define PQ(T) priority_queue<T, v(T), greater<T>>
+#define show(x) cerr << #x << " = " << x << endl;
+#define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
-#define v(T) vector<T>
-#define vv(T) v(v(T))
-using namespace std;
-using namespace atcoder;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
@@ -33,6 +46,7 @@ using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
+using vvl = vector<vl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
@@ -61,41 +75,82 @@ bool chmin(T &a, const T &b)
     }
     return false;
 }
-using MOD = modint998244353;
+
+#ifndef TO_BE_SUBMITTED
+#include <bits/stdc++.h>
+using namespace std;
+#endif
+
+#include <atcoder/modint>
+
+// 二項係数ライブラリ
+template <class mint, atcoder::internal::is_static_modint_t<mint> * = nullptr>
+struct BinomialCoefficient
+{
+    vector<mint> fact_, inv_, finv_;
+    constexpr BinomialCoefficient(int n) noexcept : fact_(n, 1), inv_(n, 1), finv_(n, 1)
+    {
+        int MOD = mint::mod();
+        for (int i = 2; i < n; i++)
+        {
+            fact_[i] = fact_[i - 1] * i;
+            inv_[i] = -inv_[MOD % i] * (MOD / i);
+            finv_[i] = finv_[i - 1] * inv_[i];
+        }
+    }
+    constexpr mint com(int n, int k) const noexcept
+    {
+        if (n < k || n < 0 || k < 0)
+            return 0;
+        return fact_[n] * finv_[k] * finv_[n - k];
+    }
+    constexpr mint fact(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return fact_[n];
+    }
+    constexpr mint inv(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return inv_[n];
+    }
+    constexpr mint finv(int n) const noexcept
+    {
+        if (n < 0)
+            return 0;
+        return finv_[n];
+    }
+};
+
+using mint = modint998244353;
+
+const int N_MAX = 200000;
+BinomialCoefficient<mint> BC(N_MAX + 1);
+
+int N, M, K;
+mint ans = 0;
+
+void solve()
+{
+    cin >> N >> M >> K;
+
+    mint mN = N;
+    mint mM = M;
+
+    rep(k, K + 1){
+        ans += mM * BC.com(N - 1, k) * (mM - 1).pow(N - 1 - k);
+    }
+
+    cout << ans.val() << "\n";
+}
 
 int main()
 {
-    ll N;
-    ll m;
-    MOD M;
-    ll K;
-    cin >> N >> m >> K;
-    M = m;
-    vv(MOD) dp(2, v(MOD)(K+1, 0)); // dp[pos][i]: i組同じ色で塗ったときの塗り方
-
-    int pos = 0;
-    int past = 1;
-
-    rep(i, N){
-        if(i == 0){
-            dp[pos][0] = M;
-        } else {
-            rep(k, K + 1){ // dp[p][k]から更新
-                dp[pos][k] += dp[past][k] * (M - 1);
-                if(k < K){
-                    dp[pos][k + 1] += dp[past][k];
-                }
-            }
-        }
-        swap(pos, past);
-    }
-
-    MOD ans = 0;
-
-    rep(i, K+1){
-        ans += dp[past][i];
-    }
-    cout << ans.val() << endl;
-
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cout << fixed << setprecision(15);
+    solve();
     return 0;
 }
