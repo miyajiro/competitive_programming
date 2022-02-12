@@ -76,9 +76,81 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, T, A;
+vi X, Y;
+vvi G;
+vi depth;
+vector<bool> reachableT; // Tの祖先であり、Tから辿れるならtrue
+
+bool dfs(int now, int prev, int dep){ // Tの祖先ならtrue
+    bool isAncestorOfT = false;
+    if(now == T){
+        isAncestorOfT = true;
+    }
+    depth[now] = dep;
+
+    for(auto nex : G[now]){
+        if(nex == prev){
+            continue;
+        }
+
+        isAncestorOfT = (dfs(nex, now, dep + 1) || isAncestorOfT);
+    }
+
+    if(isAncestorOfT && depth[now] > depth[T] / 2){
+        reachableT[now] = true;
+    }
+
+    return isAncestorOfT;
+}
+
+int dfs2(int now){ // nowの子孫の最大深さを返す
+    int res = depth[now];
+    // show(now);
+    // show(depth[now]);
+
+    for(auto nex : G[now]){
+        if(depth[nex] < depth[now]){
+            continue;
+        }
+
+        chmax(res, dfs2(nex));
+    }
+
+    return res;
+}
+
+
 void solve()
 {
-    
+    cin >> N >> T >> A;
+    T--;
+    A--;
+    G = vvi(N);
+    reachableT = vector<bool>(N, false);
+    depth = vi(N, -1);
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        G[--a].eb(--b);
+        G[b].eb(a);
+    }
+
+    dfs(A, -1, 0);
+
+    P p = P(0xfffffff, -1); // 最小深さ、最小深さの親
+
+    rep(i, N){
+        if(reachableT[i]){
+            chmin(p, P(depth[i], i));
+        }
+    }
+
+    int mid = p.sc;
+    int goalD = dfs2(mid);
+
+    int ans = goalD - 1;
+    cout << ans << "\n";
 }
 
 int main()
