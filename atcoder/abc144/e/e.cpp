@@ -76,9 +76,57 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, K;
+vl A, F;
+
+bool isOK(ll lim){ // lim秒いないで食べ終わるか
+    ll cnt = 0;
+    rep(i, N){
+        ll a = A[i];
+        ll f = F[i];
+
+        if(a * f <= lim){
+            continue;
+        }
+
+        cnt += a - lim / f;
+    }
+
+    return cnt <= K;
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+    rep(i, N){
+        ll a;
+        cin >> a;
+        F.eb(a);
+    }
+
+    sort(rng(A));
+    sort(rrng(F));
+
+    ll lb = -1;
+    ll ub = 1e12 + 1;
+
+    while(ub - lb > 1){
+        ll mid = (ub + lb) / 2LL;
+
+        if(isOK(mid)){
+            ub = mid;
+        } else {
+            lb = mid;
+        }
+    }
+
+
+    cout << ub << "\n";
 }
 
 int main()
