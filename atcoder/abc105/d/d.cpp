@@ -1,5 +1,22 @@
+#define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-#include <atcoder/all>
+// #include <atcoder/fenwicktree>
+// #include <atcoder/segtree>
+// #include <atcoder/lazysegtree>
+// #include <atcoder/string>
+// #include <atcoder/math>
+// #include <atcoder/convolution>
+#include <atcoder/modint>
+// #include <atcoder/dsu>
+// #include <atcoder/maxflow>
+// #include <atcoder/mincostflow>
+// #include <atcoder/scc>
+// #include <atcoder/twosat>
+
+namespace atcoder{};
+using namespace atcoder;
+using namespace std;
+
 #define fr first
 #define sc second
 #define rep(i, n) for (int i = 0; i < (n); ++i)
@@ -16,13 +33,11 @@
 #define pcnt __builtin_popcountll
 #define uni(x) x.erase(unique(rng(x)), x.end())
 #define snuke srand((unsigned)clock() + (unsigned)time(NULL));
-#define show(x) cout << #x << " = " << x << endl;
-#define PQ(T) priority_queue<T, v(T), greater<T>>
+#define show(x) cerr << #x << " = " << x << "\n";
+#define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
 #define newline puts("")
-using namespace std;
-using namespace atcoder;
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
@@ -31,6 +46,7 @@ using LP = pair<ll, ll>;
 using vi = vector<int>;
 using vvi = vector<vi>;
 using vl = vector<ll>;
+using vvl = vector<vl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
 inline int getInt()
@@ -60,9 +76,36 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+
+using mint = modint;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    mint::set_mod(M);
+    vector<mint> A, B;
+    B.eb(0);
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+        B.eb(B.back() + a);
+    }
+
+    map<int, int> mp;
+    for(auto b : B){
+        mp[b.val()]++;
+    }
+
+    ll ans = 0;
+    set<int> used;
+    for(auto ite : mp){
+        ll a = ite.sc;
+        ans += a * (a - 1) / 2LL;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
