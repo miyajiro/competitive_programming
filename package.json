@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "atcoder-cli": "^2.1.1"
+    "atcoder-cli": "^2.2.0"
   },
   "repository": {
     "type": "git",
