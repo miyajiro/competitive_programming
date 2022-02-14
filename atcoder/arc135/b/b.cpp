@@ -76,9 +76,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vl S;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        ll s;
+        cin >> s;
+        S.eb(s);
+    }
+
+    ll minMod3[3] = {0, 0, 0};
+    vl A(N + 2);
+    A[0] = 0;
+    A[1] = 0;
+    A[2] = 0;
+    srep(i, 3, N + 2){
+        A[i] = S[i - 2] - S[i - 3] + A[i - 3];
+        chmin(minMod3[i % 3], A[i]);
+    }
+
+    if(minMod3[0] + minMod3[1] + minMod3[2] + S[0] < 0){
+        cout << "No\n";
+        return;
+    }
+
+    A[0] = -minMod3[0];
+    A[1] = -minMod3[1];
+    A[2] = S[0] - A[0] - A[1];
+
+    srep(i, 3, N + 2){
+        A[i] = S[i - 2] - S[i - 3] + A[i - 3];
+    }
+
+    cout << "Yes\n";
+    rep(i, N + 2){
+        cout << A[i] << (i == N + 1 ? "\n" : " ");
+    }
 }
 
 int main()
