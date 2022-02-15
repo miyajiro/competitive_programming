@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,52 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, S, K;
+
+ll gcd(ll a, ll b){
+    return b == 0 ? a : gcd(b, a % b);
+}
+
+ll lca(ll a, ll b){
+    return a * b / gcd(a, b);
+}
+
+using mint = modint;
+
+void _solve(){
+    cin >> N >> S >> K;
+    S = N - S;
+
+    ll gcdNSK = gcd(gcd(N, K), S);
+    N /= gcdNSK;
+    S /= gcdNSK;
+    K /= gcdNSK;
+
+    int gcdNK = gcd(N, K);
+    if(S % gcdNK != 0){
+        cout << "-1\n";
+        return;
+    }
+
+    mint::set_mod(N);
+
+    mint s = S;
+    mint k = K;
+    int ans = (s / k).val();
+
+    ans %= (lca(N, K) / K);
+
+    cout << ans << "\n";
+    return;
+}
+
 void solve()
 {
-    
+    int t;
+    cin >> t;
+    rep(i, t){
+        _solve();
+    }
 }
 
 int main()
