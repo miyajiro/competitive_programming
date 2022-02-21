@@ -6,7 +6,7 @@
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
+#include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -76,9 +76,103 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+using mint = modint998244353;
+int H, W, K;
+vector<string> grid;
+vector<vector<mint>> dp;
+vvi imos;
+
+int getImos(int h, int w){
+    if(h < 0 || w < 0){
+        return 0;
+    }
+
+    return imos[h][w];
+}
+
+int count(int h1, int w1, int h2, int w2){ // 矩形領域に含まれる.の数を返す
+    return getImos(h2, w2) - getImos(h2, w1 - 1) - getImos(h1 - 1, w2) + getImos(h1 - 1, w1 - 1);
+}
+
 void solve()
 {
-    
+    cin >> H >> W >> K;
+    grid = vector<string>(H);
+    dp = vector<vector<mint>>(H + 1, vector<mint>(W + 1, 0));
+    imos = vvi(H, vi(W));
+
+    rep(h, H){
+        rep(w, W){
+            grid[h].push_back('.');
+        }
+    }
+
+    rep(k, K){
+        int h, w;
+        char c;
+        cin >> h >> w >> c;
+        grid[--h][--w] = c;
+    }
+
+    dp[H - 1][W - 1] = 1;
+    if(grid[H - 1][W - 1] == '.'){
+        dp[H - 1][W - 1] = 3;
+    }
+
+    rep(h, H){
+        rep(w, W){
+            if(grid[h][w] == '.'){
+                imos[h][w]++;
+            }
+        }
+    }
+    rep(h, H){
+        rep(w, W){
+            imos[h][w] += getImos(h - 1, w) + getImos(h, w - 1) - getImos(h - 1, w - 1);
+        }
+    }
+
+    mint m3 = 3;
+
+    rrep(h, H){
+        rrep(w, W){
+            if(h == H - 1 && w == W - 1){
+                continue;
+            }
+
+            mint rVal = dp[h][w + 1] * m3.pow(count(h + 1, w, H - 1, w));
+            mint dVal = dp[h + 1][w] * m3.pow(count(h, w + 1, h, W - 1));
+
+            if(grid[h][w] == 'R'){
+                dp[h][w] = rVal;
+            }
+
+            if(grid[h][w] == 'D'){
+                dp[h][w] = dVal;
+            }
+
+            if(grid[h][w] == 'X'){
+                dp[h][w] = rVal + dVal;
+            }
+
+            if(grid[h][w] == '.'){
+                dp[h][w] = (rVal + dVal) * 2;
+            }
+
+            // show(h);
+            // show(w);
+            // show(dp[h][w].val());
+        }
+    }
+
+    // rep(h, H){
+    //     rep(w, W){
+    //         cout << dp[h][w].val() << " ";
+    //     }
+    //     cout << "\n";
+    // }
+
+    cout << dp[0][0].val() << "\n";
 }
 
 int main()
