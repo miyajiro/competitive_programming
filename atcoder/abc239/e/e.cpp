@@ -76,9 +76,67 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi X;
+vi A, B;
+int Q;
+vi K;
+vvi G;
+vvi datb; // 拡頂点の部分木の数字を大きい順に格納(20番目まで)
+vi V;
+
+vi dfs(int now, int from){
+    priority_queue<int> q;
+    q.push(X[now]);
+
+    for(auto nex : G[now]){
+        if(nex == from){
+            continue;
+        }
+
+        vi res = dfs(nex, now);
+        for(auto e : res){
+            q.push(e);
+        }
+    }
+
+    while(!q.empty() && sz(datb[now]) < 20){
+        datb[now].eb(q.top());
+        q.pop();
+    }
+
+    return datb[now];
+}
+
 void solve()
 {
-    
+    cin >> N >> Q;
+    G = vvi(N);
+    datb = vvi(N);
+    rep(i, N){
+        int x;
+        cin >> x;
+        X.eb(x);
+    }
+    rep(i, N - 1){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        G[b].eb(a);
+    }
+
+    dfs(0, -1);
+
+    rep(i, Q){
+        int v, k;
+        cin >> v >> k;
+        V.eb(--v);
+        K.eb(--k);
+
+        cout << datb[v][k] << "\n";
+    }
 }
 
 int main()

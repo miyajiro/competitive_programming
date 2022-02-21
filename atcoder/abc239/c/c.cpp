@@ -76,9 +76,37 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll _x1, _x2, _y1, _y2;
+ll x, y;
+
+ll vx[8] = {2LL, 1LL, -1LL, -2LL, -2LL, -1LL, 1LL, 2LL};
+ll vy[8] = {1LL, 2LL, 2LL, 1LL, -1LL, -2LL, -2LL, -1LL};
+
 void solve()
 {
-    
+    cin >> _x1 >> _y1 >> _x2 >> _y2;
+    x = _x1 - _x2;
+    y = _y1 - _y2;
+
+    string ans = "No";
+
+    rep(i, 8){
+        ll ex = vx[i];
+        ll ey = vy[i];
+
+        ll dx = x - ex;
+        ll dy = y - ey;
+
+        if(abs(dx) >= 10LL || abs(dy) >= 10LL){
+            continue;
+        }
+
+        if(dx * dx + dy * dy == 5LL){
+            ans = "Yes";
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()

@@ -76,9 +76,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int A, B, C, D;
+
+bool isPrime(int x){
+    srep(i, 2, x){
+        if(x % i == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+int aoki(int x, int y){ // takahashi: 1, aoki: 2
+    int z = x + y;
+    if(isPrime(z)){
+        return 2;
+    } else {
+        return 1;
+    }
+}
+
+int takahashi(int x){ // takahashi: 1, aoki: 2
+    int res = 1;
+
+    srep(y, C, D + 1){ // aoki Y
+        if(aoki(x, y) == 2){
+            res = 2;
+        }
+    }
+
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> A >> B >> C >> D;
+
+    int ans = 2;
+
+    srep(x, A, B + 1){
+        if(takahashi(x) == 1){
+            ans = 1;
+        }
+    }
+
+    if(ans == 1){
+        cout << "Takahashi" << "\n";
+    } else {
+        cout << "Aoki" << "\n";
+    }
 }
 
 int main()

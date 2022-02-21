@@ -78,7 +78,9 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    double H;
+    cin >> H;
+    cout << sqrt(H * (H + 12800000)) << "\n";
 }
 
 int main()

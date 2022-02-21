@@ -76,9 +76,16 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll X;
+
 void solve()
 {
-    
+    cin >> X;
+    if(X >= 0){
+        cout << X / 10LL << "\n";
+    } else {
+        cout << (X + 1LL) / 10LL - 1LL << "\n";
+    }
 }
 
 int main()

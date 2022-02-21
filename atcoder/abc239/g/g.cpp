@@ -8,7 +8,7 @@
 // #include <atcoder/convolution>
 // #include <atcoder/modint>
 // #include <atcoder/dsu>
-// #include <atcoder/maxflow>
+#include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
 // #include <atcoder/scc>
 // #include <atcoder/twosat>
@@ -76,9 +76,73 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, M;
+vl A, B;
+vvl G;
+vl C;
+
+const ll INF = 0xffffffffffffff;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+    }
+    rep(i, N){
+        ll c;
+        cin >> c;
+        C.eb(c);
+    }
+
+    int N2 = 2 * N; // i * 2: iIn, i * 2 + 1: iOut
+
+    int s = 0 * 2; // 0 In
+    int t = (N - 1) * 2 + 1; // N-1 Out
+    mf_graph<ll> g(N2);
+
+    rep(i, N){
+        if(i == 0 || i == N - 1){
+            C[i] = INF;
+        }
+        int iIn = i * 2;
+        int iOut = i * 2 + 1;
+        g.add_edge(iIn, iOut, C[i]);
+    }
+
+    rep(i, M){
+        int a = A[i];
+        int b = B[i];
+
+        int aIn = a * 2;
+        int aOut = a * 2 + 1;
+        int bIn = b * 2;
+        int bOut = b * 2 + 1;
+
+        g.add_edge(aOut, bIn, INF);
+        g.add_edge(bOut, aIn, INF);
+    }
+
+    cout << g.flow(s, t) << "\n";
+
+    vector<bool> cuts = g.min_cut(0);
+    vl ans;
+
+    rep(i, N){
+        int iIn = i * 2;
+        int iOut = i * 2 + 1;
+        if(cuts[iIn] && !cuts[iOut]){
+            ans.eb(i);
+        }
+    }
+
+    cout << sz(ans) << "\n";
+    rep(ai, sz(ans)){
+        cout << ans[ai] + 1 << ((ai < sz(ans) - 1) ? " " : "\n");
+    }
 }
 
 int main()
