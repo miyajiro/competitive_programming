@@ -76,9 +76,58 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, K;
+vl A;
+map<ll, LP> mp; // key: modN, val: (何回目か, その個数)
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(a);
+    }
+
+    ll cnt = 0;
+    ll kosu = 0;
+
+    mp[0] = LP(0, 0);
+
+    while(true){
+        cnt++;
+
+        kosu += A[kosu % N];
+
+        if(cnt == K){
+            cout << kosu << "\n";
+            return;
+        }
+
+        if(mp.find(kosu % N) != mp.end()){
+            break;
+        }
+
+        mp[kosu % N] = LP(cnt, kosu);
+    }
+
+    LP lp = mp[kosu % N];
+    ll pastCnt = lp.fr;
+    ll pastKosu = lp.sc;
+
+    ll nokoriCnt = K - cnt;
+    ll diffCnt = cnt - pastCnt;
+    ll diffKosu = kosu - pastKosu;
+
+    ll loop = nokoriCnt / diffCnt;
+    cnt += diffCnt * loop;
+    kosu += diffKosu * loop;
+
+    rep(i, K - cnt){
+        kosu += A[kosu % N];
+    }
+
+    cout << kosu << '\n';
 }
 
 int main()
