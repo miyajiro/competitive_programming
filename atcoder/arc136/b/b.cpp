@@ -76,9 +76,63 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi A, B;
+vi _A, _B;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+        _A.eb(a);
+    }
+
+    rep(i, N){
+        int a;
+        cin >> a;
+        B.eb(a);
+        _B.eb(a);
+    }
+    sort(rng(_A));
+    sort(rng(_B));
+
+    bool hasMulti = false;
+    rep(i, N){
+        if(_A[i] != _B[i]){
+            cout << "No\n";
+            return;
+        }
+
+        if(i < N - 1 && _A[i] == _A[i + 1]){
+            hasMulti = true;
+        }
+    }
+
+    if(hasMulti){
+        cout << "Yes\n";
+        return;
+    }
+
+    int tentoA = 0, tentoB = 0;
+    rep(i, N){
+        srep(j, i + 1, N){
+            if(A[i] > A[j]){
+                tentoA++;
+            }
+            if(B[i] > B[j]){
+                tentoB++;
+            }
+        }
+    }
+
+    if(tentoA % 2 == tentoB % 2){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()
