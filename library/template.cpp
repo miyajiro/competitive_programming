@@ -1,12 +1,12 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
+#include <atcoder/modint>
 // #include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
 // #include <atcoder/math>
 // #include <atcoder/convolution>
-// #include <atcoder/modint>
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
@@ -37,18 +37,32 @@ using namespace std;
 #define PQ(T) priority_queue<T, vector<T>, greater<T>>
 #define bn(x) ((1 << x) - 1)
 #define dup(x, y) (((x) + (y)-1) / (y))
-#define newline puts("")
+#define newline cout << "\n"
+#define newlineErr cerr << "\n"
+
 using ll = long long;
 using uint = unsigned;
 using ull = unsigned long long;
 using P = pair<int, int>;
 using LP = pair<ll, ll>;
+
 using vi = vector<int>;
 using vvi = vector<vi>;
+using vvvi = vector<vvi>;
 using vl = vector<ll>;
 using vvl = vector<vl>;
+using vvvl = vector<vvl>;
 using vp = vector<P>;
 using vlp = vector<LP>;
+using vb = vector<bool>;
+using vvb = vector<vb>;
+using vvvb = vector<vvb>;
+
+using mint = modint1000000007;
+using vm = vector<mint>;
+using vvm = vector<vm>;
+using vvvm = vector<vvm>;
+
 inline int getInt()
 {
     int x;
