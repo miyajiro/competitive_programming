@@ -1,6 +1,6 @@
 #define TO_BE_SUBMITTED
 #include <bits/stdc++.h>
-// #include <atcoder/fenwicktree>
+#include <atcoder/fenwicktree>
 // #include <atcoder/segtree>
 // #include <atcoder/lazysegtree>
 // #include <atcoder/string>
@@ -76,9 +76,67 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N;
+vl A, B;
+vl _A, _B;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a + i);
+        _A.eb(a + i);
+    }
+
+    rep(i, N){
+        int b;
+        cin >> b;
+        B.eb(b + i);
+        _B.eb(b + i);
+    }
+
+    sort(rng(_A));
+    sort(rng(_B));
+
+    rep(i, N){
+        if(_A[i] != _B[i]){
+            cout << "-1\n";
+            return;
+        }
+    }
+
+    uni(_A);
+    int K = sz(_A);
+
+    rep(i, N){
+        A[i] = lower_bound(rng(_A), A[i]) - _A.begin();
+        B[i] = lower_bound(rng(_A), B[i]) - _A.begin();
+    }
+
+    fenwick_tree<int> fw(N);
+    rep(i, N){
+        fw.add(i, 1);
+    }
+
+    // K通りのsetを用意
+    vector<PQ(ll)> pqArray(K);
+    rep(i, N){
+        pqArray[A[i]].push(i);
+    }
+
+    ll ans = 0;
+    // Bの0項目から埋めていく。
+    rep(i, N){
+        int b = B[i];
+        int id = pqArray[b].top();
+        pqArray[b].pop();
+        ans += fw.sum(0, id);
+        fw.add(id, -1);
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
