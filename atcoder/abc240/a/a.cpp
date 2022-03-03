@@ -92,7 +92,15 @@ bool chmin(T &a, const T &b)
 
 void solve()
 {
-    
+    int a, b;
+    cin >> a >> b;
+    --a;
+    --b;
+    if((a + 1) % 10 == b || (a == 0 && b == 9)){
+        cout << "Yes\n";
+    } else {
+        cout << "No\n";
+    }
 }
 
 int main()
