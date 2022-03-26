@@ -58,7 +58,7 @@ using vb = vector<bool>;
 using vvb = vector<vb>;
 using vvvb = vector<vvb>;
 
-using mint = modint1000000007;
+using mint = modint;
 using vm = vector<mint>;
 using vvm = vector<vm>;
 using vvvm = vector<vvm>;
@@ -90,9 +90,45 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+string S;
+ll Q, T, K;
+vm A;
+
+void _solve(){
+    cin >> T >> K;
+    --K;
+    mint ans = 0;
+    while(T > 0){
+        if(K % 2 == 0){
+            ans++;
+        } else {
+            ans--;
+        }
+        K /= 2;
+        T--;
+
+        if(K == 0){
+            ans += T;
+            break;
+        }
+    }
+
+    ans += A[K];
+
+    char c = ('A' + ans.val());
+    cout << c << "\n";
+}
+
 void solve()
 {
-    
+    mint::set_mod(3);
+    cin >> S >> Q;
+    for(auto s : S){
+        A.eb(s - 'A');
+    }
+    rep(q, Q){
+        _solve();
+    }
 }
 
 int main()
