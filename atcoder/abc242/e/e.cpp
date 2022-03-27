@@ -58,7 +58,7 @@ using vb = vector<bool>;
 using vvb = vector<vb>;
 using vvvb = vector<vvb>;
 
-using mint = modint1000000007;
+using mint = modint998244353;
 using vm = vector<mint>;
 using vvm = vector<vm>;
 using vvvm = vector<vvm>;
@@ -90,9 +90,68 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+string S;
+vp B;
+
+void _solve(){
+    cin >> N >> S;
+    M = (N + 1) / 2;
+
+    B = vp();
+
+    rep(i, M){
+        B.eb(P(S[i] - 'A', S[N - 1 - i] - 'A'));
+    }
+
+    vm dp(M + 1, 0); // dp[i]: A[i]まで決まったときのnonStrictな回分の数
+
+    rep(i, M){
+        int l = B[i].fr;
+        int r = B[i].sc;
+        // show(i);
+        // show(l);
+        // show(r);
+
+        dp[i + 1] += dp[i] * 26;
+
+        dp[i + 1] += l; // [0, l)の数字を選ぶ場合の数
+    }
+
+    mint ans = dp[M];
+
+    bool isNG = false;
+    rrep(i, M){
+        int l = B[i].fr;
+        int r = B[i].sc;
+        if(l == r){
+            continue;
+        }
+
+        if(l < r){
+            break;
+        }
+
+        if(l > r){
+            isNG = true;
+            break;
+        }
+    }
+
+    if(!isNG){
+        ans++;
+    }
+
+    cout << ans.val() << "\n";
+}
+
 void solve()
 {
-    
+    int t;
+    cin >> t;
+    rep(_, t){
+        _solve();
+    }
 }
 
 int main()
