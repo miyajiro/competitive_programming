@@ -10,7 +10,7 @@
 // #include <atcoder/dsu>
 // #include <atcoder/maxflow>
 // #include <atcoder/mincostflow>
-// #include <atcoder/scc>
+#include <atcoder/scc>
 // #include <atcoder/twosat>
 
 namespace atcoder{};
@@ -90,9 +90,61 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi U, V;
+vvi G, rG;
+vb isEndless;
+
 void solve()
 {
-    
+    cin >> N >> M;
+
+    scc_graph sccg(N);
+    isEndless = vb(N, false);
+    G = vvi(N);
+    rG = vvi(N);
+
+    rep(i, M){
+        int u, v;
+        cin >> u >> v;
+        U.eb(--u);
+        V.eb(--v);
+        sccg.add_edge(u, v);
+        G[u].eb(v);
+        rG[v].eb(u);
+    }
+
+    vvi sccResult = sccg.scc();
+    queue<int> q;
+    for(auto res : sccResult){
+        if(res.size() > 1){
+            for(auto e : res){
+                isEndless[e] = true;
+                q.push(e);
+            }
+        }
+    }
+
+    while(!q.empty()){
+        int now = q.front();
+        q.pop();
+
+        for(auto nex : rG[now]){
+            if(!isEndless[nex]){
+                isEndless[nex] = true;
+                q.push(nex);
+            }
+        }
+    }
+
+    int ans = 0;
+    rep(i, N){
+        if(isEndless[i]){
+            ans++;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
