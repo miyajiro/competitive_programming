@@ -90,9 +90,77 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+const ll INF = 0xfffffffffffff;
+int N, K;
+vl A, C;
+ll ans = -INF;
+
+ll solve2(int x){ // xからスタート
+    ll res = -INF;
+    int k = 0;
+    ll score = 0;
+    vector<LP> memo(N, LP(0, 0)); // mp[i] = (何番目か, スコア)
+
+    while(true){
+        k++; // 個数加算
+        x = A[x]; // 移動
+        score += C[x]; // スコア加算
+        chmax(res, score);
+
+        if(k == K){ // K個目まで調べ尽くした
+            break;
+        }
+
+        if(memo[x] == LP(0, 0)){ // 初めて来た場合
+            memo[x] = LP(k, score);
+            continue;
+        }
+
+        LP lpPast = memo[x];
+        ll pastK = lpPast.fr;
+        ll pastScore = lpPast.sc;
+
+        ll dK = k - pastK;
+        ll dScore = score - pastScore;
+
+        if(dScore <= 0LL){ // 0以下のループに入ってる
+            break;
+        }
+
+        ll remainK = K - k;
+        ll loopNum = remainK / dK;
+
+        k += dK * loopNum;
+        score += dScore * loopNum;
+
+        chmax(res, score);
+
+        if(k == K){ // K個目まで調べ尽くした
+            break;
+        }
+    }
+
+    return res;
+}
+
 void solve()
 {
-    
+    cin >> N >> K;
+    rep(i, N){
+        ll a;
+        cin >> a;
+        A.eb(--a);
+    }
+    rep(i, N){
+        ll c;
+        cin >> c;
+        C.eb(c);
+    }
+    rep(i, N){
+        chmax(ans, solve2(i));
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
