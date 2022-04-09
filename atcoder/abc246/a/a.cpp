@@ -90,9 +90,33 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int x1, x2, x3, _y1, y2, y3;
+
 void solve()
 {
-    
+    cin >> x1 >> _y1 >> x2 >> y2 >> x3 >> y3;
+    int x = 0;
+    int y = 0;
+    if(x1 == x2){
+        x = x3;
+    }
+    if(x2 == x3){
+        x = x1;
+    }
+    if(x1 == x3){
+        x = x2;
+    }
+    if(_y1 == y2){
+        y = y3;
+    }
+    if(y2 == y3){
+        y = _y1;
+    }
+    if(_y1 == y3){
+        y = y2;
+    }
+
+    cout << x << " " << y << "\n";
 }
 
 int main()
