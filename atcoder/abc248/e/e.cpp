@@ -90,9 +90,55 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int K, N;
+vl X, Y;
+
+bool isColinear(int i0, int i1, int i2){
+    ll dx1 = X[i1] - X[i0];
+    ll dy1 = Y[i1] - Y[i0];
+    ll dx2 = X[i2] - X[i0];
+    ll dy2 = Y[i2] - Y[i0];
+
+    ll det = dx1 * dy2 - dx2 * dy1;
+    return (det == 0);
+}
+
+vi kColinear;
+
 void solve()
 {
-    
+    cin >> N >> K;
+    kColinear = vi(N + 1);
+
+    rep(i, N){
+        int x, y;
+        cin >> x >> y;
+        X.eb(x);
+        Y.eb(y);
+    }
+
+    if(K == 1){
+        cout << "Infinity\n";
+        return;
+    }
+
+    rep(i, N){
+        srep(j, i + 1, N){
+            int cnt = 0;
+            rep(k, N){
+                if(isColinear(i, j, k)){
+                    cnt++;
+                }
+            }
+            kColinear[cnt]++;
+        }
+    }
+
+    ll ans = 0;
+    srep(k, K, N + 1){
+        ans += ((kColinear[k] * 2) / k) / (k - 1);
+    }
+    cout << ans << "\n";
 }
 
 int main()
