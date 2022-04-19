@@ -90,9 +90,51 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, X, Y;
+vi Xs, Ys, NGs;
+vi A;
+
+// [minY, maxX]
+
 void solve()
 {
-    
+    cin >> N >> X >> Y;
+    rep(i, N){
+        int a;
+        cin >> a;
+        A.eb(a);
+        if(!isin(a, Y, X + 1)){
+            NGs.eb(i);
+        }
+        if(a == X){
+            Xs.eb(i);
+        }
+        if(a == Y){
+            Ys.eb(i);
+        }
+    }
+    NGs.eb(N);
+    Xs.eb(N);
+    Ys.eb(N);
+
+    ll ans = 0;
+
+    rep(l, N){ // 左はl。
+        int minNG = *(lower_bound(rng(NGs), l));
+        int minX = *(lower_bound(rng(Xs), l));
+        int minY = *(lower_bound(rng(Ys), l));
+
+        int rMax = minNG - 1;
+        int rMin = max(minX, minY);
+
+        if(rMin > rMax){
+            continue;
+        }
+
+        ans += rMax - rMin + 1;
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
