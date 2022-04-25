@@ -90,9 +90,26 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll N, M;
+vl X, Y;
+
 void solve()
 {
-    
+    cin >> N >> M;
+    if(N < M){
+        swap(N, M);
+    }
+
+    rep1(i, M){
+        X.eb(1);
+        Y.eb(i);
+    }
+
+    srep(i, 2, 4){
+        srep(3, M + 1){
+            X.eb()
+        }
+    }
 }
 
 int main()
