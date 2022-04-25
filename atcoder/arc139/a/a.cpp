@@ -90,9 +90,31 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N;
+vi T;
+ull now = 0;
+
 void solve()
 {
-    
+    cin >> N;
+    rep(i, N){
+        int t;
+        cin >> t;
+        T.eb(t);
+    }
+
+    ull ull1 = 1;
+    for(auto t : T){
+        // show(now);
+        ull s = ull1 << t;
+        ull mask = ~(s - ull1);
+        now &= mask;
+        now += s;
+        while((now / s) % 2 == 0){
+            now += s;
+        }
+    }
+    cout << now << "\n";
 }
 
 int main()

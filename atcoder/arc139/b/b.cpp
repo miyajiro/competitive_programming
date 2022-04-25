@@ -90,9 +90,191 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+ll extgcd(ll a, ll b, ll &x, ll &y) {
+    ll  d = a;
+  if(b != 0) {
+    d = extgcd(b, a % b, y, x);
+    y -= (a / b) * x;
+  } else {
+    x = 1;
+    y = 0;
+  }
+  return d;
+}
+
+ll gcd(ll x, ll y){
+    if(y == 0){
+        return x;
+    }
+    return gcd(y, x % y);
+}
+
+ll lca(ll x, ll y){
+    ll z = gcd(x, y);
+    return x * y / z;
+}
+
+ll M = 30000;
+
+void _solve(){
+    ll N, A, B, X, Y, Z;
+    cin >> N >> A >> B >> X >> Y >> Z;
+
+    bool notA = (X * A <= Y);
+    bool notB = (X * B <= Z);
+
+    if(notA && notB){
+        cout << N * X << "\n";
+        return;
+    }
+
+    if(notA){
+        swap(notA, notB);
+        swap(A, B);
+        swap(Y, Z);
+    }
+
+    if(notB){ // Bを使わない。Aを極力使い、あまりでX
+        cout << (N / A) * Y + (N % A) * X << "\n";
+        return;
+    }
+
+    // AとBを合わせて使う。
+    ll minCost = 0xfffffffffffffff;
+    // A目一杯
+    {
+        ll cost = 0;
+        ll remaining = N;
+
+        ll s = remaining / A;
+        cost += s * Y;
+        remaining -= s * A;
+
+        ll t = remaining / B;
+        cost += t * Z;
+        remaining -= t * B;
+
+        cost += remaining * X;
+
+        chmin(minCost, cost);
+    }
+
+    // B目一杯
+    {
+        ll cost = 0;
+        ll remaining = N;
+
+        ll t = remaining / B;
+        cost += t * Z;
+        remaining -= t * B;
+
+        ll s = remaining / A;
+        cost += s * Y;
+        remaining -= s * A;
+
+        cost += remaining * X;
+
+        chmin(minCost, cost);
+    }
+
+    if(A > B){
+        swap(A, B);
+        swap(Y, Z);
+    }
+
+    if(B >= M){
+        // Bの数総当たり
+        rep(t, N / B + 1){
+            ll cost = 0;
+            ll remaining = N;
+            remaining -= t * B;
+            cost += t * Z;
+
+            ll s = remaining / A;
+            remaining -= s * A;
+            cost += s * Y;
+
+            cost += remaining * X;
+
+            chmin(minCost, cost);
+        }
+        goto en;
+    }
+
+    // 都合が良い方をAにする。
+    if(A * Z < B * Y){
+        swap(A, B);
+        swap(Y, Z);
+    }
+
+    rep(u, max(A, B) + 1){ // X総当たり
+        ll a = A;
+        ll b = B;
+        ll cost = u * X;
+        ll remaining = N - u;
+
+        ll g = gcd(a, b); // gの倍数なら実現可能
+
+        if(remaining % g != 0){
+            continue;
+        }
+
+        a /= g;
+        b /= g;
+        remaining /= g;
+
+        // A, Bの組み合わせでremainingは実現可能
+        ll s0, t0;
+        extgcd(a, b, s0, t0);
+        s0 *= remaining;
+        t0 *= remaining;
+
+        // sA + tB = N
+        // s0A + t0B = N
+        // s = s0 + kB
+        // t = t0 - kA
+        ll s = s0;
+        ll t = t0;
+
+        if(s < 0){
+            ll pS = -s;
+            ll k = (pS - 1) / b + 1;
+            s += k * b;
+            t -= k * a;
+        }
+
+        if(t < 0){
+            ll pT = -t;
+            ll k = (pT - 1) / a + 1;
+            s -= k * b;
+            t += k * a;
+        }
+
+        if(s < 0 || t < 0){
+            continue;
+        }
+
+        { // B小さい
+            ll k = t / a;
+            s += k * b;
+            t -= k * a;
+
+            cost += s * Y + t * Z;
+            chmin(minCost, cost);
+        }
+    }
+
+    en: ;
+    cout << minCost << "\n";
+}
+
 void solve()
 {
-    
+    int t;
+    cin >> t;
+    rep(_, t){
+        _solve();
+    }
 }
 
 int main()
