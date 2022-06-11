@@ -90,9 +90,69 @@ bool chmin(T &a, const T &b)
     return false;
 }
 
+int N, M;
+vi A, B;
+int Q;
+vi X, K;
+vvi G;
+
+
 void solve()
 {
-    
+    cin >> N >> M;
+    G = vvi(N);
+
+    rep(i, M){
+        int a, b;
+        cin >> a >> b;
+        A.eb(--a);
+        B.eb(--b);
+        G[a].eb(b);
+        G[b].eb(a);
+    }
+    cin >> Q;
+    rep(i, Q){
+        int x, k;
+        cin >> x >> k;
+        X.eb(--x);
+        K.eb(k);
+
+        // newlineErr;
+        // show(x);
+        // show(k);
+
+        queue<P> q;
+        set<int> visited;
+        int ans = 0;
+
+        q.push(P(x, 0));
+        visited.insert(x);
+        while(!q.empty()){
+            P p = q.front();
+            q.pop();
+            int n = p.fr;
+            int d = p.sc;
+            // show(n);
+            // show(d);
+            ans += n + 1;
+            if(d == k){
+                continue;
+            }
+
+            for(auto nex : G[n]){
+                if(visited.find(nex) != visited.end()){
+                    continue;
+                }
+
+                visited.insert(nex);
+                q.push(P(nex, d + 1));
+            }
+        }
+
+        cout << ans << "\n";
+    }
+
+
 }
 
 int main()
